@@ -1,6 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "./generated/prisma"
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
 }
 
 datasource db {
@@ -8,21 +8,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/* =======================
-   USER & AUTH
-======================= */
 
 model User {
   id                  String         @id @default(uuid())
   fullName            String?
   phone               String         @unique
+  role                Role           @default(CUSTOMER)
   isActive            Boolean        @default(true)
 
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
   deletedAt           DateTime?
 
-  role                Roles          @default(CUSTOMER)
   reservations        Reservation[]
   createdReservations Reservation[] @relation("CreatedBy")
   payments            Payment[]
@@ -30,13 +27,11 @@ model User {
   auditLogs           AuditLog[]
 
   @@index([phone])
+  @@index([role])
   @@index([isActive])
   @@index([deletedAt])
 }
 
-/* =======================
-   SERVICES & SCHEDULING
-======================= */
 
 model Service {
   id                            String         @id @default(uuid())
@@ -50,41 +45,44 @@ model Service {
   deletedAt                     DateTime?
 
   reservations                  Reservation[]
-  timeSlots                     TimeSlot[]
+  workingHours                  WorkingHour[]
 
   @@index([isActive])
   @@index([deletedAt])
 }
 
-model TimeSlot {
-  id           String         @id @default(uuid())
-  serviceId    String
-  startTime    DateTime
-  endTime      DateTime
-  isLocked     Boolean        @default(false)
-  lockedUntil  DateTime?
+model WorkingHour {
+  id                                                String    @id @default(uuid())
+  serviceId                                         String
 
-  service      Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  reservations Reservation[]
+  weekday   Int      // 0 = Sunday ... 6 = Saturday
+  startTime String   // "09:00"
+  endTime   String   // "17:00"
+  isActive                                          Boolean   @default(true)
+
+  createdAt                                         DateTime  @default(now())
+
+  service                                           Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@index([serviceId])
-  @@index([startTime, endTime])
+  @@index([weekday])
 }
 
-/* =======================
-   RESERVATION
-======================= */
 
 model Reservation {
   id          String             @id @default(uuid())
+
   userId      String
   serviceId   String
-  timeSlotId  String?
-  reservedAt  DateTime
+
+  startAt     DateTime
+  endAt       DateTime
+
   status      ReservationStatus  @default(PENDING)
   source      ReservationSource
-  createdById String?
   notes       String?
+
+  createdById String?
 
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
@@ -92,13 +90,12 @@ model Reservation {
 
   user        User              @relation(fields: [userId], references: [id])
   service     Service           @relation(fields: [serviceId], references: [id])
-  timeSlot    TimeSlot?         @relation(fields: [timeSlotId], references: [id])
   createdBy   User?             @relation("CreatedBy", fields: [createdById], references: [id])
-  payment     Payment?
+  payments    Payment[]
 
   @@index([userId])
   @@index([serviceId])
-  @@index([reservedAt])
+  @@index([startAt, endAt])
   @@index([status])
 }
 
@@ -108,8 +105,10 @@ model Reservation {
 
 model Payment {
   id            String         @id @default(cuid())
-  reservationId String         @unique
+
   userId        String
+  reservationId String?
+  orderId       String?
 
   amount        Decimal        @db.Decimal(10, 2)
   method        PaymentMethod
@@ -123,8 +122,8 @@ model Payment {
   updatedAt     DateTime       @updatedAt
   paidAt        DateTime?
 
-  reservation   Reservation   @relation(fields: [reservationId], references: [id], onDelete: Cascade)
   user          User          @relation(fields: [userId], references: [id])
+  reservation   Reservation?  @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
@@ -218,7 +217,7 @@ enum AuditAction {
   PAYMENT
 }
 
-enum Roles {
+enum Role {
   ADMIN
   SECRETARY
   CUSTOMER

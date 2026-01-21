@@ -124,11 +124,11 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
   phone: 'phone',
+  role: 'role',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt',
-  role: 'role'
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
@@ -142,25 +142,26 @@ exports.Prisma.ServiceScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
-exports.Prisma.TimeSlotScalarFieldEnum = {
+exports.Prisma.WorkingHourScalarFieldEnum = {
   id: 'id',
   serviceId: 'serviceId',
+  weekday: 'weekday',
   startTime: 'startTime',
   endTime: 'endTime',
-  isLocked: 'isLocked',
-  lockedUntil: 'lockedUntil'
+  isActive: 'isActive',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ReservationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   serviceId: 'serviceId',
-  timeSlotId: 'timeSlotId',
-  reservedAt: 'reservedAt',
+  startAt: 'startAt',
+  endAt: 'endAt',
   status: 'status',
   source: 'source',
-  createdById: 'createdById',
   notes: 'notes',
+  createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   canceledAt: 'canceledAt'
@@ -168,8 +169,9 @@ exports.Prisma.ReservationScalarFieldEnum = {
 
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
-  reservationId: 'reservationId',
   userId: 'userId',
+  reservationId: 'reservationId',
+  orderId: 'orderId',
   amount: 'amount',
   method: 'method',
   status: 'status',
@@ -234,7 +236,7 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.Roles = exports.$Enums.Roles = {
+exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   SECRETARY: 'SECRETARY',
   CUSTOMER: 'CUSTOMER'
@@ -278,7 +280,7 @@ exports.AuditAction = exports.$Enums.AuditAction = {
 exports.Prisma.ModelName = {
   User: 'User',
   Service: 'Service',
-  TimeSlot: 'TimeSlot',
+  WorkingHour: 'WorkingHour',
   Reservation: 'Reservation',
   Payment: 'Payment',
   Wallet: 'Wallet',

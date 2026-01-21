@@ -1,79 +1,67 @@
-import { getServerSession } from "next-auth";
-import { NextResponse, NextRequest } from "next/server";
-import { authOptions } from "./utils/authOptions";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { UserRole } from "./types/common";
+import { forbidden, redirectToLogin, unauthorized } from "./utils/errors";
 
-type Rule = (req: NextRequest, session: any) => NextResponse | void;
-
-const redirectToLogin = (req: NextRequest) =>
-  NextResponse.redirect(new URL("/auth", req.url));
-
-// 1) قواعد مخصوص مسیرهای Admin
-const adminRules: Rule[] = [
-  (req, session) => {
-    if (!session) return redirectToLogin(req);
-  },
-  (req, session) => {
-    if (session?.user?.role !== "ADMIN") return redirectToLogin(req);
-  },
-];
-
-// 2) قواعد مخصوص مسیرهای Customer
-const customerRules: Rule[] = [
-  (req, session) => {
-    if (session?.user?.role !== "CUSTOMER") return redirectToLogin(req);
-  },
-];
-
-const secretaryRules: Rule[] = [
-  (req, session) => {
-    if (session?.user?.role !== "SECRETARY") return redirectToLogin(req);
-  },
-];
-
-// 3) قوانین امنیتی API ها (اختیاری ولی خوبه)
-const apiRules: Rule[] = [
-  (req, session) => {
-    // مثلا اگه بخوای فقط کاربران لاگین کرده API رو بخونن
-    if (!session)
-      return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
-  },
-  (req, session) => {
-    // مثال: برای API admin
-    if (req.nextUrl.pathname.startsWith("/api/admin")) {
-      if (session?.user?.role !== "ADMIN") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-    }
-  },
-];
-
-// 4) انتخاب rule بر اساس مسیر
-function getRulesForPath(pathname: string): Rule[] {
-  if (pathname.startsWith("/admin")) return adminRules;
-  if (pathname.startsWith("/secretary")) return secretaryRules;
-  if (pathname.startsWith("/customer")) return customerRules;
-  if (pathname.startsWith("/api/admin") || pathname.startsWith("/api/customer"))
-    return apiRules;
-
-  return [];
-}
-
-// 5) تابع اصلی proxy
-export async function proxy(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  const rules = getRulesForPath(pathname);
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-  for (const rule of rules) {
-    const result = rule(req, session);
-    if (result instanceof NextResponse) return result;
+  if (pathname.startsWith("/api")) {
+    if (!token) return unauthorized();
+
+    const role = token.role as UserRole;
+
+    if (pathname.startsWith("/api/admin") && role !== "ADMIN") {
+      return forbidden();
+    }
+
+    if (
+      pathname.startsWith("/api/secretary") &&
+      !["ADMIN", "SECRETARY"].includes(role)
+    ) {
+      return forbidden();
+    }
+
+    if (
+      pathname.startsWith("/api/customer") &&
+      !["ADMIN", "CUSTOMER"].includes(role)
+    ) {
+      return forbidden();
+    }
+
+    return NextResponse.next();
+  }
+
+  if (!token) return redirectToLogin(req);
+
+  const role = token.role as UserRole;
+
+  if (pathname.startsWith("/admin") && role !== "ADMIN") {
+    return redirectToLogin(req);
+  }
+
+  if (
+    pathname.startsWith("/secretary") &&
+    !["ADMIN", "SECRETARY"].includes(role)
+  ) {
+    return redirectToLogin(req);
+  }
+
+  if (
+    pathname.startsWith("/customer") &&
+    !["ADMIN", "CUSTOMER"].includes(role)
+  ) {
+    return redirectToLogin(req);
   }
 
   return NextResponse.next();
 }
 
-// 6) مجوز مسیرها
 export const config = {
   matcher: [
     "/admin/:path*",

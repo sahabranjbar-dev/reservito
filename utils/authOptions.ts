@@ -9,7 +9,6 @@ declare module "next-auth" {
     id: string;
     role: string;
     phone: string;
-    userId: string;
   }
   interface Session {
     user:
@@ -17,7 +16,6 @@ declare module "next-auth" {
           id: string;
           role: string;
           phone: string;
-          userId: string;
         } & DefaultSession["user"])
       | null;
   }
@@ -28,7 +26,6 @@ declare module "next-auth/jwt" {
     id: string;
     role: string;
     phone: string;
-    userId: string;
   }
 }
 
@@ -42,27 +39,18 @@ export const authOptions: AuthOptions = {
       },
 
       async authorize(credentials) {
-        if (!credentials?.phone || !credentials.code) {
-          throw new Error("شماره موبایل یا کد وارد نشده است.");
-        }
+        if (!credentials?.phone || !credentials.code) return null;
 
         const phone = convertToEnglishDigits(credentials.phone);
         const code = convertToEnglishDigits(credentials.code);
 
-        const otpEntry = await prisma.otpCode.findUnique({ where: { phone } });
-        if (!otpEntry) throw new Error("کد یافت نشد.");
+        const otp = await prisma.otpCode.findUnique({ where: { phone } });
+        if (!otp || otp.expiresAt < new Date()) return null;
 
-        // بررسی انقضا با expiresAt
-        const now = new Date();
-        if (now > otpEntry.expiresAt) {
-          await prisma.otpCode.delete({ where: { phone } });
-          throw new Error("کد منقضی شده است.");
-        }
+        const isValid = await bcrypt.compare(code, otp.codeHash);
+        if (!isValid) return null;
 
-        const isValid = await bcrypt.compare(code, otpEntry.codeHash);
-        if (!isValid) throw new Error("کد وارد شده صحیح نیست.");
-
-        await prisma.otpCode.delete({ where: { phone } });
+        await prisma.otpCode.deleteMany({ where: { phone } });
 
         const user = await prisma.user.upsert({
           where: { phone },
@@ -72,8 +60,7 @@ export const authOptions: AuthOptions = {
 
         return {
           id: user.id,
-          userId: user.id,
-          phone: user.phone ?? "",
+          phone: user.phone,
           role: user.role,
         };
       },
@@ -84,7 +71,6 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.userId = user.userId;
         token.phone = user.phone;
         token.role = user.role;
       }
@@ -93,7 +79,6 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
-        session.user.userId = token.userId;
         session.user.phone = token.phone;
         session.user.role = token.role;
       }
