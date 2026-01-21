@@ -1,0 +1,102 @@
+import { ROLE_LABELS_FA } from "@/constants/common";
+import { UserRole } from "@/types/common";
+import * as zod from "zod";
+
+// نقشه‌ی تبدیل ارقام فارسی و عربی به انگلیسی
+const FARSI_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+
+// تبدیل‌کننده‌ی واحد
+export const convertToEnglishDigits = (input: string): string => {
+  return input.replace(/[۰-۹٠-٩]/g, (char) => {
+    const fIndex = FARSI_DIGITS.indexOf(char);
+    if (fIndex !== -1) return String(fIndex);
+
+    const aIndex = ARABIC_DIGITS.indexOf(char);
+    if (aIndex !== -1) return String(aIndex);
+
+    return char;
+  });
+};
+
+// اسکیما با خوانایی بهتر
+export const mobileValidation = () =>
+  zod.object({
+    phone: zod
+      .string()
+      .trim()
+      .transform(convertToEnglishDigits)
+      .pipe(
+        zod
+          .string()
+          .min(1, "شماره موبایل الزامی است.")
+          .length(11, "شماره موبایل باید دقیقاً ۱۱ رقم باشد.")
+          .regex(/^09\d{9}$/, "شماره موبایل باید با ۰۹ شروع شود.")
+      ),
+  });
+
+export function formatPrice(value: string) {
+  if (!value) return "";
+  const number = Number(value.replace(/,/g, ""));
+  if (Number.isNaN(number)) return "";
+  return number.toLocaleString("fa-IR");
+}
+
+export function unFormatPrice(value: string) {
+  if (!value) return "";
+  return value.replace(/,/g, "");
+}
+
+export const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+export const getFilePreview = (file?: File | Blob | { publicUrl?: string }) => {
+  if (!file) return null;
+
+  // اگر از بک‌اند اومده
+  if ("publicUrl" in file && file.publicUrl) {
+    return file.publicUrl;
+  }
+
+  // اگر واقعاً File یا Blob است
+  if (file instanceof File || file instanceof Blob) {
+    return URL.createObjectURL(file);
+  }
+
+  return null;
+};
+
+export const mustBetween = (
+  min: number,
+  max: number,
+  fieldName = "این مقدار"
+) => {
+  return (value: number) => {
+    if (value < min || value > max) {
+      return `${fieldName} باید بین ${Number(min).toLocaleString(
+        "fa"
+      )} و ${Number(max).toLocaleString("fa")} باشد.`;
+    }
+    return true;
+  };
+};
+
+export function timeAgo(date: Date) {
+  const diff = Date.now() - new Date(date).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+
+  if (hours < 1) return "لحظاتی پیش";
+  if (hours < 24) return `${hours} ساعت پیش`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} روز پیش`;
+}
+
+export const getRoleFarsiLabel = (role: UserRole): string => {
+  return ROLE_LABELS_FA[role];
+};

@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * =======================
+ * USER & AUTH
+ * =======================
+ */
+
+model User {
+  id       String  @id @default(uuid())
+  fullName String?
+  phone    String  @unique
+  isActive Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  role                Roles         @default(CUSTOMER)
+  reservations        Reservation[]
+  createdReservations Reservation[] @relation("CreatedBy")
+  payments            Payment[]
+  wallet              Wallet?
+  auditLogs           AuditLog[]
+
+  @@index([phone])
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/**
+ * =======================
+ * SERVICES & SCHEDULING
+ * =======================
+ */
+
+model Service {
+  id       String  @id @default(uuid())
+  title    String
+  duration Int // minutes
+  price    Int?
+  isActive Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  reservations Reservation[]
+  timeSlots    TimeSlot[]
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model TimeSlot {
+  id          String    @id @default(uuid())
+  serviceId   String
+  startTime   DateTime
+  endTime     DateTime
+  isLocked    Boolean   @default(false)
+  lockedUntil DateTime?
+
+  service      Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@index([serviceId])
+  @@index([startTime, endTime])
+}
+
+/**
+ * =======================
+ * RESERVATION
+ * =======================
+ */
+
+model Reservation {
+  id          String            @id @default(uuid())
+  userId      String
+  serviceId   String
+  timeSlotId  String?
+  reservedAt  DateTime
+  status      ReservationStatus @default(PENDING)
+  source      ReservationSource
+  createdById String?
+  notes       String?
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  canceledAt DateTime?
+
+  user      User      @relation(fields: [userId], references: [id])
+  service   Service   @relation(fields: [serviceId], references: [id])
+  timeSlot  TimeSlot? @relation(fields: [timeSlotId], references: [id])
+  createdBy User?     @relation("CreatedBy", fields: [createdById], references: [id])
+  payment   Payment?
+
+  @@index([userId])
+  @@index([serviceId])
+  @@index([reservedAt])
+  @@index([status])
+}
+
+/**
+ * =======================
+ * PAYMENT & WALLET
+ * =======================
+ */
+
+model Payment {
+  id            String @id @default(cuid())
+  reservationId String @unique
+  userId        String
+
+  amount Decimal       @db.Decimal(10, 2)
+  method PaymentMethod
+  status PaymentStatus
+
+  authority     String?
+  refId         String?
+  failureReason String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  paidAt    DateTime?
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Wallet {
+  id      String  @id @default(uuid())
+  userId  String  @unique
+  balance Decimal @default(0) @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/**
+ * =======================
+ * OTP (SECURE)
+ * =======================
+ */
+
+model OtpCode {
+  phone     String   @id
+  codeHash  String
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+}
+
+/**
+ * =======================
+ * AUDIT LOG
+ * =======================
+ */
+
+model AuditLog {
+  id        String      @id @default(uuid())
+  userId    String?
+  action    AuditAction
+  entity    String
+  entityId  String?
+  ip        String?
+  userAgent String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+}
+
+/**
+ * =======================
+ * ENUMS
+ * =======================
+ */
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  DONE
+  CANCELED
+}
+
+enum ReservationSource {
+  ONLINE
+  WALK_IN
+  PHONE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMethod {
+  ONLINE
+  CASH
+  WALLET
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  PAYMENT
+}
+
+enum Roles {
+  ADMIN
+  SECRETARY
+  CUSTOMER
+}
