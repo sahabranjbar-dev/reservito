@@ -29,6 +29,11 @@ export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
  */
 export type WorkingHour = $Result.DefaultSelection<Prisma.$WorkingHourPayload>
 /**
+ * Model CalendarRule
+ * 
+ */
+export type CalendarRule = $Result.DefaultSelection<Prisma.$CalendarRulePayload>
+/**
  * Model Reservation
  * 
  */
@@ -58,7 +63,17 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * Enums
  */
 export namespace $Enums {
-  export const ReservationStatus: {
+  export const CalendarRuleType: {
+  DAY_OFF: 'DAY_OFF',
+  CUSTOM_DAY: 'CUSTOM_DAY',
+  RANGE_OFF: 'RANGE_OFF',
+  RANGE_CUSTOM: 'RANGE_CUSTOM'
+};
+
+export type CalendarRuleType = (typeof CalendarRuleType)[keyof typeof CalendarRuleType]
+
+
+export const ReservationStatus: {
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
   PAID: 'PAID',
@@ -117,6 +132,10 @@ export const Role: {
 export type Role = (typeof Role)[keyof typeof Role]
 
 }
+
+export type CalendarRuleType = $Enums.CalendarRuleType
+
+export const CalendarRuleType: typeof $Enums.CalendarRuleType
 
 export type ReservationStatus = $Enums.ReservationStatus
 
@@ -296,6 +315,16 @@ export class PrismaClient<
     * ```
     */
   get workingHour(): Prisma.WorkingHourDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.calendarRule`: Exposes CRUD operations for the **CalendarRule** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CalendarRules
+    * const calendarRules = await prisma.calendarRule.findMany()
+    * ```
+    */
+  get calendarRule(): Prisma.CalendarRuleDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.reservation`: Exposes CRUD operations for the **Reservation** model.
@@ -789,6 +818,7 @@ export namespace Prisma {
     User: 'User',
     Service: 'Service',
     WorkingHour: 'WorkingHour',
+    CalendarRule: 'CalendarRule',
     Reservation: 'Reservation',
     Payment: 'Payment',
     Wallet: 'Wallet',
@@ -812,7 +842,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "service" | "workingHour" | "reservation" | "payment" | "wallet" | "otpCode" | "auditLog"
+      modelProps: "user" | "service" | "workingHour" | "calendarRule" | "reservation" | "payment" | "wallet" | "otpCode" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1035,6 +1065,80 @@ export namespace Prisma {
           count: {
             args: Prisma.WorkingHourCountArgs<ExtArgs>
             result: $Utils.Optional<WorkingHourCountAggregateOutputType> | number
+          }
+        }
+      }
+      CalendarRule: {
+        payload: Prisma.$CalendarRulePayload<ExtArgs>
+        fields: Prisma.CalendarRuleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CalendarRuleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CalendarRuleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          findFirst: {
+            args: Prisma.CalendarRuleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CalendarRuleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          findMany: {
+            args: Prisma.CalendarRuleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>[]
+          }
+          create: {
+            args: Prisma.CalendarRuleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          createMany: {
+            args: Prisma.CalendarRuleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CalendarRuleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>[]
+          }
+          delete: {
+            args: Prisma.CalendarRuleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          update: {
+            args: Prisma.CalendarRuleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          deleteMany: {
+            args: Prisma.CalendarRuleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CalendarRuleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CalendarRuleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>[]
+          }
+          upsert: {
+            args: Prisma.CalendarRuleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarRulePayload>
+          }
+          aggregate: {
+            args: Prisma.CalendarRuleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCalendarRule>
+          }
+          groupBy: {
+            args: Prisma.CalendarRuleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CalendarRuleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CalendarRuleCountArgs<ExtArgs>
+            result: $Utils.Optional<CalendarRuleCountAggregateOutputType> | number
           }
         }
       }
@@ -1495,6 +1599,7 @@ export namespace Prisma {
     user?: UserOmit
     service?: ServiceOmit
     workingHour?: WorkingHourOmit
+    calendarRule?: CalendarRuleOmit
     reservation?: ReservationOmit
     payment?: PaymentOmit
     wallet?: WalletOmit
@@ -1654,11 +1759,13 @@ export namespace Prisma {
   export type ServiceCountOutputType = {
     reservations: number
     workingHours: number
+    calendarRules: number
   }
 
   export type ServiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reservations?: boolean | ServiceCountOutputTypeCountReservationsArgs
     workingHours?: boolean | ServiceCountOutputTypeCountWorkingHoursArgs
+    calendarRules?: boolean | ServiceCountOutputTypeCountCalendarRulesArgs
   }
 
   // Custom InputTypes
@@ -1684,6 +1791,13 @@ export namespace Prisma {
    */
   export type ServiceCountOutputTypeCountWorkingHoursArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkingHourWhereInput
+  }
+
+  /**
+   * ServiceCountOutputType without action
+   */
+  export type ServiceCountOutputTypeCountCalendarRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CalendarRuleWhereInput
   }
 
 
@@ -3166,6 +3280,7 @@ export namespace Prisma {
     deletedAt?: boolean
     reservations?: boolean | Service$reservationsArgs<ExtArgs>
     workingHours?: boolean | Service$workingHoursArgs<ExtArgs>
+    calendarRules?: boolean | Service$calendarRulesArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["service"]>
 
@@ -3206,6 +3321,7 @@ export namespace Prisma {
   export type ServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reservations?: boolean | Service$reservationsArgs<ExtArgs>
     workingHours?: boolean | Service$workingHoursArgs<ExtArgs>
+    calendarRules?: boolean | Service$calendarRulesArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3216,6 +3332,7 @@ export namespace Prisma {
     objects: {
       reservations: Prisma.$ReservationPayload<ExtArgs>[]
       workingHours: Prisma.$WorkingHourPayload<ExtArgs>[]
+      calendarRules: Prisma.$CalendarRulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3622,6 +3739,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     reservations<T extends Service$reservationsArgs<ExtArgs> = {}>(args?: Subset<T, Service$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workingHours<T extends Service$workingHoursArgs<ExtArgs> = {}>(args?: Subset<T, Service$workingHoursArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkingHourPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    calendarRules<T extends Service$calendarRulesArgs<ExtArgs> = {}>(args?: Subset<T, Service$calendarRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4095,6 +4213,30 @@ export namespace Prisma {
   }
 
   /**
+   * Service.calendarRules
+   */
+  export type Service$calendarRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    where?: CalendarRuleWhereInput
+    orderBy?: CalendarRuleOrderByWithRelationInput | CalendarRuleOrderByWithRelationInput[]
+    cursor?: CalendarRuleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CalendarRuleScalarFieldEnum | CalendarRuleScalarFieldEnum[]
+  }
+
+  /**
    * Service without action
    */
   export type ServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4140,7 +4282,9 @@ export namespace Prisma {
     startTime: string | null
     endTime: string | null
     isActive: boolean | null
+    englishTitle: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WorkingHourMaxAggregateOutputType = {
@@ -4150,7 +4294,9 @@ export namespace Prisma {
     startTime: string | null
     endTime: string | null
     isActive: boolean | null
+    englishTitle: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WorkingHourCountAggregateOutputType = {
@@ -4160,7 +4306,9 @@ export namespace Prisma {
     startTime: number
     endTime: number
     isActive: number
+    englishTitle: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -4180,7 +4328,9 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     isActive?: true
+    englishTitle?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type WorkingHourMaxAggregateInputType = {
@@ -4190,7 +4340,9 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     isActive?: true
+    englishTitle?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type WorkingHourCountAggregateInputType = {
@@ -4200,7 +4352,9 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     isActive?: true
+    englishTitle?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -4297,7 +4451,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive: boolean
+    englishTitle: string | null
     createdAt: Date
+    updatedAt: Date
     _count: WorkingHourCountAggregateOutputType | null
     _avg: WorkingHourAvgAggregateOutputType | null
     _sum: WorkingHourSumAggregateOutputType | null
@@ -4326,7 +4482,9 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     isActive?: boolean
+    englishTitle?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     service?: boolean | ServiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workingHour"]>
 
@@ -4337,7 +4495,9 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     isActive?: boolean
+    englishTitle?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     service?: boolean | ServiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workingHour"]>
 
@@ -4348,7 +4508,9 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     isActive?: boolean
+    englishTitle?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     service?: boolean | ServiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workingHour"]>
 
@@ -4359,10 +4521,12 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     isActive?: boolean
+    englishTitle?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type WorkingHourOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serviceId" | "weekday" | "startTime" | "endTime" | "isActive" | "createdAt", ExtArgs["result"]["workingHour"]>
+  export type WorkingHourOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serviceId" | "weekday" | "startTime" | "endTime" | "isActive" | "englishTitle" | "createdAt" | "updatedAt", ExtArgs["result"]["workingHour"]>
   export type WorkingHourInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     service?: boolean | ServiceDefaultArgs<ExtArgs>
   }
@@ -4385,7 +4549,9 @@ export namespace Prisma {
       startTime: string
       endTime: string
       isActive: boolean
+      englishTitle: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["workingHour"]>
     composites: {}
   }
@@ -4816,7 +4982,9 @@ export namespace Prisma {
     readonly startTime: FieldRef<"WorkingHour", 'String'>
     readonly endTime: FieldRef<"WorkingHour", 'String'>
     readonly isActive: FieldRef<"WorkingHour", 'Boolean'>
+    readonly englishTitle: FieldRef<"WorkingHour", 'String'>
     readonly createdAt: FieldRef<"WorkingHour", 'DateTime'>
+    readonly updatedAt: FieldRef<"WorkingHour", 'DateTime'>
   }
     
 
@@ -5228,6 +5396,1129 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: WorkingHourInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CalendarRule
+   */
+
+  export type AggregateCalendarRule = {
+    _count: CalendarRuleCountAggregateOutputType | null
+    _min: CalendarRuleMinAggregateOutputType | null
+    _max: CalendarRuleMaxAggregateOutputType | null
+  }
+
+  export type CalendarRuleMinAggregateOutputType = {
+    id: string | null
+    serviceId: string | null
+    type: $Enums.CalendarRuleType | null
+    startDate: Date | null
+    endDate: Date | null
+    startTime: string | null
+    endTime: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CalendarRuleMaxAggregateOutputType = {
+    id: string | null
+    serviceId: string | null
+    type: $Enums.CalendarRuleType | null
+    startDate: Date | null
+    endDate: Date | null
+    startTime: string | null
+    endTime: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CalendarRuleCountAggregateOutputType = {
+    id: number
+    serviceId: number
+    type: number
+    startDate: number
+    endDate: number
+    startTime: number
+    endTime: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CalendarRuleMinAggregateInputType = {
+    id?: true
+    serviceId?: true
+    type?: true
+    startDate?: true
+    endDate?: true
+    startTime?: true
+    endTime?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CalendarRuleMaxAggregateInputType = {
+    id?: true
+    serviceId?: true
+    type?: true
+    startDate?: true
+    endDate?: true
+    startTime?: true
+    endTime?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CalendarRuleCountAggregateInputType = {
+    id?: true
+    serviceId?: true
+    type?: true
+    startDate?: true
+    endDate?: true
+    startTime?: true
+    endTime?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CalendarRuleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CalendarRule to aggregate.
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarRules to fetch.
+     */
+    orderBy?: CalendarRuleOrderByWithRelationInput | CalendarRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CalendarRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CalendarRules
+    **/
+    _count?: true | CalendarRuleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CalendarRuleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CalendarRuleMaxAggregateInputType
+  }
+
+  export type GetCalendarRuleAggregateType<T extends CalendarRuleAggregateArgs> = {
+        [P in keyof T & keyof AggregateCalendarRule]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCalendarRule[P]>
+      : GetScalarType<T[P], AggregateCalendarRule[P]>
+  }
+
+
+
+
+  export type CalendarRuleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CalendarRuleWhereInput
+    orderBy?: CalendarRuleOrderByWithAggregationInput | CalendarRuleOrderByWithAggregationInput[]
+    by: CalendarRuleScalarFieldEnum[] | CalendarRuleScalarFieldEnum
+    having?: CalendarRuleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CalendarRuleCountAggregateInputType | true
+    _min?: CalendarRuleMinAggregateInputType
+    _max?: CalendarRuleMaxAggregateInputType
+  }
+
+  export type CalendarRuleGroupByOutputType = {
+    id: string
+    serviceId: string
+    type: $Enums.CalendarRuleType
+    startDate: Date
+    endDate: Date | null
+    startTime: string | null
+    endTime: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: CalendarRuleCountAggregateOutputType | null
+    _min: CalendarRuleMinAggregateOutputType | null
+    _max: CalendarRuleMaxAggregateOutputType | null
+  }
+
+  type GetCalendarRuleGroupByPayload<T extends CalendarRuleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CalendarRuleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CalendarRuleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CalendarRuleGroupByOutputType[P]>
+            : GetScalarType<T[P], CalendarRuleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CalendarRuleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serviceId?: boolean
+    type?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["calendarRule"]>
+
+  export type CalendarRuleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serviceId?: boolean
+    type?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["calendarRule"]>
+
+  export type CalendarRuleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serviceId?: boolean
+    type?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["calendarRule"]>
+
+  export type CalendarRuleSelectScalar = {
+    id?: boolean
+    serviceId?: boolean
+    type?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CalendarRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serviceId" | "type" | "startDate" | "endDate" | "startTime" | "endTime" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["calendarRule"]>
+  export type CalendarRuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+  export type CalendarRuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+  export type CalendarRuleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+
+  export type $CalendarRulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CalendarRule"
+    objects: {
+      service: Prisma.$ServicePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      serviceId: string
+      type: $Enums.CalendarRuleType
+      startDate: Date
+      endDate: Date | null
+      startTime: string | null
+      endTime: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["calendarRule"]>
+    composites: {}
+  }
+
+  type CalendarRuleGetPayload<S extends boolean | null | undefined | CalendarRuleDefaultArgs> = $Result.GetResult<Prisma.$CalendarRulePayload, S>
+
+  type CalendarRuleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CalendarRuleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CalendarRuleCountAggregateInputType | true
+    }
+
+  export interface CalendarRuleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CalendarRule'], meta: { name: 'CalendarRule' } }
+    /**
+     * Find zero or one CalendarRule that matches the filter.
+     * @param {CalendarRuleFindUniqueArgs} args - Arguments to find a CalendarRule
+     * @example
+     * // Get one CalendarRule
+     * const calendarRule = await prisma.calendarRule.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CalendarRuleFindUniqueArgs>(args: SelectSubset<T, CalendarRuleFindUniqueArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CalendarRule that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CalendarRuleFindUniqueOrThrowArgs} args - Arguments to find a CalendarRule
+     * @example
+     * // Get one CalendarRule
+     * const calendarRule = await prisma.calendarRule.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CalendarRuleFindUniqueOrThrowArgs>(args: SelectSubset<T, CalendarRuleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CalendarRule that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleFindFirstArgs} args - Arguments to find a CalendarRule
+     * @example
+     * // Get one CalendarRule
+     * const calendarRule = await prisma.calendarRule.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CalendarRuleFindFirstArgs>(args?: SelectSubset<T, CalendarRuleFindFirstArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CalendarRule that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleFindFirstOrThrowArgs} args - Arguments to find a CalendarRule
+     * @example
+     * // Get one CalendarRule
+     * const calendarRule = await prisma.calendarRule.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CalendarRuleFindFirstOrThrowArgs>(args?: SelectSubset<T, CalendarRuleFindFirstOrThrowArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CalendarRules that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CalendarRules
+     * const calendarRules = await prisma.calendarRule.findMany()
+     * 
+     * // Get first 10 CalendarRules
+     * const calendarRules = await prisma.calendarRule.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const calendarRuleWithIdOnly = await prisma.calendarRule.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CalendarRuleFindManyArgs>(args?: SelectSubset<T, CalendarRuleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CalendarRule.
+     * @param {CalendarRuleCreateArgs} args - Arguments to create a CalendarRule.
+     * @example
+     * // Create one CalendarRule
+     * const CalendarRule = await prisma.calendarRule.create({
+     *   data: {
+     *     // ... data to create a CalendarRule
+     *   }
+     * })
+     * 
+     */
+    create<T extends CalendarRuleCreateArgs>(args: SelectSubset<T, CalendarRuleCreateArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CalendarRules.
+     * @param {CalendarRuleCreateManyArgs} args - Arguments to create many CalendarRules.
+     * @example
+     * // Create many CalendarRules
+     * const calendarRule = await prisma.calendarRule.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CalendarRuleCreateManyArgs>(args?: SelectSubset<T, CalendarRuleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CalendarRules and returns the data saved in the database.
+     * @param {CalendarRuleCreateManyAndReturnArgs} args - Arguments to create many CalendarRules.
+     * @example
+     * // Create many CalendarRules
+     * const calendarRule = await prisma.calendarRule.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CalendarRules and only return the `id`
+     * const calendarRuleWithIdOnly = await prisma.calendarRule.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CalendarRuleCreateManyAndReturnArgs>(args?: SelectSubset<T, CalendarRuleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CalendarRule.
+     * @param {CalendarRuleDeleteArgs} args - Arguments to delete one CalendarRule.
+     * @example
+     * // Delete one CalendarRule
+     * const CalendarRule = await prisma.calendarRule.delete({
+     *   where: {
+     *     // ... filter to delete one CalendarRule
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CalendarRuleDeleteArgs>(args: SelectSubset<T, CalendarRuleDeleteArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CalendarRule.
+     * @param {CalendarRuleUpdateArgs} args - Arguments to update one CalendarRule.
+     * @example
+     * // Update one CalendarRule
+     * const calendarRule = await prisma.calendarRule.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CalendarRuleUpdateArgs>(args: SelectSubset<T, CalendarRuleUpdateArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CalendarRules.
+     * @param {CalendarRuleDeleteManyArgs} args - Arguments to filter CalendarRules to delete.
+     * @example
+     * // Delete a few CalendarRules
+     * const { count } = await prisma.calendarRule.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CalendarRuleDeleteManyArgs>(args?: SelectSubset<T, CalendarRuleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CalendarRules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CalendarRules
+     * const calendarRule = await prisma.calendarRule.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CalendarRuleUpdateManyArgs>(args: SelectSubset<T, CalendarRuleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CalendarRules and returns the data updated in the database.
+     * @param {CalendarRuleUpdateManyAndReturnArgs} args - Arguments to update many CalendarRules.
+     * @example
+     * // Update many CalendarRules
+     * const calendarRule = await prisma.calendarRule.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CalendarRules and only return the `id`
+     * const calendarRuleWithIdOnly = await prisma.calendarRule.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CalendarRuleUpdateManyAndReturnArgs>(args: SelectSubset<T, CalendarRuleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CalendarRule.
+     * @param {CalendarRuleUpsertArgs} args - Arguments to update or create a CalendarRule.
+     * @example
+     * // Update or create a CalendarRule
+     * const calendarRule = await prisma.calendarRule.upsert({
+     *   create: {
+     *     // ... data to create a CalendarRule
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CalendarRule we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CalendarRuleUpsertArgs>(args: SelectSubset<T, CalendarRuleUpsertArgs<ExtArgs>>): Prisma__CalendarRuleClient<$Result.GetResult<Prisma.$CalendarRulePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CalendarRules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleCountArgs} args - Arguments to filter CalendarRules to count.
+     * @example
+     * // Count the number of CalendarRules
+     * const count = await prisma.calendarRule.count({
+     *   where: {
+     *     // ... the filter for the CalendarRules we want to count
+     *   }
+     * })
+    **/
+    count<T extends CalendarRuleCountArgs>(
+      args?: Subset<T, CalendarRuleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CalendarRuleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CalendarRule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CalendarRuleAggregateArgs>(args: Subset<T, CalendarRuleAggregateArgs>): Prisma.PrismaPromise<GetCalendarRuleAggregateType<T>>
+
+    /**
+     * Group by CalendarRule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarRuleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CalendarRuleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CalendarRuleGroupByArgs['orderBy'] }
+        : { orderBy?: CalendarRuleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CalendarRuleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCalendarRuleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CalendarRule model
+   */
+  readonly fields: CalendarRuleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CalendarRule.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CalendarRuleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CalendarRule model
+   */
+  interface CalendarRuleFieldRefs {
+    readonly id: FieldRef<"CalendarRule", 'String'>
+    readonly serviceId: FieldRef<"CalendarRule", 'String'>
+    readonly type: FieldRef<"CalendarRule", 'CalendarRuleType'>
+    readonly startDate: FieldRef<"CalendarRule", 'DateTime'>
+    readonly endDate: FieldRef<"CalendarRule", 'DateTime'>
+    readonly startTime: FieldRef<"CalendarRule", 'String'>
+    readonly endTime: FieldRef<"CalendarRule", 'String'>
+    readonly isActive: FieldRef<"CalendarRule", 'Boolean'>
+    readonly createdAt: FieldRef<"CalendarRule", 'DateTime'>
+    readonly updatedAt: FieldRef<"CalendarRule", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CalendarRule findUnique
+   */
+  export type CalendarRuleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarRule to fetch.
+     */
+    where: CalendarRuleWhereUniqueInput
+  }
+
+  /**
+   * CalendarRule findUniqueOrThrow
+   */
+  export type CalendarRuleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarRule to fetch.
+     */
+    where: CalendarRuleWhereUniqueInput
+  }
+
+  /**
+   * CalendarRule findFirst
+   */
+  export type CalendarRuleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarRule to fetch.
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarRules to fetch.
+     */
+    orderBy?: CalendarRuleOrderByWithRelationInput | CalendarRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CalendarRules.
+     */
+    cursor?: CalendarRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CalendarRules.
+     */
+    distinct?: CalendarRuleScalarFieldEnum | CalendarRuleScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarRule findFirstOrThrow
+   */
+  export type CalendarRuleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarRule to fetch.
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarRules to fetch.
+     */
+    orderBy?: CalendarRuleOrderByWithRelationInput | CalendarRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CalendarRules.
+     */
+    cursor?: CalendarRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CalendarRules.
+     */
+    distinct?: CalendarRuleScalarFieldEnum | CalendarRuleScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarRule findMany
+   */
+  export type CalendarRuleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarRules to fetch.
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarRules to fetch.
+     */
+    orderBy?: CalendarRuleOrderByWithRelationInput | CalendarRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CalendarRules.
+     */
+    cursor?: CalendarRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarRules.
+     */
+    skip?: number
+    distinct?: CalendarRuleScalarFieldEnum | CalendarRuleScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarRule create
+   */
+  export type CalendarRuleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CalendarRule.
+     */
+    data: XOR<CalendarRuleCreateInput, CalendarRuleUncheckedCreateInput>
+  }
+
+  /**
+   * CalendarRule createMany
+   */
+  export type CalendarRuleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CalendarRules.
+     */
+    data: CalendarRuleCreateManyInput | CalendarRuleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CalendarRule createManyAndReturn
+   */
+  export type CalendarRuleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * The data used to create many CalendarRules.
+     */
+    data: CalendarRuleCreateManyInput | CalendarRuleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CalendarRule update
+   */
+  export type CalendarRuleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CalendarRule.
+     */
+    data: XOR<CalendarRuleUpdateInput, CalendarRuleUncheckedUpdateInput>
+    /**
+     * Choose, which CalendarRule to update.
+     */
+    where: CalendarRuleWhereUniqueInput
+  }
+
+  /**
+   * CalendarRule updateMany
+   */
+  export type CalendarRuleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CalendarRules.
+     */
+    data: XOR<CalendarRuleUpdateManyMutationInput, CalendarRuleUncheckedUpdateManyInput>
+    /**
+     * Filter which CalendarRules to update
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * Limit how many CalendarRules to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CalendarRule updateManyAndReturn
+   */
+  export type CalendarRuleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * The data used to update CalendarRules.
+     */
+    data: XOR<CalendarRuleUpdateManyMutationInput, CalendarRuleUncheckedUpdateManyInput>
+    /**
+     * Filter which CalendarRules to update
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * Limit how many CalendarRules to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CalendarRule upsert
+   */
+  export type CalendarRuleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CalendarRule to update in case it exists.
+     */
+    where: CalendarRuleWhereUniqueInput
+    /**
+     * In case the CalendarRule found by the `where` argument doesn't exist, create a new CalendarRule with this data.
+     */
+    create: XOR<CalendarRuleCreateInput, CalendarRuleUncheckedCreateInput>
+    /**
+     * In case the CalendarRule was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CalendarRuleUpdateInput, CalendarRuleUncheckedUpdateInput>
+  }
+
+  /**
+   * CalendarRule delete
+   */
+  export type CalendarRuleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
+    /**
+     * Filter which CalendarRule to delete.
+     */
+    where: CalendarRuleWhereUniqueInput
+  }
+
+  /**
+   * CalendarRule deleteMany
+   */
+  export type CalendarRuleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CalendarRules to delete
+     */
+    where?: CalendarRuleWhereInput
+    /**
+     * Limit how many CalendarRules to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CalendarRule without action
+   */
+  export type CalendarRuleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarRule
+     */
+    select?: CalendarRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarRule
+     */
+    omit?: CalendarRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarRuleInclude<ExtArgs> | null
   }
 
 
@@ -10929,10 +12220,28 @@ export namespace Prisma {
     startTime: 'startTime',
     endTime: 'endTime',
     isActive: 'isActive',
-    createdAt: 'createdAt'
+    englishTitle: 'englishTitle',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type WorkingHourScalarFieldEnum = (typeof WorkingHourScalarFieldEnum)[keyof typeof WorkingHourScalarFieldEnum]
+
+
+  export const CalendarRuleScalarFieldEnum: {
+    id: 'id',
+    serviceId: 'serviceId',
+    type: 'type',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CalendarRuleScalarFieldEnum = (typeof CalendarRuleScalarFieldEnum)[keyof typeof CalendarRuleScalarFieldEnum]
 
 
   export const ReservationScalarFieldEnum: {
@@ -11115,6 +12424,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CalendarRuleType'
+   */
+  export type EnumCalendarRuleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarRuleType'>
+    
+
+
+  /**
+   * Reference to a field of type 'CalendarRuleType[]'
+   */
+  export type ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarRuleType[]'>
     
 
 
@@ -11329,6 +12652,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Service"> | Date | string | null
     reservations?: ReservationListRelationFilter
     workingHours?: WorkingHourListRelationFilter
+    calendarRules?: CalendarRuleListRelationFilter
   }
 
   export type ServiceOrderByWithRelationInput = {
@@ -11342,6 +12666,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     reservations?: ReservationOrderByRelationAggregateInput
     workingHours?: WorkingHourOrderByRelationAggregateInput
+    calendarRules?: CalendarRuleOrderByRelationAggregateInput
   }
 
   export type ServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -11358,6 +12683,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Service"> | Date | string | null
     reservations?: ReservationListRelationFilter
     workingHours?: WorkingHourListRelationFilter
+    calendarRules?: CalendarRuleListRelationFilter
   }, "id">
 
   export type ServiceOrderByWithAggregationInput = {
@@ -11400,7 +12726,9 @@ export namespace Prisma {
     startTime?: StringFilter<"WorkingHour"> | string
     endTime?: StringFilter<"WorkingHour"> | string
     isActive?: BoolFilter<"WorkingHour"> | boolean
+    englishTitle?: StringNullableFilter<"WorkingHour"> | string | null
     createdAt?: DateTimeFilter<"WorkingHour"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkingHour"> | Date | string
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
   }
 
@@ -11411,7 +12739,9 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     isActive?: SortOrder
+    englishTitle?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     service?: ServiceOrderByWithRelationInput
   }
 
@@ -11425,7 +12755,9 @@ export namespace Prisma {
     startTime?: StringFilter<"WorkingHour"> | string
     endTime?: StringFilter<"WorkingHour"> | string
     isActive?: BoolFilter<"WorkingHour"> | boolean
+    englishTitle?: StringNullableFilter<"WorkingHour"> | string | null
     createdAt?: DateTimeFilter<"WorkingHour"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkingHour"> | Date | string
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
   }, "id">
 
@@ -11436,7 +12768,9 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     isActive?: SortOrder
+    englishTitle?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: WorkingHourCountOrderByAggregateInput
     _avg?: WorkingHourAvgOrderByAggregateInput
     _max?: WorkingHourMaxOrderByAggregateInput
@@ -11454,7 +12788,89 @@ export namespace Prisma {
     startTime?: StringWithAggregatesFilter<"WorkingHour"> | string
     endTime?: StringWithAggregatesFilter<"WorkingHour"> | string
     isActive?: BoolWithAggregatesFilter<"WorkingHour"> | boolean
+    englishTitle?: StringNullableWithAggregatesFilter<"WorkingHour"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"WorkingHour"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WorkingHour"> | Date | string
+  }
+
+  export type CalendarRuleWhereInput = {
+    AND?: CalendarRuleWhereInput | CalendarRuleWhereInput[]
+    OR?: CalendarRuleWhereInput[]
+    NOT?: CalendarRuleWhereInput | CalendarRuleWhereInput[]
+    id?: StringFilter<"CalendarRule"> | string
+    serviceId?: StringFilter<"CalendarRule"> | string
+    type?: EnumCalendarRuleTypeFilter<"CalendarRule"> | $Enums.CalendarRuleType
+    startDate?: DateTimeFilter<"CalendarRule"> | Date | string
+    endDate?: DateTimeNullableFilter<"CalendarRule"> | Date | string | null
+    startTime?: StringNullableFilter<"CalendarRule"> | string | null
+    endTime?: StringNullableFilter<"CalendarRule"> | string | null
+    isActive?: BoolFilter<"CalendarRule"> | boolean
+    createdAt?: DateTimeFilter<"CalendarRule"> | Date | string
+    updatedAt?: DateTimeFilter<"CalendarRule"> | Date | string
+    service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
+  }
+
+  export type CalendarRuleOrderByWithRelationInput = {
+    id?: SortOrder
+    serviceId?: SortOrder
+    type?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    startTime?: SortOrderInput | SortOrder
+    endTime?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    service?: ServiceOrderByWithRelationInput
+  }
+
+  export type CalendarRuleWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CalendarRuleWhereInput | CalendarRuleWhereInput[]
+    OR?: CalendarRuleWhereInput[]
+    NOT?: CalendarRuleWhereInput | CalendarRuleWhereInput[]
+    serviceId?: StringFilter<"CalendarRule"> | string
+    type?: EnumCalendarRuleTypeFilter<"CalendarRule"> | $Enums.CalendarRuleType
+    startDate?: DateTimeFilter<"CalendarRule"> | Date | string
+    endDate?: DateTimeNullableFilter<"CalendarRule"> | Date | string | null
+    startTime?: StringNullableFilter<"CalendarRule"> | string | null
+    endTime?: StringNullableFilter<"CalendarRule"> | string | null
+    isActive?: BoolFilter<"CalendarRule"> | boolean
+    createdAt?: DateTimeFilter<"CalendarRule"> | Date | string
+    updatedAt?: DateTimeFilter<"CalendarRule"> | Date | string
+    service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
+  }, "id">
+
+  export type CalendarRuleOrderByWithAggregationInput = {
+    id?: SortOrder
+    serviceId?: SortOrder
+    type?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrderInput | SortOrder
+    startTime?: SortOrderInput | SortOrder
+    endTime?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CalendarRuleCountOrderByAggregateInput
+    _max?: CalendarRuleMaxOrderByAggregateInput
+    _min?: CalendarRuleMinOrderByAggregateInput
+  }
+
+  export type CalendarRuleScalarWhereWithAggregatesInput = {
+    AND?: CalendarRuleScalarWhereWithAggregatesInput | CalendarRuleScalarWhereWithAggregatesInput[]
+    OR?: CalendarRuleScalarWhereWithAggregatesInput[]
+    NOT?: CalendarRuleScalarWhereWithAggregatesInput | CalendarRuleScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CalendarRule"> | string
+    serviceId?: StringWithAggregatesFilter<"CalendarRule"> | string
+    type?: EnumCalendarRuleTypeWithAggregatesFilter<"CalendarRule"> | $Enums.CalendarRuleType
+    startDate?: DateTimeWithAggregatesFilter<"CalendarRule"> | Date | string
+    endDate?: DateTimeNullableWithAggregatesFilter<"CalendarRule"> | Date | string | null
+    startTime?: StringNullableWithAggregatesFilter<"CalendarRule"> | string | null
+    endTime?: StringNullableWithAggregatesFilter<"CalendarRule"> | string | null
+    isActive?: BoolWithAggregatesFilter<"CalendarRule"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"CalendarRule"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CalendarRule"> | Date | string
   }
 
   export type ReservationWhereInput = {
@@ -11948,6 +13364,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     reservations?: ReservationCreateNestedManyWithoutServiceInput
     workingHours?: WorkingHourCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateInput = {
@@ -11961,6 +13378,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     reservations?: ReservationUncheckedCreateNestedManyWithoutServiceInput
     workingHours?: WorkingHourUncheckedCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUpdateInput = {
@@ -11974,6 +13392,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reservations?: ReservationUpdateManyWithoutServiceNestedInput
     workingHours?: WorkingHourUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateInput = {
@@ -11987,6 +13406,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reservations?: ReservationUncheckedUpdateManyWithoutServiceNestedInput
     workingHours?: WorkingHourUncheckedUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceCreateManyInput = {
@@ -12028,7 +13448,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     service: ServiceCreateNestedOneWithoutWorkingHoursInput
   }
 
@@ -12039,7 +13461,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkingHourUpdateInput = {
@@ -12048,7 +13472,9 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     service?: ServiceUpdateOneRequiredWithoutWorkingHoursNestedInput
   }
 
@@ -12059,7 +13485,9 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkingHourCreateManyInput = {
@@ -12069,7 +13497,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkingHourUpdateManyMutationInput = {
@@ -12078,7 +13508,9 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkingHourUncheckedUpdateManyInput = {
@@ -12088,7 +13520,99 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleCreateInput = {
+    id?: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    service: ServiceCreateNestedOneWithoutCalendarRulesInput
+  }
+
+  export type CalendarRuleUncheckedCreateInput = {
+    id?: string
+    serviceId: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CalendarRuleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    service?: ServiceUpdateOneRequiredWithoutCalendarRulesNestedInput
+  }
+
+  export type CalendarRuleUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serviceId?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleCreateManyInput = {
+    id?: string
+    serviceId: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CalendarRuleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serviceId?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReservationCreateInput = {
@@ -12748,7 +14272,17 @@ export namespace Prisma {
     none?: WorkingHourWhereInput
   }
 
+  export type CalendarRuleListRelationFilter = {
+    every?: CalendarRuleWhereInput
+    some?: CalendarRuleWhereInput
+    none?: CalendarRuleWhereInput
+  }
+
   export type WorkingHourOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CalendarRuleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12839,7 +14373,9 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     isActive?: SortOrder
+    englishTitle?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkingHourAvgOrderByAggregateInput = {
@@ -12853,7 +14389,9 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     isActive?: SortOrder
+    englishTitle?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkingHourMinOrderByAggregateInput = {
@@ -12863,11 +14401,69 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     isActive?: SortOrder
+    englishTitle?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkingHourSumOrderByAggregateInput = {
     weekday?: SortOrder
+  }
+
+  export type EnumCalendarRuleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CalendarRuleType | EnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCalendarRuleTypeFilter<$PrismaModel> | $Enums.CalendarRuleType
+  }
+
+  export type CalendarRuleCountOrderByAggregateInput = {
+    id?: SortOrder
+    serviceId?: SortOrder
+    type?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CalendarRuleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    serviceId?: SortOrder
+    type?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CalendarRuleMinOrderByAggregateInput = {
+    id?: SortOrder
+    serviceId?: SortOrder
+    type?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumCalendarRuleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CalendarRuleType | EnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCalendarRuleTypeWithAggregatesFilter<$PrismaModel> | $Enums.CalendarRuleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCalendarRuleTypeFilter<$PrismaModel>
+    _max?: NestedEnumCalendarRuleTypeFilter<$PrismaModel>
   }
 
   export type EnumReservationStatusFilter<$PrismaModel = never> = {
@@ -13475,6 +15071,13 @@ export namespace Prisma {
     connect?: WorkingHourWhereUniqueInput | WorkingHourWhereUniqueInput[]
   }
 
+  export type CalendarRuleCreateNestedManyWithoutServiceInput = {
+    create?: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput> | CalendarRuleCreateWithoutServiceInput[] | CalendarRuleUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: CalendarRuleCreateOrConnectWithoutServiceInput | CalendarRuleCreateOrConnectWithoutServiceInput[]
+    createMany?: CalendarRuleCreateManyServiceInputEnvelope
+    connect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+  }
+
   export type ReservationUncheckedCreateNestedManyWithoutServiceInput = {
     create?: XOR<ReservationCreateWithoutServiceInput, ReservationUncheckedCreateWithoutServiceInput> | ReservationCreateWithoutServiceInput[] | ReservationUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: ReservationCreateOrConnectWithoutServiceInput | ReservationCreateOrConnectWithoutServiceInput[]
@@ -13487,6 +15090,13 @@ export namespace Prisma {
     connectOrCreate?: WorkingHourCreateOrConnectWithoutServiceInput | WorkingHourCreateOrConnectWithoutServiceInput[]
     createMany?: WorkingHourCreateManyServiceInputEnvelope
     connect?: WorkingHourWhereUniqueInput | WorkingHourWhereUniqueInput[]
+  }
+
+  export type CalendarRuleUncheckedCreateNestedManyWithoutServiceInput = {
+    create?: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput> | CalendarRuleCreateWithoutServiceInput[] | CalendarRuleUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: CalendarRuleCreateOrConnectWithoutServiceInput | CalendarRuleCreateOrConnectWithoutServiceInput[]
+    createMany?: CalendarRuleCreateManyServiceInputEnvelope
+    connect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -13533,6 +15143,20 @@ export namespace Prisma {
     deleteMany?: WorkingHourScalarWhereInput | WorkingHourScalarWhereInput[]
   }
 
+  export type CalendarRuleUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput> | CalendarRuleCreateWithoutServiceInput[] | CalendarRuleUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: CalendarRuleCreateOrConnectWithoutServiceInput | CalendarRuleCreateOrConnectWithoutServiceInput[]
+    upsert?: CalendarRuleUpsertWithWhereUniqueWithoutServiceInput | CalendarRuleUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: CalendarRuleCreateManyServiceInputEnvelope
+    set?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    disconnect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    delete?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    connect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    update?: CalendarRuleUpdateWithWhereUniqueWithoutServiceInput | CalendarRuleUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: CalendarRuleUpdateManyWithWhereWithoutServiceInput | CalendarRuleUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: CalendarRuleScalarWhereInput | CalendarRuleScalarWhereInput[]
+  }
+
   export type ReservationUncheckedUpdateManyWithoutServiceNestedInput = {
     create?: XOR<ReservationCreateWithoutServiceInput, ReservationUncheckedCreateWithoutServiceInput> | ReservationCreateWithoutServiceInput[] | ReservationUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: ReservationCreateOrConnectWithoutServiceInput | ReservationCreateOrConnectWithoutServiceInput[]
@@ -13561,6 +15185,20 @@ export namespace Prisma {
     deleteMany?: WorkingHourScalarWhereInput | WorkingHourScalarWhereInput[]
   }
 
+  export type CalendarRuleUncheckedUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput> | CalendarRuleCreateWithoutServiceInput[] | CalendarRuleUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: CalendarRuleCreateOrConnectWithoutServiceInput | CalendarRuleCreateOrConnectWithoutServiceInput[]
+    upsert?: CalendarRuleUpsertWithWhereUniqueWithoutServiceInput | CalendarRuleUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: CalendarRuleCreateManyServiceInputEnvelope
+    set?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    disconnect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    delete?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    connect?: CalendarRuleWhereUniqueInput | CalendarRuleWhereUniqueInput[]
+    update?: CalendarRuleUpdateWithWhereUniqueWithoutServiceInput | CalendarRuleUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: CalendarRuleUpdateManyWithWhereWithoutServiceInput | CalendarRuleUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: CalendarRuleScalarWhereInput | CalendarRuleScalarWhereInput[]
+  }
+
   export type ServiceCreateNestedOneWithoutWorkingHoursInput = {
     create?: XOR<ServiceCreateWithoutWorkingHoursInput, ServiceUncheckedCreateWithoutWorkingHoursInput>
     connectOrCreate?: ServiceCreateOrConnectWithoutWorkingHoursInput
@@ -13573,6 +15211,24 @@ export namespace Prisma {
     upsert?: ServiceUpsertWithoutWorkingHoursInput
     connect?: ServiceWhereUniqueInput
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutWorkingHoursInput, ServiceUpdateWithoutWorkingHoursInput>, ServiceUncheckedUpdateWithoutWorkingHoursInput>
+  }
+
+  export type ServiceCreateNestedOneWithoutCalendarRulesInput = {
+    create?: XOR<ServiceCreateWithoutCalendarRulesInput, ServiceUncheckedCreateWithoutCalendarRulesInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutCalendarRulesInput
+    connect?: ServiceWhereUniqueInput
+  }
+
+  export type EnumCalendarRuleTypeFieldUpdateOperationsInput = {
+    set?: $Enums.CalendarRuleType
+  }
+
+  export type ServiceUpdateOneRequiredWithoutCalendarRulesNestedInput = {
+    create?: XOR<ServiceCreateWithoutCalendarRulesInput, ServiceUncheckedCreateWithoutCalendarRulesInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutCalendarRulesInput
+    upsert?: ServiceUpsertWithoutCalendarRulesInput
+    connect?: ServiceWhereUniqueInput
+    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutCalendarRulesInput, ServiceUpdateWithoutCalendarRulesInput>, ServiceUncheckedUpdateWithoutCalendarRulesInput>
   }
 
   export type UserCreateNestedOneWithoutReservationsInput = {
@@ -13965,6 +15621,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumCalendarRuleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CalendarRuleType | EnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCalendarRuleTypeFilter<$PrismaModel> | $Enums.CalendarRuleType
+  }
+
+  export type NestedEnumCalendarRuleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CalendarRuleType | EnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CalendarRuleType[] | ListEnumCalendarRuleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCalendarRuleTypeWithAggregatesFilter<$PrismaModel> | $Enums.CalendarRuleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCalendarRuleTypeFilter<$PrismaModel>
+    _max?: NestedEnumCalendarRuleTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumReservationStatusFilter<$PrismaModel = never> = {
@@ -14460,7 +16133,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkingHourUncheckedCreateWithoutServiceInput = {
@@ -14469,7 +16144,9 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkingHourCreateOrConnectWithoutServiceInput = {
@@ -14479,6 +16156,40 @@ export namespace Prisma {
 
   export type WorkingHourCreateManyServiceInputEnvelope = {
     data: WorkingHourCreateManyServiceInput | WorkingHourCreateManyServiceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CalendarRuleCreateWithoutServiceInput = {
+    id?: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CalendarRuleUncheckedCreateWithoutServiceInput = {
+    id?: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CalendarRuleCreateOrConnectWithoutServiceInput = {
+    where: CalendarRuleWhereUniqueInput
+    create: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput>
+  }
+
+  export type CalendarRuleCreateManyServiceInputEnvelope = {
+    data: CalendarRuleCreateManyServiceInput | CalendarRuleCreateManyServiceInput[]
     skipDuplicates?: boolean
   }
 
@@ -14524,7 +16235,41 @@ export namespace Prisma {
     startTime?: StringFilter<"WorkingHour"> | string
     endTime?: StringFilter<"WorkingHour"> | string
     isActive?: BoolFilter<"WorkingHour"> | boolean
+    englishTitle?: StringNullableFilter<"WorkingHour"> | string | null
     createdAt?: DateTimeFilter<"WorkingHour"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkingHour"> | Date | string
+  }
+
+  export type CalendarRuleUpsertWithWhereUniqueWithoutServiceInput = {
+    where: CalendarRuleWhereUniqueInput
+    update: XOR<CalendarRuleUpdateWithoutServiceInput, CalendarRuleUncheckedUpdateWithoutServiceInput>
+    create: XOR<CalendarRuleCreateWithoutServiceInput, CalendarRuleUncheckedCreateWithoutServiceInput>
+  }
+
+  export type CalendarRuleUpdateWithWhereUniqueWithoutServiceInput = {
+    where: CalendarRuleWhereUniqueInput
+    data: XOR<CalendarRuleUpdateWithoutServiceInput, CalendarRuleUncheckedUpdateWithoutServiceInput>
+  }
+
+  export type CalendarRuleUpdateManyWithWhereWithoutServiceInput = {
+    where: CalendarRuleScalarWhereInput
+    data: XOR<CalendarRuleUpdateManyMutationInput, CalendarRuleUncheckedUpdateManyWithoutServiceInput>
+  }
+
+  export type CalendarRuleScalarWhereInput = {
+    AND?: CalendarRuleScalarWhereInput | CalendarRuleScalarWhereInput[]
+    OR?: CalendarRuleScalarWhereInput[]
+    NOT?: CalendarRuleScalarWhereInput | CalendarRuleScalarWhereInput[]
+    id?: StringFilter<"CalendarRule"> | string
+    serviceId?: StringFilter<"CalendarRule"> | string
+    type?: EnumCalendarRuleTypeFilter<"CalendarRule"> | $Enums.CalendarRuleType
+    startDate?: DateTimeFilter<"CalendarRule"> | Date | string
+    endDate?: DateTimeNullableFilter<"CalendarRule"> | Date | string | null
+    startTime?: StringNullableFilter<"CalendarRule"> | string | null
+    endTime?: StringNullableFilter<"CalendarRule"> | string | null
+    isActive?: BoolFilter<"CalendarRule"> | boolean
+    createdAt?: DateTimeFilter<"CalendarRule"> | Date | string
+    updatedAt?: DateTimeFilter<"CalendarRule"> | Date | string
   }
 
   export type ServiceCreateWithoutWorkingHoursInput = {
@@ -14537,6 +16282,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     reservations?: ReservationCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutWorkingHoursInput = {
@@ -14549,6 +16295,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     reservations?: ReservationUncheckedCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutWorkingHoursInput = {
@@ -14577,6 +16324,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reservations?: ReservationUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutWorkingHoursInput = {
@@ -14589,6 +16337,75 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reservations?: ReservationUncheckedUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceCreateWithoutCalendarRulesInput = {
+    id?: string
+    title: string
+    duration: number
+    price?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    reservations?: ReservationCreateNestedManyWithoutServiceInput
+    workingHours?: WorkingHourCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUncheckedCreateWithoutCalendarRulesInput = {
+    id?: string
+    title: string
+    duration: number
+    price?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    reservations?: ReservationUncheckedCreateNestedManyWithoutServiceInput
+    workingHours?: WorkingHourUncheckedCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceCreateOrConnectWithoutCalendarRulesInput = {
+    where: ServiceWhereUniqueInput
+    create: XOR<ServiceCreateWithoutCalendarRulesInput, ServiceUncheckedCreateWithoutCalendarRulesInput>
+  }
+
+  export type ServiceUpsertWithoutCalendarRulesInput = {
+    update: XOR<ServiceUpdateWithoutCalendarRulesInput, ServiceUncheckedUpdateWithoutCalendarRulesInput>
+    create: XOR<ServiceCreateWithoutCalendarRulesInput, ServiceUncheckedCreateWithoutCalendarRulesInput>
+    where?: ServiceWhereInput
+  }
+
+  export type ServiceUpdateToOneWithWhereWithoutCalendarRulesInput = {
+    where?: ServiceWhereInput
+    data: XOR<ServiceUpdateWithoutCalendarRulesInput, ServiceUncheckedUpdateWithoutCalendarRulesInput>
+  }
+
+  export type ServiceUpdateWithoutCalendarRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    duration?: IntFieldUpdateOperationsInput | number
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservations?: ReservationUpdateManyWithoutServiceNestedInput
+    workingHours?: WorkingHourUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateWithoutCalendarRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    duration?: IntFieldUpdateOperationsInput | number
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservations?: ReservationUncheckedUpdateManyWithoutServiceNestedInput
+    workingHours?: WorkingHourUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type UserCreateWithoutReservationsInput = {
@@ -14636,6 +16453,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workingHours?: WorkingHourCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutReservationsInput = {
@@ -14648,6 +16466,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workingHours?: WorkingHourUncheckedCreateNestedManyWithoutServiceInput
+    calendarRules?: CalendarRuleUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutReservationsInput = {
@@ -14792,6 +16611,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workingHours?: WorkingHourUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutReservationsInput = {
@@ -14804,6 +16624,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workingHours?: WorkingHourUncheckedUpdateManyWithoutServiceNestedInput
+    calendarRules?: CalendarRuleUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type UserUpsertWithoutCreatedReservationsInput = {
@@ -15407,7 +17228,21 @@ export namespace Prisma {
     startTime: string
     endTime: string
     isActive?: boolean
+    englishTitle?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CalendarRuleCreateManyServiceInput = {
+    id?: string
+    type: $Enums.CalendarRuleType
+    startDate: Date | string
+    endDate?: Date | string | null
+    startTime?: string | null
+    endTime?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ReservationUpdateWithoutServiceInput = {
@@ -15460,7 +17295,9 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkingHourUncheckedUpdateWithoutServiceInput = {
@@ -15469,7 +17306,9 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkingHourUncheckedUpdateManyWithoutServiceInput = {
@@ -15478,7 +17317,45 @@ export namespace Prisma {
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    englishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleUncheckedUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarRuleUncheckedUpdateManyWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumCalendarRuleTypeFieldUpdateOperationsInput | $Enums.CalendarRuleType
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentCreateManyReservationInput = {

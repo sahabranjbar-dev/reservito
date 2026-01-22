@@ -1,5 +1,5 @@
 import { ROLE_LABELS_FA } from "@/constants/common";
-import { UserRole } from "@/types/common";
+import { TimeSlot, UserRole } from "@/types/common";
 import * as zod from "zod";
 
 // نقشه‌ی تبدیل ارقام فارسی و عربی به انگلیسی
@@ -100,3 +100,46 @@ export function timeAgo(date: Date) {
 export const getRoleFarsiLabel = (role: UserRole): string => {
   return ROLE_LABELS_FA[role];
 };
+
+export function combineDateAndTime(date: Date, time: string) {
+  const [h, m] = time.split(":").map(Number);
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+export function calculateAvailableSlots(params: {
+  date: Date;
+  workingHour: {
+    startTime: string;
+    endTime: string;
+  };
+  reservations: { startAt: Date; endAt: Date }[];
+  duration: number;
+}): TimeSlot[] {
+  const { date, workingHour, reservations, duration } = params;
+
+  const dayStart = combineDateAndTime(date, workingHour.startTime);
+  const dayEnd = combineDateAndTime(date, workingHour.endTime);
+
+  const slots: TimeSlot[] = [];
+
+  let cursor = new Date(dayStart);
+
+  while (cursor.getTime() + duration * 60000 <= dayEnd.getTime()) {
+    const slotStart = new Date(cursor);
+    const slotEnd = new Date(cursor.getTime() + duration * 60000);
+
+    const hasConflict = reservations.some((r) => {
+      return slotStart < r.endAt && slotEnd > r.startAt;
+    });
+
+    if (!hasConflict) {
+      slots.push({ startAt: slotStart, endAt: slotEnd });
+    }
+
+    cursor = new Date(cursor.getTime() + duration * 60000);
+  }
+
+  return slots;
+}

@@ -33,11 +33,7 @@ const VerifyCodeForm = ({
       onLoginSuccess?.(data);
       if (!pathname.startsWith("/auth")) return;
       const session = await getSession();
-      if (session?.user?.role === "ADMIN") {
-        router.push("/admin");
-      } else if (session?.user?.role === "USER") {
-        router.push("/customer");
-      }
+      router.push("/" + session?.user?.role.trim().toLowerCase());
     } else {
       toast.error(data?.error);
     }

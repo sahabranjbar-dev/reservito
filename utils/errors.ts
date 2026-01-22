@@ -1,6 +1,6 @@
 "use server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const ServerError = async () => {
   return NextResponse.json(
@@ -8,12 +8,3 @@ export const ServerError = async () => {
     { status: 500 }
   );
 };
-
-export const redirectToLogin = (req: NextRequest) =>
-  NextResponse.redirect(new URL("/auth", req.url));
-
-export const unauthorized = () =>
-  NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
-
-export const forbidden = () =>
-  NextResponse.json({ error: "Forbidden" }, { status: 403 });

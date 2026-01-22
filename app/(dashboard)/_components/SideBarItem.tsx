@@ -33,8 +33,9 @@ type SidebarItem = {
 const secretarySideBarItem: SidebarItem[] = [
   { title: "داشبورد", url: "/", icon: Home },
   { title: "کاربران", url: "/users", icon: Home },
-  { title: "سفارشات کاربران", url: "/users-reservations", icon: Home },
+  { title: "رزرو‌های کاربران", url: "/users-reservations", icon: Home },
   { title: "تنظیمات", url: "/settings", icon: Settings },
+  { title: "خدمات", url: "/services", icon: Users },
 ];
 
 const customerSideBarItem: SidebarItem[] = [
@@ -46,32 +47,10 @@ const customerSideBarItem: SidebarItem[] = [
 const adminSideBarItem: SidebarItem[] = [
   { title: "داشبورد", url: "/", icon: Home },
   { title: "کاربران", url: "/users", icon: Users },
-  { title: "پیام‌ها", url: "/message", icon: Inbox },
-  { title: "محصولات", url: "/products", icon: Store },
-  {
-    title: "مقالات",
-    icon: Rss,
-    children: [
-      { title: "لیست مقالات", url: "/articles" },
-      { title: "دسته‌بندی مقاله", url: "/articles/categories" },
-      { title: "تگ‌های مقاله", url: "/articles/tags" },
-    ],
-  },
-  { title: "برند‌ها", url: "/brands", icon: Tag },
-  { title: "کد تخفیف", url: "/coupon-code", icon: Tag },
-  { title: "دسته‌بندی‌ها", url: "/categories", icon: ChartColumnStacked },
-  { title: "سفارش‌ها", url: "/orders", icon: ShoppingCart },
+  { title: "خدمات", url: "/services", icon: Users },
+  { title: "رزرو‌های کاربران", url: "/users-reservations", icon: Home },
+  { title: "پیام‌ها", url: "/messages", icon: Inbox },
   { title: "نقش‌ها و دسترسی‌ها", url: "/roles", icon: ShieldBan },
-  { title: "جشنواره‌ها و کمپین‌ها", url: "/campaign", icon: ShieldBan },
-  {
-    title: "خودرو",
-    icon: ShieldBan,
-    children: [
-      { title: "برند خودرو", url: "/car/brands" },
-      { title: "مدل خودرو", url: "/car/models" },
-      { title: "سال خودرو", url: "/car/years" },
-    ],
-  },
   { title: "تنظیمات", url: "/settings", icon: Settings },
 ];
 
@@ -107,14 +86,17 @@ const SidebarNode = ({ item, level }: SidebarNodeProps) => {
   return (
     <SidebarMenuItem>
       {item.url ? (
-        <SidebarMenuButton asChild>
+        <SidebarMenuButton asChild className="border mt-2">
           <Link href={`/${getRole()}${item.url}`}>
             {Icon && <Icon />}
             <span>{item.title}</span>
           </Link>
         </SidebarMenuButton>
       ) : (
-        <SidebarMenuButton onClick={() => setOpen((p) => !p)}>
+        <SidebarMenuButton
+          onClick={() => setOpen((p) => !p)}
+          className="border mt-2"
+        >
           {hasChildren && (
             <ChevronDown
               className={`transition ${open ? "rotate-180" : ""}`}
@@ -139,16 +121,16 @@ export default function SideBarItem() {
   const pathname = usePathname();
 
   const getItems = () => {
-    switch (pathname) {
-      case "/admin":
-        return adminSideBarItem;
-      case "/secretary":
-        return secretarySideBarItem;
-      case "/customer":
-        return customerSideBarItem;
-      default:
-        return [];
+    if (pathname.startsWith("/admin")) {
+      return adminSideBarItem;
     }
+    if (pathname.startsWith("/secretary")) {
+      return secretarySideBarItem;
+    }
+    if (pathname.startsWith("/customer")) {
+      return customerSideBarItem;
+    }
+    return [];
   };
 
   const items = getItems();

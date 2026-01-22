@@ -149,7 +149,22 @@ exports.Prisma.WorkingHourScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   isActive: 'isActive',
-  createdAt: 'createdAt'
+  englishTitle: 'englishTitle',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CalendarRuleScalarFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  type: 'type',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ReservationScalarFieldEnum = {
@@ -242,6 +257,13 @@ exports.Role = exports.$Enums.Role = {
   CUSTOMER: 'CUSTOMER'
 };
 
+exports.CalendarRuleType = exports.$Enums.CalendarRuleType = {
+  DAY_OFF: 'DAY_OFF',
+  CUSTOM_DAY: 'CUSTOM_DAY',
+  RANGE_OFF: 'RANGE_OFF',
+  RANGE_CUSTOM: 'RANGE_CUSTOM'
+};
+
 exports.ReservationStatus = exports.$Enums.ReservationStatus = {
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
@@ -281,6 +303,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Service: 'Service',
   WorkingHour: 'WorkingHour',
+  CalendarRule: 'CalendarRule',
   Reservation: 'Reservation',
   Payment: 'Payment',
   Wallet: 'Wallet',

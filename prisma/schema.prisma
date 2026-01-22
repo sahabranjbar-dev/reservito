@@ -34,18 +34,19 @@ model User {
 
 
 model Service {
-  id                            String         @id @default(uuid())
-  title                         String
-  duration  Int      // minutes
-  price                         Int?
-  isActive                      Boolean        @default(true)
+  id                                       String          @id @default(uuid())
+  title                                    String
+  duration      Int             // minutes
+  price                                    Int?
+  isActive                                 Boolean         @default(true)
 
-  createdAt                     DateTime       @default(now())
-  updatedAt                     DateTime       @updatedAt
-  deletedAt                     DateTime?
+  createdAt                                DateTime        @default(now())
+  updatedAt                                DateTime        @updatedAt
+  deletedAt                                DateTime?
 
-  reservations                  Reservation[]
-  workingHours                  WorkingHour[]
+  reservations                             Reservation[]
+  workingHours                             WorkingHour[]
+  calendarRules                            CalendarRule[]
 
   @@index([isActive])
   @@index([deletedAt])
@@ -59,13 +60,45 @@ model WorkingHour {
   startTime String   // "09:00"
   endTime   String   // "17:00"
   isActive                                          Boolean   @default(true)
-
+  englishTitle                                      String?
   createdAt                                         DateTime  @default(now())
+  updatedAt                                         DateTime  @updatedAt
 
   service                                           Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@index([serviceId])
   @@index([weekday])
+}
+
+
+enum CalendarRuleType {
+  DAY_OFF        // تعطیلی یک روز
+  CUSTOM_DAY     // تغییر ساعت یک روز
+  RANGE_OFF      // تعطیلی بازه
+  RANGE_CUSTOM   // تغییر ساعت بازه
+}
+
+model CalendarRule {
+  id                                                                              String            @id @default(uuid())
+  serviceId                                                                       String
+  type                                                                            CalendarRuleType
+
+  startDate DateTime         // تاریخ شروع (یا تاریخ روز برای DAY_OFF/CUSTOM_DAY)
+  endDate   DateTime?        // فقط برای RANGE_*
+  startTime String?          // فقط برای CUSTOM_*
+  endTime   String?          // فقط برای CUSTOM_*
+
+  isActive                                                                        Boolean           @default(true)
+
+  createdAt                                                                       DateTime          @default(now())
+  updatedAt                                                                       DateTime          @updatedAt
+
+  service                                                                         Service          @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([type])
+  @@index([startDate])
+  @@index([endDate])
 }
 
 
@@ -99,9 +132,6 @@ model Reservation {
   @@index([status])
 }
 
-/* =======================
-   PAYMENT & WALLET
-======================= */
 
 model Payment {
   id            String         @id @default(cuid())
@@ -140,9 +170,6 @@ model Wallet {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-/* =======================
-   OTP (SECURE)
-======================= */
 
 model OtpCode {
   phone     String    @id
@@ -154,10 +181,6 @@ model OtpCode {
 
   @@index([expiresAt])
 }
-
-/* =======================
-   AUDIT LOG
-======================= */
 
 model AuditLog {
   id        String       @id @default(uuid())
@@ -178,9 +201,6 @@ model AuditLog {
   @@index([createdAt])
 }
 
-/* =======================
-   ENUMS
-======================= */
 
 enum ReservationStatus {
   PENDING

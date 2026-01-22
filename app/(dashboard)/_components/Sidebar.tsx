@@ -32,10 +32,12 @@ const SidebarDashboard = async () => {
 
   return (
     <Sidebar side="right">
-      <SidebarHeader />
-      <SidebarContent>
+      <SidebarHeader className="bg-primary text-gray-100" />
+      <SidebarContent className="bg-primary text-white">
         <SidebarGroup>
-          <SidebarGroupLabel>داشبورد {role}</SidebarGroupLabel>
+          <SidebarGroupLabel className="bg-sidebar-primary text-white font-semibold text-lg m-4">
+            داشبورد {role}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SideBarItem />
           </SidebarGroupContent>
