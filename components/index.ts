@@ -15,6 +15,9 @@ import DatePicker from "./DatePicker/DatePicker";
 import FormButtons from "./FormButtons/FormButtons";
 import Combobox from "./Combobox/Combobox";
 import ActionsButtons from "./ActionsButtons/ActionsButtons";
+import MultiselectCombobox from "./MultiselectCombobox/MultiselectCombobox";
+import SwitchContainer from "./SwitchContainer/SwitchContainer";
+import SwitchComponent from "./SwitchComponent/SwitchComponent";
 
 export {
   Header,
@@ -24,6 +27,9 @@ export {
   DatePicker,
   Combobox,
   ActionsButtons,
+  MultiselectCombobox,
+  SwitchContainer,
+  SwitchComponent,
   FormButtons,
   CheckboxContainer,
   Footer,

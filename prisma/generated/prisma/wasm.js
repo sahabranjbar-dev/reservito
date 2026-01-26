@@ -122,88 +122,161 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  fullName: 'fullName',
   phone: 'phone',
-  role: 'role',
+  email: 'email',
+  username: 'username',
+  passwordHash: 'passwordHash',
+  fullName: 'fullName',
+  avatar: 'avatar',
+  isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.UserRoleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  role: 'role'
+};
+
+exports.Prisma.BusinessScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  businessName: 'businessName',
+  ownerName: 'ownerName',
+  description: 'description',
+  logo: 'logo',
+  banner: 'banner',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  timezone: 'timezone',
+  allowOnlinePayment: 'allowOnlinePayment',
+  allowOfflinePayment: 'allowOfflinePayment',
+  commissionRate: 'commissionRate',
+  ownerId: 'ownerId',
+  identifier: 'identifier',
+  isActive: 'isActive',
+  businessType: 'businessType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.StaffMemberScalarFieldEnum = {
+  id: 'id',
+  businessId: 'businessId',
+  userId: 'userId',
+  name: 'name',
+  avatar: 'avatar',
+  phone: 'phone',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.StaffAvailabilityScalarFieldEnum = {
+  id: 'id',
+  staffId: 'staffId',
+  dayOfWeek: 'dayOfWeek',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isClosed: 'isClosed'
+};
+
+exports.Prisma.StaffExceptionScalarFieldEnum = {
+  id: 'id',
+  staffId: 'staffId',
+  date: 'date',
+  isClosed: 'isClosed'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
   id: 'id',
-  title: 'title',
-  duration: 'duration',
+  name: 'name',
+  description: 'description',
   price: 'price',
+  duration: 'duration',
+  capacity: 'capacity',
+  depositRequired: 'depositRequired',
+  depositAmount: 'depositAmount',
   isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  businessId: 'businessId'
 };
 
-exports.Prisma.WorkingHourScalarFieldEnum = {
+exports.Prisma.ServiceStaffScalarFieldEnum = {
   id: 'id',
   serviceId: 'serviceId',
-  weekday: 'weekday',
+  staffId: 'staffId',
+  overridePrice: 'overridePrice'
+};
+
+exports.Prisma.BookingScalarFieldEnum = {
+  id: 'id',
+  businessId: 'businessId',
+  customerId: 'customerId',
+  serviceId: 'serviceId',
+  staffId: 'staffId',
   startTime: 'startTime',
   endTime: 'endTime',
-  isActive: 'isActive',
-  englishTitle: 'englishTitle',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CalendarRuleScalarFieldEnum = {
-  id: 'id',
-  serviceId: 'serviceId',
-  type: 'type',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ReservationScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  serviceId: 'serviceId',
-  startAt: 'startAt',
-  endAt: 'endAt',
   status: 'status',
-  source: 'source',
-  notes: 'notes',
-  createdById: 'createdById',
+  totalPrice: 'totalPrice',
+  customerNotes: 'customerNotes',
+  internalNotes: 'internalNotes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  canceledAt: 'canceledAt'
+  deletedAt: 'deletedAt',
+  createdById: 'createdById'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  reservationId: 'reservationId',
-  orderId: 'orderId',
-  amount: 'amount',
+  businessId: 'businessId',
+  bookingId: 'bookingId',
   method: 'method',
+  amount: 'amount',
   status: 'status',
   authority: 'authority',
   refId: 'refId',
-  failureReason: 'failureReason',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  paidAt: 'paidAt'
-};
-
-exports.Prisma.WalletScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  balance: 'balance',
+  gatewayName: 'gatewayName',
+  verifiedById: 'verifiedById',
+  verifiedAt: 'verifiedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommissionScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  grossAmount: 'grossAmount',
+  platformFee: 'platformFee',
+  businessShare: 'businessShare',
+  taxAmount: 'taxAmount',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LedgerEntryScalarFieldEnum = {
+  id: 'id',
+  walletType: 'walletType',
+  entryType: 'entryType',
+  amount: 'amount',
+  paymentId: 'paymentId',
+  settlementId: 'settlementId',
+  businessId: 'businessId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SettlementScalarFieldEnum = {
+  id: 'id',
+  businessId: 'businessId',
+  amount: 'amount',
+  status: 'status',
+  fromDate: 'fromDate',
+  toDate: 'toDate',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.OtpCodeScalarFieldEnum = {
@@ -214,26 +287,16 @@ exports.Prisma.OtpCodeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.AuditLogScalarFieldEnum = {
+exports.Prisma.FavoriteScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  action: 'action',
-  entity: 'entity',
-  entityId: 'entityId',
-  ip: 'ip',
-  userAgent: 'userAgent',
-  metadata: 'metadata',
+  businessId: 'businessId',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -245,70 +308,82 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
 exports.Role = exports.$Enums.Role = {
-  ADMIN: 'ADMIN',
-  SECRETARY: 'SECRETARY',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  BUSINESS_OWNER: 'BUSINESS_OWNER',
+  STAFF: 'STAFF',
   CUSTOMER: 'CUSTOMER'
 };
 
-exports.CalendarRuleType = exports.$Enums.CalendarRuleType = {
-  DAY_OFF: 'DAY_OFF',
-  CUSTOM_DAY: 'CUSTOM_DAY',
-  RANGE_OFF: 'RANGE_OFF',
-  RANGE_CUSTOM: 'RANGE_CUSTOM'
+exports.BusinessType = exports.$Enums.BusinessType = {
+  SALON: 'SALON',
+  GYM: 'GYM',
+  CLINIC: 'CLINIC',
+  BEAUTY: 'BEAUTY',
+  EDUCATION: 'EDUCATION',
+  SPORTS: 'SPORTS',
+  CAFE: 'CAFE',
+  RESTAURANT: 'RESTAURANT',
+  LAW: 'LAW',
+  DENTAL: 'DENTAL',
+  VETERINARY: 'VETERINARY',
+  CONSULTING: 'CONSULTING',
+  OTHER: 'OTHER'
 };
 
-exports.ReservationStatus = exports.$Enums.ReservationStatus = {
-  PENDING: 'PENDING',
+exports.BookingStatus = exports.$Enums.BookingStatus = {
+  PENDING_CONFIRMATION: 'PENDING_CONFIRMATION',
   CONFIRMED: 'CONFIRMED',
-  PAID: 'PAID',
-  DONE: 'DONE',
-  CANCELED: 'CANCELED'
-};
-
-exports.ReservationSource = exports.$Enums.ReservationSource = {
-  ONLINE: 'ONLINE',
-  WALK_IN: 'WALK_IN',
-  PHONE: 'PHONE'
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+  NO_SHOW: 'NO_SHOW'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
   ONLINE: 'ONLINE',
-  CASH: 'CASH',
-  WALLET: 'WALLET'
+  OFFLINE: 'OFFLINE'
 };
 
 exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  UNPAID: 'UNPAID',
   PENDING: 'PENDING',
-  SUCCESS: 'SUCCESS',
-  FAILED: 'FAILED'
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
 };
 
-exports.AuditAction = exports.$Enums.AuditAction = {
-  CREATE: 'CREATE',
-  UPDATE: 'UPDATE',
-  DELETE: 'DELETE',
-  LOGIN: 'LOGIN',
-  LOGOUT: 'LOGOUT',
-  PAYMENT: 'PAYMENT'
+exports.WalletType = exports.$Enums.WalletType = {
+  PLATFORM: 'PLATFORM',
+  BUSINESS: 'BUSINESS'
+};
+
+exports.LedgerEntryType = exports.$Enums.LedgerEntryType = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT'
+};
+
+exports.SettlementStatus = exports.$Enums.SettlementStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED'
 };
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserRole: 'UserRole',
+  Business: 'Business',
+  StaffMember: 'StaffMember',
+  StaffAvailability: 'StaffAvailability',
+  StaffException: 'StaffException',
   Service: 'Service',
-  WorkingHour: 'WorkingHour',
-  CalendarRule: 'CalendarRule',
-  Reservation: 'Reservation',
+  ServiceStaff: 'ServiceStaff',
+  Booking: 'Booking',
   Payment: 'Payment',
-  Wallet: 'Wallet',
+  Commission: 'Commission',
+  LedgerEntry: 'LedgerEntry',
+  Settlement: 'Settlement',
   OtpCode: 'OtpCode',
-  AuditLog: 'AuditLog'
+  Favorite: 'Favorite'
 };
 
 /**

@@ -16,6 +16,7 @@ import {
 } from "../ui/dropdown-menu";
 import LoginForm from "../LoginForm/LoginForm";
 import Modal from "../Modal/Modal";
+import { getRole } from "@/utils/common";
 
 interface Props {
   className?: string;
@@ -32,6 +33,8 @@ const LoginButton = ({ className, isModal = true }: Props) => {
   const loginClickHanlder = () => {
     setOpenModal(true);
   };
+
+  const role = getRole(session.data?.user.roles);
 
   return (
     <>
@@ -50,9 +53,7 @@ const LoginButton = ({ className, isModal = true }: Props) => {
             <DropdownMenuSeparator />
             <DropdownMenuItem dir="rtl">
               <Link
-                href={
-                  session.data.user?.role === "ADMIN" ? "/admin" : "customer"
-                }
+                href={`/dashboard/${role}`}
                 target="_blank"
                 className="flex justify-start items-center gap-2 text-primary"
               >

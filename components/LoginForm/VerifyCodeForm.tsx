@@ -6,8 +6,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { Loader2, RotateCcw, ShieldCheck } from "lucide-react";
+import { Session } from "next-auth";
 import { getSession, signIn, SignInResponse } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,7 +17,10 @@ import ResendCode from "./ResendCode";
 interface IVerifyForm {
   setLoginFormType: Dispatch<SetStateAction<LoginFormType | null>>;
   mobile: string;
-  onLoginSuccess?: (data: SignInResponse | undefined) => void;
+  onLoginSuccess?: (
+    data: SignInResponse | undefined,
+    session: Session | null
+  ) => void;
 }
 
 const VerifyCodeForm = ({
@@ -25,22 +28,18 @@ const VerifyCodeForm = ({
   mobile,
   onLoginSuccess,
 }: IVerifyForm) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const signInOnSuccess = async (data: SignInResponse | undefined) => {
     if (data?.ok) {
-      toast.success("با موفقیت وارد شدید");
-      onLoginSuccess?.(data);
-      if (!pathname.startsWith("/auth")) return;
       const session = await getSession();
-      router.push("/" + session?.user?.role.trim().toLowerCase());
+      toast.success("با موفقیت وارد شدید");
+      onLoginSuccess?.(data, session);
     } else {
       toast.error(data?.error);
     }
   };
 
   const signInFn = async (code: string) => {
-    const response = await signIn("credentials", {
+    const response = await signIn("otp", {
       redirect: false,
       code,
       phone: mobile,

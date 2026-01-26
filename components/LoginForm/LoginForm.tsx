@@ -4,11 +4,15 @@ import { JSX, useState } from "react";
 import SendCodeForm from "./SendCodeForm";
 import VerifyCodeForm from "./VerifyCodeForm";
 import { SignInResponse } from "next-auth/react";
+import { Session } from "next-auth";
 
 export type LoginFormType = "sendCode" | "verify";
 
 interface Props {
-  onLoginSuccess?: (data: SignInResponse | undefined) => void;
+  onLoginSuccess?: (
+    data: SignInResponse | undefined,
+    session: Session | null
+  ) => void;
 }
 
 const LoginForm = ({ onLoginSuccess }: Props): JSX.Element => {

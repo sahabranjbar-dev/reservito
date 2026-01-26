@@ -4,61 +4,98 @@ import { authOptions } from "./utils/authOptions";
 
 type Rule = (req: NextRequest, session: any) => NextResponse | void;
 
-const redirectToLogin = (req: NextRequest) =>
-  NextResponse.redirect(new URL("/auth", req.url));
+const redirectToLogin = (req: NextRequest, url?: string) =>
+  NextResponse.redirect(new URL(url ? url : "/auth", req.url));
 
+// ================================
 // 1) قواعد مخصوص مسیرهای Admin
+// ================================
 const adminRules: Rule[] = [
   (req, session) => {
     if (!session) return redirectToLogin(req);
   },
   (req, session) => {
-    if (session?.user?.role !== "ADMIN") return redirectToLogin(req);
+    const roles = session?.user?.roles || [];
+    if (!roles.includes("SUPER_ADMIN")) return redirectToLogin(req);
   },
 ];
 
+// =================================
 // 2) قواعد مخصوص مسیرهای Customer
+// =================================
 const customerRules: Rule[] = [
   (req, session) => {
-    if (session?.user?.role !== "CUSTOMER") return redirectToLogin(req);
+    const roles = session?.user?.roles || [];
+    if (!roles.includes("CUSTOMER")) return redirectToLogin(req);
   },
 ];
 
-const secretaryRules: Rule[] = [
+// =================================
+// 3) قواعد مخصوص مسیرهای Business
+// =================================
+const businessRules: Rule[] = [
   (req, session) => {
-    if (session?.user?.role !== "SECRETARY") return redirectToLogin(req);
+    const roles = session?.user?.roles || [];
+    if (!roles.includes("BUSINESS_OWNER"))
+      return redirectToLogin(req, "/business/login");
   },
 ];
 
-// 3) قوانین امنیتی API ها (اختیاری ولی خوبه)
+// =================================
+// 4) قوانین امنیتی API ها
+// =================================
 const apiRules: Rule[] = [
   (req, session) => {
-    // مثلا اگه بخوای فقط کاربران لاگین کرده API رو بخونن
-    if (!session)
+    if (!session) {
       return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
+    }
   },
+
   (req, session) => {
-    // مثال: برای API admin
-    if (req.nextUrl.pathname.startsWith("/api/admin")) {
-      if (session?.user?.role !== "ADMIN") {
+    const roles = session?.user?.roles || [];
+
+    if (req.nextUrl.pathname.startsWith("/api/dashboard/admin")) {
+      if (!roles.includes("SUPER_ADMIN")) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    if (req.nextUrl.pathname.startsWith("/api/dashboard/business")) {
+      if (!roles.includes("BUSINESS_OWNER")) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    if (req.nextUrl.pathname.startsWith("/api/dashboard/customer")) {
+      if (!roles.includes("CUSTOMER")) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
     }
   },
 ];
 
-// 4) انتخاب rule بر اساس مسیر
+// ================================
+// 5) انتخاب rule بر اساس مسیر
+// ================================
 function getRulesForPath(pathname: string): Rule[] {
-  if (pathname.startsWith("/admin")) return adminRules;
-  if (pathname.startsWith("/secretary")) return secretaryRules;
-  if (pathname.startsWith("/customer")) return customerRules;
-  if (pathname.startsWith("/api/admin") || pathname.startsWith("/api/customer"))
+  if (pathname.startsWith("/dashboard/admin")) return adminRules;
+  if (pathname.startsWith("/dashboard/business")) return businessRules;
+  if (pathname.startsWith("/dashboard/customer")) return customerRules;
+
+  if (
+    pathname.startsWith("/api/dashboard/admin") ||
+    pathname.startsWith("/api/dashboard/customer") ||
+    pathname.startsWith("/api/dashboard/business")
+  ) {
     return apiRules;
+  }
 
   return [];
 }
 
-// 5) تابع اصلی proxy
+// ================================
+// 6) تابع اصلی middleware
+// ================================
 export async function proxy(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const pathname = req.nextUrl.pathname;
@@ -73,12 +110,9 @@ export async function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-// 6) مجوز مسیرها
+// ================================
+// 7) مجوز مسیرها
+// ================================
 export const config = {
-  matcher: [
-    "/admin/:path*",
-    "/secretary/:path*",
-    "/customer/:path*",
-    "/api/:path*",
-  ],
+  matcher: ["/dashboard/:path*", "/api/:path*"],
 };

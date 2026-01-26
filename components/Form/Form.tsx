@@ -1,10 +1,10 @@
 "use client";
 
 import {
+  FieldValues,
   FormProvider,
   useForm,
   UseFormProps,
-  FieldValues,
 } from "react-hook-form";
 import { IForm } from "./meta/types";
 
@@ -30,7 +30,13 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={onSubmit ? methods.handleSubmit(onSubmit) : undefined}
+        onSubmit={
+          onSubmit
+            ? methods.handleSubmit((data, event) =>
+                onSubmit(data as any, event as any, methods)
+              )
+            : undefined
+        }
         className={className}
         noValidate // مهم! تا مرورگر اعتبارسنجی خودش رو نشون نده
       >

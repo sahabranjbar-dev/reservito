@@ -39,6 +39,7 @@ const handleNumberInput = ({ event, onChange }: NumberInputProps) => {
 interface BaseInputProps
   extends Omit<React.ComponentProps<"input">, "onChange" | "value"> {
   value?: string | number | null | undefined;
+  icon?: any;
 }
 
 interface StandardInputProps extends BaseInputProps {
@@ -73,6 +74,7 @@ function TextCore({
   number = false,
   onChange,
   value,
+  icon: Icon,
   ...props
 }: InputProps) {
   const isNumberInput = number;
@@ -138,6 +140,12 @@ function TextCore({
         onChange={handleChange}
         type={isNumberInput || isFormatterInput ? "text" : type}
       />
+
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
+          {Icon}
+        </div>
+      )}
     </div>
   );
 }

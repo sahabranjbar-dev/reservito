@@ -1,13 +1,15 @@
 import { UserRole } from "@/types/common";
 
 export const ROLE_LABELS_FA: Record<UserRole, string> = {
-  ADMIN: "ادمین",
-  SECRETARY: "منشی",
-  CUSTOMER: "کاربر",
+  SUPER_ADMIN: "ادمین",
+  BUSINESS_OWNER: "مدیر کسب‌و‌کار",
+  CUSTOMER: "مشتری",
+  STAFF: "کارمند",
 };
 
 export const ROLE_LABELS_EN: Record<UserRole, string> = {
-  ADMIN: "admin",
-  SECRETARY: "secretary",
+  SUPER_ADMIN: "admin",
+  BUSINESS_OWNER: "business_owner",
   CUSTOMER: "customer",
+  STAFF: "staff",
 };

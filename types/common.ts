@@ -1,4 +1,4 @@
-export type UserRole = "ADMIN" | "SECRETARY" | "CUSTOMER";
+export type UserRole = "SUPER_ADMIN" | "BUSINESS_OWNER" | "STAFF" | "CUSTOMER";
 
 export type TimeSlot = {
   startAt: Date;

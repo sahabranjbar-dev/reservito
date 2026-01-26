@@ -14,7 +14,7 @@ const CheckboxContainer = ({
   onChange,
   ...props
 }: React.ComponentProps<typeof CheckboxPrimitive.Root> & {
-  text?: string;
+  text?: React.ReactNode;
   name: string;
   onChange?: (value: boolean) => void;
 }) => {

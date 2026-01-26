@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: "پرو رزرو | pro reserve",
+  title: "رزرویتو | reservito",
 };
 
 export default async function LocaleLayout({ children }: Props) {

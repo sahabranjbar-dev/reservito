@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 function Input({
   className,
   type,
-  maxLength = 20,
+  maxLength = 40,
   formatter,
   ...props
 }: React.ComponentProps<"input"> & { formatter?: boolean }) {
