@@ -1,6 +1,8 @@
 "use server";
 
+import { authOptions } from "@/utils/authOptions";
 import prisma from "@/utils/prisma";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 // تایپ‌ها
@@ -23,6 +25,15 @@ export async function approveBusiness(
   businessId: string
 ): Promise<BusinessActionResponse> {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user.roles.includes("SUPER_ADMIN")) {
+      return {
+        success: false,
+        message: "دسترسی ندارید",
+        error: "ادمین میتواند کسب‌‌وکار را تایید کند",
+      };
+    }
     // 1. آپدیت در دیتابیس
     const updatedBusiness = await prisma.business.update({
       where: { id: businessId },
@@ -60,6 +71,15 @@ export async function rejectBusiness(
   reason: string
 ): Promise<BusinessActionResponse> {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user.roles.includes("SUPER_ADMIN")) {
+      return {
+        success: false,
+        message: "دسترسی ندارید",
+        error: "ادمین میتواند کسب‌‌وکار را رد کند",
+      };
+    }
     if (!reason.trim()) {
       return { success: false, message: "دلیل رد کردن الزامی است." };
     }
@@ -88,6 +108,61 @@ export async function rejectBusiness(
     return {
       success: false,
       message: "خطا در رد کردن کسب و کار",
+      error: String(error),
+    };
+  }
+}
+
+export async function updateBusinessCommission(
+  businessId: string,
+  commission: number
+): Promise<BusinessActionResponse> {
+  try {
+    const session = await getServerSession(authOptions);
+
+    // دسترسی
+    if (!session?.user.roles.includes("SUPER_ADMIN")) {
+      return {
+        success: false,
+        message: "دسترسی ندارید",
+        error: "فقط ادمین می‌تواند کمیسیون را تغییر دهد",
+      };
+    }
+
+    // ولیدیشن
+    if (
+      typeof commission !== "number" ||
+      isNaN(commission) ||
+      commission < 0 ||
+      commission > 100
+    ) {
+      return {
+        success: false,
+        message: "مقدار کمیسیون نامعتبر است",
+        error: "Commission must be between 0 and 100",
+      };
+    }
+
+    // آپدیت دیتابیس
+    await prisma.business.update({
+      where: { id: businessId },
+      data: {
+        commissionRate: commission,
+      },
+    });
+
+    // ری‌ولیدیت کش
+    revalidatePath("/dashboard/admin/businesses");
+
+    return {
+      success: true,
+      message: "کمیسیون با موفقیت بروزرسانی شد",
+    };
+  } catch (error) {
+    console.error("Error updating business commission:", error);
+    return {
+      success: false,
+      message: "خطا در بروزرسانی کمیسیون",
       error: String(error),
     };
   }

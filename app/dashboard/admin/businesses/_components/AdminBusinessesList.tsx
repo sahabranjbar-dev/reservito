@@ -1,12 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, Eye, MapPin, Phone, User, Percent } from "lucide-react";
+import {
+  Check,
+  X,
+  Eye,
+  MapPin,
+  Phone,
+  User,
+  Percent,
+  Edit,
+} from "lucide-react";
 import {
   approveBusiness,
   rejectBusiness,
+  updateBusinessCommission,
 } from "../_meta/actions/businessActions";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 enum BusinessStatus {
   PENDING = "PENDING",
@@ -67,7 +80,10 @@ const StatusBadge = ({ status }: { status: BusinessStatus }) => {
 const AdminBusinessesList = ({
   initialBusinesses,
 }: AdminBusinessesListProps) => {
+  const { refresh } = useRouter();
   const [businesses, setBusinesses] = useState<Business[]>(initialBusinesses);
+  const [editMode, setEditMode] = useState(false);
+  const [tempCommission, setTempCommission] = useState<number | null>(null);
 
   // State for Modals
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(
@@ -241,6 +257,7 @@ const AdminBusinessesList = ({
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => {
+                          setSelectedBusiness(null);
                           setSelectedBusiness(business);
                           setIsDetailsOpen(true);
                         }}
@@ -276,12 +293,17 @@ const AdminBusinessesList = ({
 
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">
-                    نام کسب‌وکار
-                  </label>
-                  <div className="font-semibold text-lg text-gray-800">
-                    {selectedBusiness.businessName}
+                <div className="group flex justify-between">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      نام کسب‌وکار
+                    </label>
+                    <div className="font-semibold text-lg text-gray-800">
+                      {selectedBusiness.businessName}
+                    </div>
+                  </div>
+                  <div className="group-hover:opacity-100 opacity-0 duration-200">
+                    <Edit className="text-gray-500 border bg-gray-100 rounded cursor-pointer" />
                   </div>
                 </div>
                 <div>
@@ -341,10 +363,84 @@ const AdminBusinessesList = ({
                     {selectedBusiness.description || "توضیحی ثبت نشده است."}
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 group justify-between">
                   <div className="flex items-center gap-1 text-gray-700">
                     <Percent size={16} className="text-blue-500" />
-                    <span>کمیسیون: %{selectedBusiness.commissionRate}</span>
+                    <span>کمیسیون: </span>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={
+                        editMode
+                          ? tempCommission ?? ""
+                          : selectedBusiness.commissionRate
+                      }
+                      readOnly={!editMode}
+                      className="w-20 text-center focus-visible:ring-0"
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        if (isNaN(value)) return;
+                        setTempCommission(value);
+                      }}
+                    />
+                    %
+                  </div>
+                  <div>
+                    {editMode ? (
+                      <div className="flex items-center gap-2">
+                        {/* SAVE */}
+                        <Check
+                          className="text-green-600 border bg-green-50 rounded cursor-pointer"
+                          onClick={() => {
+                            if (tempCommission === null) return;
+                            if (tempCommission < 0 || tempCommission > 100) {
+                              alert("کمیسیون باید بین ۰ تا ۱۰۰ باشد");
+                              return;
+                            }
+
+                            setSelectedBusiness((prev) =>
+                              prev
+                                ? { ...prev, commissionRate: tempCommission }
+                                : prev
+                            );
+
+                            setEditMode(false);
+                            setTempCommission(null);
+
+                            // TODO: بعداً اینجا API می‌زنیم
+                            updateBusinessCommission(
+                              selectedBusiness.id,
+                              tempCommission
+                            ).then((data) => {
+                              if (!data.success) return;
+                              toast.success(data?.message);
+                              setEditMode(false);
+                              setTempCommission(null);
+                              setIsDetailsOpen(false);
+                              refresh();
+                            });
+                          }}
+                        />
+
+                        {/* CANCEL */}
+                        <X
+                          className="text-gray-500 border bg-gray-100 rounded cursor-pointer"
+                          onClick={() => {
+                            setEditMode(false);
+                            setTempCommission(null);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <Edit
+                        className="text-gray-500 border bg-gray-100 rounded cursor-pointer group-hover:opacity-100 opacity-0 duration-200"
+                        onClick={() => {
+                          setTempCommission(selectedBusiness.commissionRate);
+                          setEditMode(true);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
