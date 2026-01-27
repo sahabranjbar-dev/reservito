@@ -59,7 +59,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    body.phone = convertToEnglishDigits(body.phone);
     const validation = mobileValidation().safeParse(body);
     if (!validation.success) {
       return NextResponse.json(
@@ -69,9 +68,12 @@ export async function POST(request: NextRequest) {
     }
 
     const phone = validation.data.phone;
+    const resolvedPhone = convertToEnglishDigits(phone);
 
     // 2. بررسی Rate Limiting
-    const lastOtp = await prisma.otpCode.findUnique({ where: { phone } });
+    const lastOtp = await prisma.otpCode.findUnique({
+      where: { phone: resolvedPhone },
+    });
     if (lastOtp) {
       const timeSinceLast = new Date().getTime() - lastOtp.createdAt.getTime();
       if (timeSinceLast < RESEND_DELAY) {
@@ -97,14 +99,14 @@ export async function POST(request: NextRequest) {
 
     // 5. ذخیره یا به‌روزرسانی کد
     await prisma.otpCode.upsert({
-      where: { phone },
+      where: { phone: resolvedPhone },
       update: {
         expiresAt: expirationDate,
         codeHash: hashedCode,
         createdAt: new Date(),
       },
       create: {
-        phone,
+        phone: resolvedPhone,
         codeHash: hashedCode,
         expiresAt: expirationDate,
         createdAt: new Date(),

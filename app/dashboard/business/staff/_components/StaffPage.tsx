@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner"; // یا سیستم ناتیف خودتان
 import { cn } from "@/lib/utils";
+import { convertToEnglishDigits } from "@/utils/common";
 
 // تایپ برای داده پرسنل
 type StaffMember = {
@@ -92,7 +93,7 @@ const StaffPage = ({ businessId, initialStaff }: StaffPageProps) => {
 
     const form = new FormData();
     form.append("name", formData.name);
-    form.append("phone", formData.phone);
+    form.append("phone", convertToEnglishDigits(formData.phone));
 
     startTransition(async () => {
       let res;

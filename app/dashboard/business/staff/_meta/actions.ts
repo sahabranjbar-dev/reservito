@@ -1,6 +1,7 @@
 "use server";
 
 import { BusinessRole, Role } from "@/constants/enums";
+import { convertToEnglishDigits } from "@/utils/common";
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -40,18 +41,19 @@ export async function createStaffAction(
   try {
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
+    const resolvedPhone = convertToEnglishDigits(phone);
 
-    if (!name || !phone) {
+    if (!name || !resolvedPhone) {
       return { success: false, error: "نام و شماره موبایل الزامی است" };
     }
 
     const result = await prisma.$transaction(async (tx) => {
       // 1. بررسی یا ایجاد کاربر (Upsert)
       const user = await tx.user.upsert({
-        where: { phone },
+        where: { phone: resolvedPhone },
         update: {},
         create: {
-          phone,
+          phone: resolvedPhone,
           roles: {
             create: {
               role: Role.CUSTOMER,
@@ -79,7 +81,7 @@ export async function createStaffAction(
           businessId: businessId,
           userId: user.id,
           name: name,
-          phone: phone, // ذخیره مجدد تلفن برای نمایش
+          phone: resolvedPhone, // ذخیره مجدد تلفن برای نمایش
         },
       });
 
@@ -114,14 +116,14 @@ export async function updateStaffAction(formData: FormData, staffId: string) {
   try {
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
-
-    if (!name || !phone) {
+    const resolvedPhone = convertToEnglishDigits(phone);
+    if (!name || !resolvedPhone) {
       return { success: false, error: "اطلاعات ناقص است" };
     }
 
     await prisma.staffMember.update({
       where: { id: staffId },
-      data: { name, phone },
+      data: { name, phone: resolvedPhone },
     });
 
     revalidatePath("/dashboard/business/staff");
