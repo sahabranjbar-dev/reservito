@@ -17,6 +17,7 @@ import {
 import LoginForm from "../LoginForm/LoginForm";
 import Modal from "../Modal/Modal";
 import { getRole } from "@/utils/common";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -25,7 +26,7 @@ interface Props {
 
 const LoginButton = ({ className, isModal = true }: Props) => {
   const session = useSession();
-
+  const { refresh } = useRouter();
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const isAuthenticated = session.status === "authenticated";
@@ -96,7 +97,11 @@ const LoginButton = ({ className, isModal = true }: Props) => {
                 hideActions
                 width="md:max-w-xl"
               >
-                <LoginForm />
+                <LoginForm
+                  onLoginSuccess={() => {
+                    refresh();
+                  }}
+                />
               </Modal>
             </>
           ) : (

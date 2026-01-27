@@ -118,7 +118,7 @@ const CheckoutPage = () => {
   });
 
   const handleConfirm = async () => {
-    if (!session || !session.user.roles.includes("CUSTOMER")) {
+    if (!session?.user.id) {
       toast.warning("لطفاً ابتدا وارد حساب کاربری شوید.");
       setOpenModal(true);
 
@@ -339,7 +339,7 @@ const CheckoutPage = () => {
               </p>
             </div>
 
-            {!session && (
+            {!session?.user.id && (
               <div className="flex items-start gap-2 bg-amber-50 p-3 rounded-lg text-amber-700 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <p>برای ثبت نهایی باید وارد حساب کاربری خود شوید.</p>

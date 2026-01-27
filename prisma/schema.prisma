@@ -151,7 +151,7 @@ model Business {
 
   registrationStatus  BusinessRegistrationStatus  @default(PENDING)
   rejectionReason     String?
-  isActive            Boolean                     @default(false)
+  isActive            Boolean                     @default(true)
   activatedAt         DateTime?
   rejectedAt          DateTime?
 

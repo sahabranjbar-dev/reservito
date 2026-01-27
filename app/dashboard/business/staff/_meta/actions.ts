@@ -1,8 +1,8 @@
 "use server";
 
+import { BusinessRole, Role } from "@/constants/enums";
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 // --- 1. دریافت لیست پرسنل ---
 export async function getStaffListAction(businessId: string) {
@@ -32,6 +32,7 @@ export async function getStaffListAction(businessId: string) {
 }
 
 // --- 2. ایجاد پرسنل جدید ---
+
 export async function createStaffAction(
   formData: FormData,
   businessId: string
@@ -39,31 +40,75 @@ export async function createStaffAction(
   try {
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
-    const email = formData.get("email") as string | null;
-    const avatarUrl = formData.get("avatarUrl") as string | null;
 
     if (!name || !phone) {
       return { success: false, error: "نام و شماره موبایل الزامی است" };
     }
 
-    await prisma.staffMember.create({
-      data: {
-        businessId,
-        name,
-        phone,
-        // اگر نیاز بود یوزر ایجاد شود، اینجا می‌توان چک کرد اما فعلاً ساده نگه می‌داریم
-        // userId: ...
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. بررسی یا ایجاد کاربر (Upsert)
+      const user = await tx.user.upsert({
+        where: { phone },
+        update: {},
+        create: {
+          phone,
+          roles: {
+            create: {
+              role: Role.CUSTOMER,
+            },
+          },
+        },
+      });
+
+      // 2. بررسی اینکه این کاربر قبلاً پرسنل این بیزنس نشده باشد
+      const existingStaff = await tx.staffMember.findFirst({
+        where: {
+          businessId: businessId,
+          userId: user.id,
+        },
+      });
+
+      if (existingStaff) {
+        throw new Error("این پرسنل قبلاً در این کسب‌وکار ثبت شده است.");
+      }
+
+      // 3. ساخت پروفایل پرسنل (StaffMember)
+      // این جدول مشخص می‌کند که این فرد در بیزنس شما چه ویژگی‌هایی دارد (نام، عکس، سرویس‌ها و...)
+      const staffMember = await tx.staffMember.create({
+        data: {
+          businessId: businessId,
+          userId: user.id,
+          name: name,
+          phone: phone, // ذخیره مجدد تلفن برای نمایش
+        },
+      });
+
+      // 4. اضافه کردن به اعضای بیزنس (BusinessMember)
+      // این جدول مشخص می‌کند که به این فرد اجازه ورود به داشبورد بیزنس با نقش STAFF داده شود
+      await tx.businessMember.create({
+        data: {
+          userId: user.id,
+          businessId: businessId,
+          role: BusinessRole.STAFF,
+        },
+      });
+
+      return staffMember;
     });
 
     revalidatePath("/dashboard/business/staff");
     return { success: true, message: "پرسنل با موفقیت اضافه شد" };
   } catch (error) {
     console.error("Create Staff Error:", error);
+
+    // اگر خطای Unique Constraint بود، پیام فارسی و واضح برگردانیم
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+
     return { success: false, error: "خطا در ایجاد پرسنل" };
   }
 }
-
 // --- 3. ویرایش پرسنل ---
 export async function updateStaffAction(formData: FormData, staffId: string) {
   try {

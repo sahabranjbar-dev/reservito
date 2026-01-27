@@ -26,7 +26,7 @@ const SideBarHeaderContent = () => {
       businessRole === "OWNER" && pathname.startsWith("/dashboard/business") ? (
         <div className="flex flex-col overflow-hidden">
           <span className="font-bold text-slate-800 text-sm truncate max-w-35">
-            {displayName}
+            {session?.user.business?.businessName}
           </span>
           <span className="text-xs text-slate-500">
             مدیر: {session?.user.business?.ownerName || "—"}
@@ -36,14 +36,16 @@ const SideBarHeaderContent = () => {
         pathname.startsWith("/dashboard/staff") ? (
         <div className="flex flex-col overflow-hidden">
           <span className="font-bold text-slate-800 text-sm truncate max-w-35">
-            {session?.user.name || "کارمند"}
+            {session?.user.name || session?.user.phone || "همکار"}
           </span>
-          <span className="text-xs text-slate-500">کارمند مجموعه</span>
+          <span className="text-xs text-slate-500">
+            همکار در مجموعه {session?.user.business?.businessName ?? ""}
+          </span>
         </div>
       ) : (
         <div className="flex flex-col overflow-hidden">
           <span className="font-bold text-slate-800 text-sm truncate max-w-35">
-            {displayName}
+            {session?.user.name || session?.user.phone || "کاربر مهمان"}
           </span>
           <span className="text-xs text-slate-500">{phone || "—"}</span>
         </div>

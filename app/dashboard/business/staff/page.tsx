@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
-import prisma from "@/utils/prisma";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import StaffPage from "./_components/StaffPage"; // اگر فایل کامپوننت را جدا کردید، وگرنه همین فایل است
 import { getStaffListAction } from "./_meta/actions";
 
