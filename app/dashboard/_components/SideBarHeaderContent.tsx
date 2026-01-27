@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { getEnglishLabel } from "../_meta/utils";
 import { JSX, useMemo } from "react";
 
-type UserRole = "customer" | "business" | "admin" | "staff";
+type UserRole = "CUSTOMER" | "SUPER_ADMIN";
 
 const SideBarHeaderContent = () => {
   const { data: session } = useSession();
@@ -15,43 +15,43 @@ const SideBarHeaderContent = () => {
   const role = getEnglishLabel(pathname) as UserRole;
 
   const displayName =
-    session?.user.business?.businessName || session?.user.name || "کاربر";
+    session?.user.business?.ownerName || session?.user.name || "کاربر";
 
   const phone = session?.user.phone;
 
+  const businessRole = session?.user?.business?.businessRole;
+
   const roleContentMap: Record<UserRole, JSX.Element> = {
-    customer: (
-      <div className="flex flex-col overflow-hidden">
-        <span className="font-bold text-slate-800 text-sm truncate max-w-[140px]">
-          {displayName}
-        </span>
-        <span className="text-xs text-slate-500">{phone || "—"}</span>
-      </div>
-    ),
+    CUSTOMER:
+      businessRole === "OWNER" && pathname.startsWith("/dashboard/business") ? (
+        <div className="flex flex-col overflow-hidden">
+          <span className="font-bold text-slate-800 text-sm truncate max-w-35">
+            {displayName}
+          </span>
+          <span className="text-xs text-slate-500">
+            مدیر: {session?.user.business?.ownerName || "—"}
+          </span>
+        </div>
+      ) : businessRole === "STAFF" &&
+        pathname.startsWith("/dashboard/staff") ? (
+        <div className="flex flex-col overflow-hidden">
+          <span className="font-bold text-slate-800 text-sm truncate max-w-35">
+            {session?.user.name || "کارمند"}
+          </span>
+          <span className="text-xs text-slate-500">کارمند مجموعه</span>
+        </div>
+      ) : (
+        <div className="flex flex-col overflow-hidden">
+          <span className="font-bold text-slate-800 text-sm truncate max-w-35">
+            {displayName}
+          </span>
+          <span className="text-xs text-slate-500">{phone || "—"}</span>
+        </div>
+      ),
 
-    business: (
+    SUPER_ADMIN: (
       <div className="flex flex-col overflow-hidden">
-        <span className="font-bold text-slate-800 text-sm truncate max-w-[140px]">
-          {displayName}
-        </span>
-        <span className="text-xs text-slate-500">
-          مدیر: {session?.user.business?.ownerName || "—"}
-        </span>
-      </div>
-    ),
-
-    staff: (
-      <div className="flex flex-col overflow-hidden">
-        <span className="font-bold text-slate-800 text-sm truncate max-w-[140px]">
-          {session?.user.name || "کارمند"}
-        </span>
-        <span className="text-xs text-slate-500">کارمند مجموعه</span>
-      </div>
-    ),
-
-    admin: (
-      <div className="flex flex-col overflow-hidden">
-        <span className="font-bold text-slate-800 text-sm truncate max-w-[140px]">
+        <span className="font-bold text-slate-800 text-sm truncate max-w-35">
           {session?.user.name || "ادمین"}
         </span>
         <span className="text-xs text-rose-600 font-medium">مدیر سیستم</span>
@@ -60,7 +60,7 @@ const SideBarHeaderContent = () => {
   };
 
   const content = useMemo(() => {
-    return roleContentMap[role] ?? roleContentMap.customer;
+    return roleContentMap[role] ?? roleContentMap.CUSTOMER;
   }, [role, session]);
 
   return (

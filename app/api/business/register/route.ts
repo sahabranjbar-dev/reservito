@@ -6,6 +6,15 @@ import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+enum Role {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  CUSTOMER = "CUSTOMER",
+}
+
+enum BusinessRole {
+  OWNER = "OWNER",
+  STAFF = "STAFF",
+}
 /* ==============================
    Schema
 ============================== */
@@ -49,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: true, errors: parsed.error.flatten().fieldErrors },
+        { error: true, errors: JSON.parse(parsed.error.message) },
         { status: 400 }
       );
     }
@@ -64,19 +73,15 @@ export async function POST(request: NextRequest) {
       username,
     } = parsed.data;
 
-    const existUserName = await prisma.business.findFirst({
-      where: {
-        identifier: username,
-      },
+    // 1. بررسی تکراری بودن نام کاربری (identifier در جدول Business)
+    const existUserName = await prisma.business.findUnique({
+      where: { identifier: username },
     });
 
     if (existUserName) {
       return NextResponse.json(
-        {
-          success: false,
-          message: `نام کاربری تکراری است `,
-        },
-        { status: 402 }
+        { success: false, message: "نام کاربری تکراری است" },
+        { status: 409 }
       );
     }
 
@@ -84,52 +89,67 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 12);
     const slug = await generateUniqueSlug(businessName);
 
+    // 2. تراکنش برای ایجاد User, Business و BusinessMember
     const business = await prisma.$transaction(async (tx) => {
+      // یافتن کاربر
       const existingUser = await tx.user.findUnique({
         where: { phone: resolvedPhone },
-        select: { id: true, roles: true },
+        select: {
+          id: true,
+          roles: { select: { role: true } },
+          username: true, // برای چک کردن تکراری بودن یوزرنیم در جدول یوزرها
+        },
       });
 
       let ownerId: string;
 
+      // سناریو الف: کاربر جدید است
       if (!existingUser) {
-        const owner = await tx.user.create({
+        const newUser = await tx.user.create({
           data: {
             phone: resolvedPhone,
             fullName: ownerFullname,
-            username,
+            username, // ذخیره یوزرنیم
             passwordHash,
+            // اضافه کردن نقش سراسری مشتری تا بتواند رزرو کند (اختیاری)
             roles: {
               create: {
-                role: "BUSINESS_OWNER",
+                role: Role.CUSTOMER,
               },
             },
           },
         });
+        ownerId = newUser.id;
+      }
+      // سناریو ب: کاربر قبلاً وجود دارد
+      else {
+        // اگر یوزرنیم وارد شده با یوزرنیم موجود فرق دارد، چک میکنیم
+        if (existingUser.username && existingUser.username !== username) {
+          // در اینجا سیاست امنیتی شما تعیین می‌کند.
+          // اگر می‌خواهید اجازه بدهید یوزرنیم را عوض کند، اینجا آپدیت کنید.
+          // فعلاً فرض می‌کنیم اگر یوزرنیم دارد، همان استفاده شود.
+        } else if (!existingUser.username) {
+          // اگر یوزرنیم نداشت، ست می‌کنیم
+          await tx.user.update({
+            where: { id: existingUser.id },
+            data: { username },
+          });
+        }
 
-        ownerId = owner.id;
-      } else {
-        await tx.user.update({
-          where: { id: existingUser.id },
-          data: {
-            passwordHash,
-            username,
-            ...(existingUser.roles.some((r) => r.role === "BUSINESS_OWNER")
-              ? {}
-              : {
-                  roles: {
-                    create: {
-                      role: "BUSINESS_OWNER",
-                    },
-                  },
-                }),
-          },
-        });
+        // اپدیت پسورد و نام (اختیاری)
+        // await tx.user.update({
+        //   where: { id: existingUser.id },
+        //   data: {
+        //     fullName: ownerFullname,
+        //     passwordHash: passwordHash,
+        //   },
+        // });
 
         ownerId = existingUser.id;
       }
 
-      return tx.business.create({
+      // 3. ایجاد بیزنس
+      const newBusiness = await tx.business.create({
         data: {
           businessName,
           slug,
@@ -138,8 +158,22 @@ export async function POST(request: NextRequest) {
           identifier: username,
           ownerId,
           ownerName: ownerFullname,
+          isActive: false,
+          registrationStatus: "PENDING",
         },
       });
+
+      // 4. ایجاد لینک عضویت در بیزنس (BusinessMember)
+      // این لینک به کاربر اجازه می‌دهد در داشبورد این بیزنس با نقش OWNER وارد شود
+      await tx.businessMember.create({
+        data: {
+          userId: ownerId,
+          businessId: newBusiness.id,
+          role: BusinessRole.OWNER,
+        },
+      });
+
+      return newBusiness;
     });
 
     return NextResponse.json(
@@ -149,12 +183,25 @@ export async function POST(request: NextRequest) {
         credentials: {
           identifier: business.identifier,
         },
-        message: `کسب‌وکار ${business.businessName} با موفقیت ایجاد شد`,
+        message: `کسب‌وکار ${business.businessName} با موفقیت ایجاد شد و منتظر تایید مدیریت است.`,
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("[CREATE_BUSINESS_ERROR]", error);
+
+    // هندل کردن خطای تکراری بودن یوزرنیم در جدول User
+    if (
+      error instanceof Error &&
+      error.message.includes("Unique constraint") &&
+      error.message.includes("User_username")
+    ) {
+      return NextResponse.json(
+        { success: false, message: "نام کاربری انتخاب شده در سیستم وجود دارد" },
+        { status: 409 }
+      );
+    }
+
     return ServerError();
   }
 }

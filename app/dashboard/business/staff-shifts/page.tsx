@@ -2,6 +2,7 @@ import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import ShiftSettings from "./_components/ShiftSettings";
+import BusinessSchedule from "./_components/BusinessSchedule";
 
 export default async function ShiftsPage() {
   const session = await getServerSession(authOptions);
@@ -19,8 +20,8 @@ export default async function ShiftsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <ShiftSettings businessId={business.id} />
+    <div className="p-4">
+      <BusinessSchedule businessId={business.id} />
     </div>
   );
 }

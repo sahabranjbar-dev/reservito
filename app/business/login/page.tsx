@@ -29,7 +29,7 @@ const BusinessLoginPage = () => {
   const onSubmit = async (data: IForm) => {
     setIsLoading(true);
     const response = await signIn("password", {
-      identifier: data.identifier,
+      emailOrPhone: data.identifier,
       password: data.password,
       redirect: false,
     });
@@ -40,7 +40,7 @@ const BusinessLoginPage = () => {
       return;
     }
     toast.success("با موفقیت وارد شدید");
-    push("/dashboard/business");
+    push("/auth/choose-dashboard");
   };
 
   return (

@@ -1,6 +1,5 @@
 "use client";
 import { LoginForm } from "@/components";
-import { getRole } from "@/utils/common";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -11,9 +10,8 @@ const AuthPage = () => {
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">ورود به حساب</h2>
         <LoginForm
-          onLoginSuccess={(data, session) => {
-            const role = getRole(session?.user.roles);
-            replace(`/dashboard/${role}`);
+          onLoginSuccess={() => {
+            replace("/auth/choose-dashboard");
           }}
         />
         <div className="w-full text-center my-4">

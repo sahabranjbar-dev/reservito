@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -9,9 +12,12 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-
-import { getRole } from "@/utils/common";
-import { cn } from "@/lib/utils"; // مطمئن شوید فایل lib/utils دارید
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 import {
   BookmarkCheck,
   CalendarCheck,
@@ -19,22 +25,13 @@ import {
   ChevronRight,
   Home,
   Inbox,
-  Settings,
   ShieldBan,
   SquareMousePointer,
   Users,
   Workflow,
   type LucideIcon,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { UserRole } from "@/types/common";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Role } from "@/constants/enums";
 
 // ==========================================
 // Types
@@ -49,7 +46,7 @@ type SidebarItem = {
 };
 
 // ==========================================
-// Data Config
+// Sidebar Config
 // ==========================================
 
 const businessSideBarItems: SidebarItem[] = [
@@ -58,7 +55,7 @@ const businessSideBarItems: SidebarItem[] = [
   { title: "خدمات و سرویس‌ها", url: "/services", icon: Workflow },
   { title: "شیفت‌های پرسنل", url: "/staff-shifts", icon: CalendarRange },
   {
-    title: "رزرو‌های کاربران",
+    title: "رزروهای کاربران",
     url: "/users-reservations",
     icon: SquareMousePointer,
   },
@@ -76,15 +73,48 @@ const customerSideBarItems: SidebarItem[] = [
   { title: "پیام‌ها", url: "/inbox", icon: Inbox },
 ];
 
+const staffSideBarItems: SidebarItem[] = [
+  { title: "داشبورد", url: "/", icon: Home },
+  { title: "خدمات من", url: "/services", icon: Workflow },
+  { title: "شیفت‌های من", url: "/shifts", icon: CalendarRange },
+  { title: "پیام‌ها", url: "/inbox", icon: Inbox },
+];
+
 const adminSideBarItems: SidebarItem[] = [
   { title: "داشبورد", url: "/", icon: Home },
   { title: "کاربران", url: "/users", icon: Users },
-  { title: "کسب‌وکار", url: "/businesses", icon: Users },
+  { title: "کسب‌وکارها", url: "/businesses", icon: Users },
   { title: "خدمات", url: "/services", icon: Workflow },
-  { title: "رزرو‌های کاربران", url: "/users-reservations", icon: Inbox },
+  { title: "رزروهای کاربران", url: "/users-reservations", icon: Inbox },
   { title: "پیام‌ها", url: "/messages", icon: Inbox },
   { title: "نقش‌ها و دسترسی‌ها", url: "/roles", icon: ShieldBan },
 ];
+
+// ==========================================
+// Hooks
+// ==========================================
+
+function useSidebarItems() {
+  const { data: session, status } = useSession();
+
+  return useMemo(() => {
+    if (status === "loading") return [];
+
+    if (session?.user.roles?.includes(Role.SUPER_ADMIN)) {
+      return adminSideBarItems;
+    }
+
+    if (session?.user.business?.businessRole === "OWNER") {
+      return businessSideBarItems;
+    }
+
+    if (session?.user.business?.businessRole === "STAFF") {
+      return staffSideBarItems;
+    }
+
+    return customerSideBarItems;
+  }, [session, status]);
+}
 
 // ==========================================
 // Components
@@ -92,121 +122,104 @@ const adminSideBarItems: SidebarItem[] = [
 
 interface SidebarItemProps {
   item: SidebarItem;
-  basePath: string;
   pathname: string;
 }
 
-const SidebarItemComponent = ({
-  item,
-  basePath,
-  pathname,
-}: SidebarItemProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+function SidebarItemComponent({ item, pathname }: SidebarItemProps) {
   const Icon = item.icon;
-  const hasChildren = item.children && item.children.length > 0;
+  const hasChildren = !!item.children?.length;
+  const session = useSession();
 
-  const href = `${basePath}${item.url || "#"}`;
+  const isActive =
+    item.url === "/" ? pathname === "/" : pathname.startsWith(item.url ?? "");
 
-  const isActive = pathname === href;
+  const isOpen =
+    hasChildren &&
+    item.children?.some((child) => pathname.startsWith(child.url ?? ""));
 
-  useEffect(() => {
-    if (hasChildren && item.children) {
-      const isChildActive = item.children.some(
-        (child) => `${basePath}${child.url}` === pathname
-      );
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (isChildActive) setIsOpen(true);
+  const getRole = () => {
+    if (session?.data?.user.roles?.includes(Role.SUPER_ADMIN)) {
+      return "admin";
     }
-  }, [pathname, item.children, basePath, hasChildren]);
+
+    if (session?.data?.user.business?.businessRole === "OWNER") {
+      return "business";
+    }
+
+    if (session?.data?.user.business?.businessRole === "STAFF") {
+      return "staff";
+    }
+
+    return "customer";
+  };
+
+  const role = getRole();
+
+  if (hasChildren) {
+    return (
+      <SidebarMenuItem>
+        <Collapsible open={isOpen}>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton tooltip={item.title}>
+              {Icon && <Icon />}
+              <span>{item.title}</span>
+              <ChevronRight
+                className={cn(
+                  "ml-auto transition-transform",
+                  isOpen && "rotate-90"
+                )}
+              />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {item.children!.map((sub) => (
+                <SidebarMenuSubItem key={sub.title}>
+                  <SidebarMenuSubButton
+                    asChild
+                    isActive={pathname.startsWith(sub.url ?? "")}
+                  >
+                    <Link href={sub.url!}>
+                      <span>{sub.title}</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              ))}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </Collapsible>
+      </SidebarMenuItem>
+    );
+  }
 
   return (
     <SidebarMenuItem>
-      {hasChildren ? (
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} asChild>
-          <>
-            <CollapsibleTrigger asChild>
-              <SidebarMenuButton tooltip={item.title}>
-                {Icon && <Icon />}
-                <span>{item.title}</span>
-                <ChevronRight
-                  className={cn(
-                    "ml-auto transition-transform duration-200",
-                    isOpen && "rotate-90"
-                  )}
-                />
-              </SidebarMenuButton>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <SidebarMenuSub>
-                {item.children!.map((subItem) => (
-                  <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={pathname === `${basePath}${subItem.url}`}
-                    >
-                      <Link href={`${basePath}${subItem.url}`}>
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))}
-              </SidebarMenuSub>
-            </CollapsibleContent>
-          </>
-        </Collapsible>
-      ) : (
-        <SidebarMenuButton
-          asChild
-          tooltip={item.title}
-          isActive={isActive}
-          className={cn(
-            "group transition-all duration-200",
-            isActive &&
-              "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-          )}
-        >
-          <Link href={href}>
-            {Icon && (
-              <Icon
-                className={cn(
-                  "text-muted-foreground transition-colors",
-                  isActive && "text-primary"
-                )}
-              />
-            )}
-            <span>{item.title}</span>
-          </Link>
-        </SidebarMenuButton>
-      )}
+      <SidebarMenuButton
+        asChild
+        tooltip={item.title}
+        isActive={isActive}
+        disabled={item.disabled}
+        className={cn(item.disabled && "opacity-50 pointer-events-none")}
+      >
+        <Link href={`/dashboard/${role}${item.url}`}>
+          {Icon && <Icon />}
+          <span>{item.title}</span>
+        </Link>
+      </SidebarMenuButton>
     </SidebarMenuItem>
   );
-};
+}
 
-export default function SideBarItem() {
-  const { data: session, status } = useSession();
+// ==========================================
+// Main Sidebar
+// ==========================================
+
+export default function AppSidebar() {
   const pathname = usePathname();
-  const role = getRole(session?.user?.roles as UserRole[]);
+  const items = useSidebarItems();
 
-  const items = useMemo(() => {
-    if (status === "loading") return [];
-
-    switch (role) {
-      case "business":
-        return businessSideBarItems;
-      case "admin":
-        return adminSideBarItems;
-      case "customer":
-        return customerSideBarItems;
-      default:
-        return [];
-    }
-  }, [role, status]);
-
-  const basePath = useMemo(() => {
-    return `/dashboard/${role}`;
-  }, [role]);
-
-  if (items.length === 0) return null;
+  if (!items.length) return null;
 
   return (
     <SidebarMenu>
@@ -214,7 +227,6 @@ export default function SideBarItem() {
         <SidebarItemComponent
           key={item.title}
           item={item}
-          basePath={basePath}
           pathname={pathname}
         />
       ))}

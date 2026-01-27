@@ -168,6 +168,13 @@ exports.Prisma.BusinessScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.BusinessMemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  businessId: 'businessId',
+  role: 'role'
+};
+
 exports.Prisma.StaffMemberScalarFieldEnum = {
   id: 'id',
   businessId: 'businessId',
@@ -194,7 +201,10 @@ exports.Prisma.StaffExceptionScalarFieldEnum = {
   id: 'id',
   staffId: 'staffId',
   date: 'date',
-  isClosed: 'isClosed'
+  isClosed: 'isClosed',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  reason: 'reason'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
@@ -314,8 +324,6 @@ exports.Prisma.NullsOrder = {
 };
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
-  BUSINESS_OWNER: 'BUSINESS_OWNER',
-  STAFF: 'STAFF',
   CUSTOMER: 'CUSTOMER'
 };
 
@@ -339,6 +347,11 @@ exports.BusinessType = exports.$Enums.BusinessType = {
   VETERINARY: 'VETERINARY',
   CONSULTING: 'CONSULTING',
   OTHER: 'OTHER'
+};
+
+exports.BusinessRole = exports.$Enums.BusinessRole = {
+  OWNER: 'OWNER',
+  STAFF: 'STAFF'
 };
 
 exports.BookingStatus = exports.$Enums.BookingStatus = {
@@ -382,6 +395,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   UserRole: 'UserRole',
   Business: 'Business',
+  BusinessMember: 'BusinessMember',
   StaffMember: 'StaffMember',
   StaffAvailability: 'StaffAvailability',
   StaffException: 'StaffException',

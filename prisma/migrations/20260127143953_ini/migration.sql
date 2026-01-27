@@ -1,5 +1,8 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('SUPER_ADMIN', 'BUSINESS_OWNER', 'STAFF', 'CUSTOMER');
+CREATE TYPE "Role" AS ENUM ('SUPER_ADMIN', 'CUSTOMER');
+
+-- CreateEnum
+CREATE TYPE "BusinessRole" AS ENUM ('OWNER', 'STAFF');
 
 -- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING_CONFIRMATION', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'NO_SHOW');
@@ -21,6 +24,9 @@ CREATE TYPE "LedgerEntryType" AS ENUM ('CREDIT', 'DEBIT');
 
 -- CreateEnum
 CREATE TYPE "SettlementStatus" AS ENUM ('PENDING', 'PAID', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "BusinessRegistrationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -66,13 +72,27 @@ CREATE TABLE "Business" (
     "commissionRate" INTEGER NOT NULL DEFAULT 10,
     "ownerId" TEXT NOT NULL,
     "identifier" TEXT NOT NULL,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "registrationStatus" "BusinessRegistrationStatus" NOT NULL DEFAULT 'PENDING',
+    "rejectionReason" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "activatedAt" TIMESTAMP(3),
+    "rejectedAt" TIMESTAMP(3),
     "businessType" "BusinessType" NOT NULL DEFAULT 'OTHER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Business_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BusinessMember" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "businessId" TEXT NOT NULL,
+    "role" "BusinessRole" NOT NULL,
+
+    CONSTRAINT "BusinessMember_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -109,6 +129,9 @@ CREATE TABLE "StaffException" (
     "staffId" TEXT NOT NULL,
     "date" DATE NOT NULL,
     "isClosed" BOOLEAN NOT NULL DEFAULT true,
+    "startTime" TEXT,
+    "endTime" TEXT,
+    "reason" TEXT,
 
     CONSTRAINT "StaffException_pkey" PRIMARY KEY ("id")
 );
@@ -231,6 +254,16 @@ CREATE TABLE "OtpCode" (
     CONSTRAINT "OtpCode_pkey" PRIMARY KEY ("phone")
 );
 
+-- CreateTable
+CREATE TABLE "Favorite" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "businessId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_phone_key" ON "User"("phone");
 
@@ -250,6 +283,15 @@ CREATE UNIQUE INDEX "Business_slug_key" ON "Business"("slug");
 CREATE UNIQUE INDEX "Business_identifier_key" ON "Business"("identifier");
 
 -- CreateIndex
+CREATE INDEX "BusinessMember_businessId_idx" ON "BusinessMember"("businessId");
+
+-- CreateIndex
+CREATE INDEX "BusinessMember_userId_idx" ON "BusinessMember"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BusinessMember_userId_businessId_key" ON "BusinessMember"("userId", "businessId");
+
+-- CreateIndex
 CREATE INDEX "StaffMember_businessId_idx" ON "StaffMember"("businessId");
 
 -- CreateIndex
@@ -260,6 +302,9 @@ CREATE UNIQUE INDEX "StaffMember_businessId_userId_key" ON "StaffMember"("busine
 
 -- CreateIndex
 CREATE UNIQUE INDEX "StaffAvailability_staffId_dayOfWeek_key" ON "StaffAvailability"("staffId", "dayOfWeek");
+
+-- CreateIndex
+CREATE INDEX "StaffException_staffId_date_idx" ON "StaffException"("staffId", "date");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "StaffException_staffId_date_key" ON "StaffException"("staffId", "date");
@@ -300,11 +345,20 @@ CREATE INDEX "Settlement_businessId_status_idx" ON "Settlement"("businessId", "s
 -- CreateIndex
 CREATE INDEX "OtpCode_expiresAt_idx" ON "OtpCode"("expiresAt");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Favorite_userId_businessId_key" ON "Favorite"("userId", "businessId");
+
 -- AddForeignKey
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Business" ADD CONSTRAINT "Business_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BusinessMember" ADD CONSTRAINT "BusinessMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BusinessMember" ADD CONSTRAINT "BusinessMember_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "StaffMember" ADD CONSTRAINT "StaffMember_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -365,3 +419,9 @@ ALTER TABLE "LedgerEntry" ADD CONSTRAINT "LedgerEntry_businessId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "Settlement" ADD CONSTRAINT "Settlement_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;

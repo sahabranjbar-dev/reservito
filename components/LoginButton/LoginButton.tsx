@@ -53,7 +53,7 @@ const LoginButton = ({ className, isModal = true }: Props) => {
             <DropdownMenuSeparator />
             <DropdownMenuItem dir="rtl">
               <Link
-                href={`/dashboard/${role}`}
+                href={`/auth/choose-dashboard`}
                 target="_blank"
                 className="flex justify-start items-center gap-2 text-primary"
               >

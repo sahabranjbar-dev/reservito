@@ -8,16 +8,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ==========================================
-// ENUMS
-// ==========================================
-
-/// نقش‌های سطح سیستم
 enum Role {
   SUPER_ADMIN
-  BUSINESS_OWNER
-  STAFF
   CUSTOMER
+}
+
+enum BusinessRole {
+  OWNER
+  STAFF
 }
 
 enum BookingStatus {
@@ -63,8 +61,8 @@ enum WalletType {
 }
 
 enum LedgerEntryType {
-  CREDIT // بستانکار
-  DEBIT // بدهکار
+  CREDIT
+  DEBIT
 }
 
 enum SettlementStatus {
@@ -74,25 +72,16 @@ enum SettlementStatus {
 }
 
 enum BusinessRegistrationStatus {
-  PENDING // در انتظار تایید مدیر
-  APPROVED // تایید شده (فعال)
-  REJECTED // رد شده
+  PENDING
+  APPROVED
+  REJECTED
 }
-
-// ==========================================
-// USERS & AUTH
-// ==========================================
 
 model User {
   id String @id @default(cuid())
 
-  /// شماره موبایل (شناسه اصلی OTP)
-  phone String @unique
-
-  /// ایمیل اختیاری (ادمین / بیزنس)
-  email String? @unique
-
-  /// فقط برای لاگین بیزنس / ادمین
+  phone        String  @unique
+  email        String? @unique
   username     String? @unique
   passwordHash String?
 
@@ -104,29 +93,20 @@ model User {
   createdAt   DateTime  @default(now())
   deletedAt   DateTime?
 
-  // ================= Relations =================
-
   favorites Favorite[]
-  /// نقش‌های کاربر (چندگانه)
   roles     UserRole[]
 
-  /// بیزنس‌هایی که مالک آن است
+  businessMembers BusinessMember[]
+
   ownedBusinesses Business[]
 
-  /// رزروهایی که به عنوان مشتری انجام داده
-  bookings Booking[]
-
-  /// رزروهایی که ثبت کرده (منشی / ادمین)
-  createdBookings Booking[] @relation("BookingCreatedBy")
-
-  /// پرداخت‌هایی که تأیید کرده
+  bookings         Booking[]
+  createdBookings  Booking[] @relation("BookingCreatedBy")
   verifiedPayments Payment[] @relation("PaymentVerifiedBy")
 
-  /// عضویت در بیزنس‌ها به عنوان پرسنل
   staffMembers StaffMember[]
 }
 
-/// جدول واسط نقش‌ها (خیلی مهم)
 model UserRole {
   id     String @id @default(cuid())
   userId String
@@ -136,10 +116,6 @@ model UserRole {
 
   @@unique([userId, role])
 }
-
-// ==========================================
-// BUSINESS
-// ==========================================
 
 model Business {
   id   String @id @default(cuid())
@@ -163,8 +139,9 @@ model Business {
 
   commissionRate Int @default(10)
 
-  ownerId    String
-  owner      User   @relation(fields: [ownerId], references: [id])
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
   identifier String @unique
 
   registrationStatus BusinessRegistrationStatus @default(PENDING)
@@ -181,21 +158,30 @@ model Business {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  // ================= Relations =================
-
   bookings      Booking[]
   payments      Payment[]
   settlements   Settlement[]
   ledgerEntries LedgerEntry[]
 
-  // ✅ این دوتا مهم بودن
   staffMembers StaffMember[]
   services     Service[]
+
+  businessMembers BusinessMember[]
 }
 
-// ==========================================
-// STAFF & SCHEDULING
-// ==========================================
+model BusinessMember {
+  id         String       @id @default(cuid())
+  userId     String
+  businessId String
+  role       BusinessRole
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+  @@index([businessId])
+  @@index([userId])
+}
 
 model StaffMember {
   id String @id @default(cuid())
@@ -203,11 +189,9 @@ model StaffMember {
   businessId String
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
-  /// اگر پرسنل اکانت داشته باشد
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
-  /// نام نمایشی
   name   String
   avatar String?
   phone  String?
@@ -222,7 +206,6 @@ model StaffMember {
   services   ServiceStaff[]
   bookings   Booking[]
 
-  /// یک یوزر فقط یک‌بار در هر بیزنس
   @@unique([businessId, userId])
   @@index([businessId])
   @@index([userId])
@@ -234,13 +217,10 @@ model StaffAvailability {
   staffId String
   staff   StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
 
-  /// 0 = شنبه ، 6 = جمعه
   dayOfWeek Int
-
-  startTime String // "09:00"
-  endTime   String // "17:00"
-
-  isClosed Boolean @default(false)
+  startTime String
+  endTime   String
+  isClosed  Boolean @default(false)
 
   @@unique([staffId, dayOfWeek])
 }
@@ -251,16 +231,16 @@ model StaffException {
   staffId String
   staff   StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
 
-  /// تعطیلی خاص
   date     DateTime @db.Date
   isClosed Boolean  @default(true)
 
-  @@unique([staffId, date])
-}
+  startTime String?
+  endTime   String?
+  reason    String?
 
-// ==========================================
-// SERVICES
-// ==========================================
+  @@unique([staffId, date])
+  @@index([staffId, date])
+}
 
 model Service {
   id          String  @id @default(cuid())
@@ -268,7 +248,7 @@ model Service {
   description String? @db.Text
 
   price    Int
-  duration Int // دقیقه
+  duration Int
   capacity Int @default(1)
 
   depositRequired Boolean @default(false)
@@ -294,15 +274,10 @@ model ServiceStaff {
   staffId String
   staff   StaffMember @relation(fields: [staffId], references: [id], onDelete: Cascade)
 
-  /// قیمت اختصاصی
   overridePrice Int?
 
   @@unique([serviceId, staffId])
 }
-
-// ==========================================
-// BOOKINGS & PAYMENTS
-// ==========================================
 
 model Booking {
   id String @id @default(cuid())
@@ -310,7 +285,6 @@ model Booking {
   businessId String
   business   Business @relation(fields: [businessId], references: [id])
 
-  /// مشتری (OTP)
   customerId String
   customer   User   @relation(fields: [customerId], references: [id])
 
@@ -333,7 +307,6 @@ model Booking {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  /// ثبت‌کننده رزرو
   createdById String?
   createdBy   User?   @relation("BookingCreatedBy", fields: [createdById], references: [id])
 
@@ -369,7 +342,6 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ///           Relations
   ledgerEntries LedgerEntry[]
   commission    Commission?
 
@@ -382,10 +354,10 @@ model Commission {
   paymentId String  @unique
   payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
-  grossAmount   Int // مبلغ پرداختی مشتری
-  platformFee   Int // سهم پلتفرم
-  businessShare Int // سهم بیزنس
-  taxAmount     Int? // مالیات (اختیاری – آینده)
+  grossAmount   Int
+  platformFee   Int
+  businessShare Int
+  taxAmount     Int?
 
   createdAt DateTime @default(now())
 }
@@ -398,7 +370,6 @@ model LedgerEntry {
 
   amount Int
 
-  /// برای ردیابی
   paymentId String?
   payment   Payment? @relation(fields: [paymentId], references: [id])
 
@@ -414,7 +385,6 @@ model LedgerEntry {
   @@index([businessId])
 }
 
-// (تسویه دوره‌ای)
 model Settlement {
   id String @id @default(cuid())
 
@@ -435,11 +405,6 @@ model Settlement {
   @@index([businessId, status])
 }
 
-// ==========================================
-// OTP
-// ==========================================
-
-/// فقط برای لاگین OTP مشتریان
 model OtpCode {
   phone     String   @id
   codeHash  String
@@ -462,6 +427,5 @@ model Favorite {
 
   createdAt DateTime @default(now())
 
-  // جلوگیری از علاقه تکراری برای یک کاربر
   @@unique([userId, businessId])
 }

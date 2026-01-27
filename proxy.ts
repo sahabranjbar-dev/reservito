@@ -1,8 +1,12 @@
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import { NextResponse, NextRequest } from "next/server";
 import { authOptions } from "./utils/authOptions";
+import prisma from "./utils/prisma";
 
-type Rule = (req: NextRequest, session: any) => NextResponse | void;
+type Rule = (
+  req: NextRequest,
+  session: Session | null
+) => NextResponse | void | Promise<any>;
 
 const redirectToLogin = (req: NextRequest, url?: string) =>
   NextResponse.redirect(new URL(url ? url : "/auth", req.url));
@@ -34,9 +38,41 @@ const customerRules: Rule[] = [
 // 3) قواعد مخصوص مسیرهای Business
 // =================================
 const businessRules: Rule[] = [
-  (req, session) => {
-    const roles = session?.user?.roles || [];
-    if (!roles.includes("BUSINESS_OWNER"))
+  async (req, session) => {
+    const userId = session?.user.id;
+    const businessId = session?.user.business?.id;
+    if (!businessId || !userId) {
+      return redirectToLogin(req, "/business/login");
+    }
+    const businessMember = await prisma.businessMember.findUnique({
+      where: {
+        userId_businessId: {
+          businessId,
+          userId,
+        },
+      },
+    });
+    if (businessMember?.role !== "OWNER")
+      return redirectToLogin(req, "/business/login");
+  },
+];
+
+const staffRules: Rule[] = [
+  async (req, session) => {
+    const userId = session?.user.id;
+    const businessId = session?.user.business?.id;
+    if (!businessId || !userId) {
+      return redirectToLogin(req, "/business/login");
+    }
+    const businessMember = await prisma.businessMember.findUnique({
+      where: {
+        userId_businessId: {
+          businessId,
+          userId,
+        },
+      },
+    });
+    if (businessMember?.role !== "STAFF")
       return redirectToLogin(req, "/business/login");
   },
 ];
@@ -51,7 +87,7 @@ const apiRules: Rule[] = [
     }
   },
 
-  (req, session) => {
+  async (req, session) => {
     const roles = session?.user?.roles || [];
 
     if (req.nextUrl.pathname.startsWith("/api/dashboard/admin")) {
@@ -61,7 +97,39 @@ const apiRules: Rule[] = [
     }
 
     if (req.nextUrl.pathname.startsWith("/api/dashboard/business")) {
-      if (!roles.includes("BUSINESS_OWNER")) {
+      const userId = session?.user.id;
+      const businessId = session?.user.business?.id;
+      if (!businessId || !userId) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const businessMember = await prisma.businessMember.findUnique({
+        where: {
+          userId_businessId: {
+            businessId,
+            userId,
+          },
+        },
+      });
+      if (businessMember?.role !== "OWNER") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    if (req.nextUrl.pathname.startsWith("/api/dashboard/staff")) {
+      const userId = session?.user.id;
+      const businessId = session?.user.business?.id;
+      if (!businessId || !userId) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const businessMember = await prisma.businessMember.findUnique({
+        where: {
+          userId_businessId: {
+            businessId,
+            userId,
+          },
+        },
+      });
+      if (businessMember?.role !== "STAFF") {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
     }
@@ -81,11 +149,13 @@ function getRulesForPath(pathname: string): Rule[] {
   if (pathname.startsWith("/dashboard/admin")) return adminRules;
   if (pathname.startsWith("/dashboard/business")) return businessRules;
   if (pathname.startsWith("/dashboard/customer")) return customerRules;
+  if (pathname.startsWith("/dashboard/staff")) return staffRules;
 
   if (
     pathname.startsWith("/api/dashboard/admin") ||
     pathname.startsWith("/api/dashboard/customer") ||
-    pathname.startsWith("/api/dashboard/business")
+    pathname.startsWith("/api/dashboard/business") ||
+    pathname.startsWith("/api/dashboard/staff")
   ) {
     return apiRules;
   }

@@ -13,3 +13,13 @@ export enum BusinessType {
   CONSULTING = "CONSULTING",
   OTHER = "OTHER",
 }
+
+export enum Role {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  CUSTOMER = "CUSTOMER",
+}
+
+export enum BusinessRole {
+  OWNER = "OWNER",
+  STAFF = "STAFF",
+}

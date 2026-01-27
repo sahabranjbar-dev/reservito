@@ -20,7 +20,7 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
  * Model UserRole
- * جدول واسط نقش‌ها (خیلی مهم)
+ * 
  */
 export type UserRole = $Result.DefaultSelection<Prisma.$UserRolePayload>
 /**
@@ -28,6 +28,11 @@ export type UserRole = $Result.DefaultSelection<Prisma.$UserRolePayload>
  * 
  */
 export type Business = $Result.DefaultSelection<Prisma.$BusinessPayload>
+/**
+ * Model BusinessMember
+ * 
+ */
+export type BusinessMember = $Result.DefaultSelection<Prisma.$BusinessMemberPayload>
 /**
  * Model StaffMember
  * 
@@ -80,7 +85,7 @@ export type LedgerEntry = $Result.DefaultSelection<Prisma.$LedgerEntryPayload>
 export type Settlement = $Result.DefaultSelection<Prisma.$SettlementPayload>
 /**
  * Model OtpCode
- * فقط برای لاگین OTP مشتریان
+ * 
  */
 export type OtpCode = $Result.DefaultSelection<Prisma.$OtpCodePayload>
 /**
@@ -95,12 +100,18 @@ export type Favorite = $Result.DefaultSelection<Prisma.$FavoritePayload>
 export namespace $Enums {
   export const Role: {
   SUPER_ADMIN: 'SUPER_ADMIN',
-  BUSINESS_OWNER: 'BUSINESS_OWNER',
-  STAFF: 'STAFF',
   CUSTOMER: 'CUSTOMER'
 };
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const BusinessRole: {
+  OWNER: 'OWNER',
+  STAFF: 'STAFF'
+};
+
+export type BusinessRole = (typeof BusinessRole)[keyof typeof BusinessRole]
 
 
 export const BookingStatus: {
@@ -190,6 +201,10 @@ export type BusinessRegistrationStatus = (typeof BusinessRegistrationStatus)[key
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type BusinessRole = $Enums.BusinessRole
+
+export const BusinessRole: typeof $Enums.BusinessRole
 
 export type BookingStatus = $Enums.BookingStatus
 
@@ -377,6 +392,16 @@ export class PrismaClient<
     * ```
     */
   get business(): Prisma.BusinessDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.businessMember`: Exposes CRUD operations for the **BusinessMember** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BusinessMembers
+    * const businessMembers = await prisma.businessMember.findMany()
+    * ```
+    */
+  get businessMember(): Prisma.BusinessMemberDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.staffMember`: Exposes CRUD operations for the **StaffMember** model.
@@ -940,6 +965,7 @@ export namespace Prisma {
     User: 'User',
     UserRole: 'UserRole',
     Business: 'Business',
+    BusinessMember: 'BusinessMember',
     StaffMember: 'StaffMember',
     StaffAvailability: 'StaffAvailability',
     StaffException: 'StaffException',
@@ -970,7 +996,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userRole" | "business" | "staffMember" | "staffAvailability" | "staffException" | "service" | "serviceStaff" | "booking" | "payment" | "commission" | "ledgerEntry" | "settlement" | "otpCode" | "favorite"
+      modelProps: "user" | "userRole" | "business" | "businessMember" | "staffMember" | "staffAvailability" | "staffException" | "service" | "serviceStaff" | "booking" | "payment" | "commission" | "ledgerEntry" | "settlement" | "otpCode" | "favorite"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1193,6 +1219,80 @@ export namespace Prisma {
           count: {
             args: Prisma.BusinessCountArgs<ExtArgs>
             result: $Utils.Optional<BusinessCountAggregateOutputType> | number
+          }
+        }
+      }
+      BusinessMember: {
+        payload: Prisma.$BusinessMemberPayload<ExtArgs>
+        fields: Prisma.BusinessMemberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BusinessMemberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BusinessMemberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          findFirst: {
+            args: Prisma.BusinessMemberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BusinessMemberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          findMany: {
+            args: Prisma.BusinessMemberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>[]
+          }
+          create: {
+            args: Prisma.BusinessMemberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          createMany: {
+            args: Prisma.BusinessMemberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BusinessMemberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>[]
+          }
+          delete: {
+            args: Prisma.BusinessMemberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          update: {
+            args: Prisma.BusinessMemberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          deleteMany: {
+            args: Prisma.BusinessMemberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BusinessMemberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BusinessMemberUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>[]
+          }
+          upsert: {
+            args: Prisma.BusinessMemberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessMemberPayload>
+          }
+          aggregate: {
+            args: Prisma.BusinessMemberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBusinessMember>
+          }
+          groupBy: {
+            args: Prisma.BusinessMemberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BusinessMemberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BusinessMemberCountArgs<ExtArgs>
+            result: $Utils.Optional<BusinessMemberCountAggregateOutputType> | number
           }
         }
       }
@@ -2171,6 +2271,7 @@ export namespace Prisma {
     user?: UserOmit
     userRole?: UserRoleOmit
     business?: BusinessOmit
+    businessMember?: BusinessMemberOmit
     staffMember?: StaffMemberOmit
     staffAvailability?: StaffAvailabilityOmit
     staffException?: StaffExceptionOmit
@@ -2279,6 +2380,7 @@ export namespace Prisma {
   export type UserCountOutputType = {
     favorites: number
     roles: number
+    businessMembers: number
     ownedBusinesses: number
     bookings: number
     createdBookings: number
@@ -2289,6 +2391,7 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favorites?: boolean | UserCountOutputTypeCountFavoritesArgs
     roles?: boolean | UserCountOutputTypeCountRolesArgs
+    businessMembers?: boolean | UserCountOutputTypeCountBusinessMembersArgs
     ownedBusinesses?: boolean | UserCountOutputTypeCountOwnedBusinessesArgs
     bookings?: boolean | UserCountOutputTypeCountBookingsArgs
     createdBookings?: boolean | UserCountOutputTypeCountCreatedBookingsArgs
@@ -2319,6 +2422,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserRoleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBusinessMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BusinessMemberWhereInput
   }
 
   /**
@@ -2369,6 +2479,7 @@ export namespace Prisma {
     ledgerEntries: number
     staffMembers: number
     services: number
+    businessMembers: number
   }
 
   export type BusinessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2379,6 +2490,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | BusinessCountOutputTypeCountLedgerEntriesArgs
     staffMembers?: boolean | BusinessCountOutputTypeCountStaffMembersArgs
     services?: boolean | BusinessCountOutputTypeCountServicesArgs
+    businessMembers?: boolean | BusinessCountOutputTypeCountBusinessMembersArgs
   }
 
   // Custom InputTypes
@@ -2439,6 +2551,13 @@ export namespace Prisma {
    */
   export type BusinessCountOutputTypeCountServicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ServiceWhereInput
+  }
+
+  /**
+   * BusinessCountOutputType without action
+   */
+  export type BusinessCountOutputTypeCountBusinessMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BusinessMemberWhereInput
   }
 
 
@@ -2851,6 +2970,7 @@ export namespace Prisma {
     deletedAt?: boolean
     favorites?: boolean | User$favoritesArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
+    businessMembers?: boolean | User$businessMembersArgs<ExtArgs>
     ownedBusinesses?: boolean | User$ownedBusinessesArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
     createdBookings?: boolean | User$createdBookingsArgs<ExtArgs>
@@ -2905,6 +3025,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favorites?: boolean | User$favoritesArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
+    businessMembers?: boolean | User$businessMembersArgs<ExtArgs>
     ownedBusinesses?: boolean | User$ownedBusinessesArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
     createdBookings?: boolean | User$createdBookingsArgs<ExtArgs>
@@ -2919,44 +3040,18 @@ export namespace Prisma {
     name: "User"
     objects: {
       favorites: Prisma.$FavoritePayload<ExtArgs>[]
-      /**
-       * نقش‌های کاربر (چندگانه)
-       */
       roles: Prisma.$UserRolePayload<ExtArgs>[]
-      /**
-       * بیزنس‌هایی که مالک آن است
-       */
+      businessMembers: Prisma.$BusinessMemberPayload<ExtArgs>[]
       ownedBusinesses: Prisma.$BusinessPayload<ExtArgs>[]
-      /**
-       * رزروهایی که به عنوان مشتری انجام داده
-       */
       bookings: Prisma.$BookingPayload<ExtArgs>[]
-      /**
-       * رزروهایی که ثبت کرده (منشی / ادمین)
-       */
       createdBookings: Prisma.$BookingPayload<ExtArgs>[]
-      /**
-       * پرداخت‌هایی که تأیید کرده
-       */
       verifiedPayments: Prisma.$PaymentPayload<ExtArgs>[]
-      /**
-       * عضویت در بیزنس‌ها به عنوان پرسنل
-       */
       staffMembers: Prisma.$StaffMemberPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      /**
-       * شماره موبایل (شناسه اصلی OTP)
-       */
       phone: string
-      /**
-       * ایمیل اختیاری (ادمین / بیزنس)
-       */
       email: string | null
-      /**
-       * فقط برای لاگین بیزنس / ادمین
-       */
       username: string | null
       passwordHash: string | null
       fullName: string | null
@@ -3361,6 +3456,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     favorites<T extends User$favoritesArgs<ExtArgs> = {}>(args?: Subset<T, User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    businessMembers<T extends User$businessMembersArgs<ExtArgs> = {}>(args?: Subset<T, User$businessMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ownedBusinesses<T extends User$ownedBusinessesArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedBusinessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bookings<T extends User$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdBookings<T extends User$createdBookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdBookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3839,6 +3935,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
+  }
+
+  /**
+   * User.businessMembers
+   */
+  export type User$businessMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    where?: BusinessMemberWhereInput
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    cursor?: BusinessMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BusinessMemberScalarFieldEnum | BusinessMemberScalarFieldEnum[]
   }
 
   /**
@@ -5386,6 +5506,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | Business$ledgerEntriesArgs<ExtArgs>
     staffMembers?: boolean | Business$staffMembersArgs<ExtArgs>
     services?: boolean | Business$servicesArgs<ExtArgs>
+    businessMembers?: boolean | Business$businessMembersArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business"]>
 
@@ -5485,6 +5606,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | Business$ledgerEntriesArgs<ExtArgs>
     staffMembers?: boolean | Business$staffMembersArgs<ExtArgs>
     services?: boolean | Business$servicesArgs<ExtArgs>
+    businessMembers?: boolean | Business$businessMembersArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BusinessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5505,6 +5627,7 @@ export namespace Prisma {
       ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
       staffMembers: Prisma.$StaffMemberPayload<ExtArgs>[]
       services: Prisma.$ServicePayload<ExtArgs>[]
+      businessMembers: Prisma.$BusinessMemberPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5934,6 +6057,7 @@ export namespace Prisma {
     ledgerEntries<T extends Business$ledgerEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Business$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     staffMembers<T extends Business$staffMembersArgs<ExtArgs> = {}>(args?: Subset<T, Business$staffMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     services<T extends Business$servicesArgs<ExtArgs> = {}>(args?: Subset<T, Business$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    businessMembers<T extends Business$businessMembersArgs<ExtArgs> = {}>(args?: Subset<T, Business$businessMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6552,6 +6676,30 @@ export namespace Prisma {
   }
 
   /**
+   * Business.businessMembers
+   */
+  export type Business$businessMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    where?: BusinessMemberWhereInput
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    cursor?: BusinessMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BusinessMemberScalarFieldEnum | BusinessMemberScalarFieldEnum[]
+  }
+
+  /**
    * Business without action
    */
   export type BusinessDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6567,6 +6715,1059 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BusinessInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BusinessMember
+   */
+
+  export type AggregateBusinessMember = {
+    _count: BusinessMemberCountAggregateOutputType | null
+    _min: BusinessMemberMinAggregateOutputType | null
+    _max: BusinessMemberMaxAggregateOutputType | null
+  }
+
+  export type BusinessMemberMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    businessId: string | null
+    role: $Enums.BusinessRole | null
+  }
+
+  export type BusinessMemberMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    businessId: string | null
+    role: $Enums.BusinessRole | null
+  }
+
+  export type BusinessMemberCountAggregateOutputType = {
+    id: number
+    userId: number
+    businessId: number
+    role: number
+    _all: number
+  }
+
+
+  export type BusinessMemberMinAggregateInputType = {
+    id?: true
+    userId?: true
+    businessId?: true
+    role?: true
+  }
+
+  export type BusinessMemberMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    businessId?: true
+    role?: true
+  }
+
+  export type BusinessMemberCountAggregateInputType = {
+    id?: true
+    userId?: true
+    businessId?: true
+    role?: true
+    _all?: true
+  }
+
+  export type BusinessMemberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessMember to aggregate.
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessMembers to fetch.
+     */
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BusinessMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BusinessMembers
+    **/
+    _count?: true | BusinessMemberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BusinessMemberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BusinessMemberMaxAggregateInputType
+  }
+
+  export type GetBusinessMemberAggregateType<T extends BusinessMemberAggregateArgs> = {
+        [P in keyof T & keyof AggregateBusinessMember]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBusinessMember[P]>
+      : GetScalarType<T[P], AggregateBusinessMember[P]>
+  }
+
+
+
+
+  export type BusinessMemberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BusinessMemberWhereInput
+    orderBy?: BusinessMemberOrderByWithAggregationInput | BusinessMemberOrderByWithAggregationInput[]
+    by: BusinessMemberScalarFieldEnum[] | BusinessMemberScalarFieldEnum
+    having?: BusinessMemberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BusinessMemberCountAggregateInputType | true
+    _min?: BusinessMemberMinAggregateInputType
+    _max?: BusinessMemberMaxAggregateInputType
+  }
+
+  export type BusinessMemberGroupByOutputType = {
+    id: string
+    userId: string
+    businessId: string
+    role: $Enums.BusinessRole
+    _count: BusinessMemberCountAggregateOutputType | null
+    _min: BusinessMemberMinAggregateOutputType | null
+    _max: BusinessMemberMaxAggregateOutputType | null
+  }
+
+  type GetBusinessMemberGroupByPayload<T extends BusinessMemberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BusinessMemberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BusinessMemberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BusinessMemberGroupByOutputType[P]>
+            : GetScalarType<T[P], BusinessMemberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BusinessMemberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    businessId?: boolean
+    role?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessMember"]>
+
+  export type BusinessMemberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    businessId?: boolean
+    role?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessMember"]>
+
+  export type BusinessMemberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    businessId?: boolean
+    role?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessMember"]>
+
+  export type BusinessMemberSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    businessId?: boolean
+    role?: boolean
+  }
+
+  export type BusinessMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "businessId" | "role", ExtArgs["result"]["businessMember"]>
+  export type BusinessMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+  export type BusinessMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+  export type BusinessMemberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+
+  export type $BusinessMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BusinessMember"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      business: Prisma.$BusinessPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      businessId: string
+      role: $Enums.BusinessRole
+    }, ExtArgs["result"]["businessMember"]>
+    composites: {}
+  }
+
+  type BusinessMemberGetPayload<S extends boolean | null | undefined | BusinessMemberDefaultArgs> = $Result.GetResult<Prisma.$BusinessMemberPayload, S>
+
+  type BusinessMemberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BusinessMemberFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BusinessMemberCountAggregateInputType | true
+    }
+
+  export interface BusinessMemberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BusinessMember'], meta: { name: 'BusinessMember' } }
+    /**
+     * Find zero or one BusinessMember that matches the filter.
+     * @param {BusinessMemberFindUniqueArgs} args - Arguments to find a BusinessMember
+     * @example
+     * // Get one BusinessMember
+     * const businessMember = await prisma.businessMember.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BusinessMemberFindUniqueArgs>(args: SelectSubset<T, BusinessMemberFindUniqueArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BusinessMember that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BusinessMemberFindUniqueOrThrowArgs} args - Arguments to find a BusinessMember
+     * @example
+     * // Get one BusinessMember
+     * const businessMember = await prisma.businessMember.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BusinessMemberFindUniqueOrThrowArgs>(args: SelectSubset<T, BusinessMemberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BusinessMember that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberFindFirstArgs} args - Arguments to find a BusinessMember
+     * @example
+     * // Get one BusinessMember
+     * const businessMember = await prisma.businessMember.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BusinessMemberFindFirstArgs>(args?: SelectSubset<T, BusinessMemberFindFirstArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BusinessMember that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberFindFirstOrThrowArgs} args - Arguments to find a BusinessMember
+     * @example
+     * // Get one BusinessMember
+     * const businessMember = await prisma.businessMember.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BusinessMemberFindFirstOrThrowArgs>(args?: SelectSubset<T, BusinessMemberFindFirstOrThrowArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BusinessMembers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BusinessMembers
+     * const businessMembers = await prisma.businessMember.findMany()
+     * 
+     * // Get first 10 BusinessMembers
+     * const businessMembers = await prisma.businessMember.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const businessMemberWithIdOnly = await prisma.businessMember.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BusinessMemberFindManyArgs>(args?: SelectSubset<T, BusinessMemberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BusinessMember.
+     * @param {BusinessMemberCreateArgs} args - Arguments to create a BusinessMember.
+     * @example
+     * // Create one BusinessMember
+     * const BusinessMember = await prisma.businessMember.create({
+     *   data: {
+     *     // ... data to create a BusinessMember
+     *   }
+     * })
+     * 
+     */
+    create<T extends BusinessMemberCreateArgs>(args: SelectSubset<T, BusinessMemberCreateArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BusinessMembers.
+     * @param {BusinessMemberCreateManyArgs} args - Arguments to create many BusinessMembers.
+     * @example
+     * // Create many BusinessMembers
+     * const businessMember = await prisma.businessMember.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BusinessMemberCreateManyArgs>(args?: SelectSubset<T, BusinessMemberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BusinessMembers and returns the data saved in the database.
+     * @param {BusinessMemberCreateManyAndReturnArgs} args - Arguments to create many BusinessMembers.
+     * @example
+     * // Create many BusinessMembers
+     * const businessMember = await prisma.businessMember.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BusinessMembers and only return the `id`
+     * const businessMemberWithIdOnly = await prisma.businessMember.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BusinessMemberCreateManyAndReturnArgs>(args?: SelectSubset<T, BusinessMemberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BusinessMember.
+     * @param {BusinessMemberDeleteArgs} args - Arguments to delete one BusinessMember.
+     * @example
+     * // Delete one BusinessMember
+     * const BusinessMember = await prisma.businessMember.delete({
+     *   where: {
+     *     // ... filter to delete one BusinessMember
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BusinessMemberDeleteArgs>(args: SelectSubset<T, BusinessMemberDeleteArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BusinessMember.
+     * @param {BusinessMemberUpdateArgs} args - Arguments to update one BusinessMember.
+     * @example
+     * // Update one BusinessMember
+     * const businessMember = await prisma.businessMember.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BusinessMemberUpdateArgs>(args: SelectSubset<T, BusinessMemberUpdateArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BusinessMembers.
+     * @param {BusinessMemberDeleteManyArgs} args - Arguments to filter BusinessMembers to delete.
+     * @example
+     * // Delete a few BusinessMembers
+     * const { count } = await prisma.businessMember.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BusinessMemberDeleteManyArgs>(args?: SelectSubset<T, BusinessMemberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BusinessMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BusinessMembers
+     * const businessMember = await prisma.businessMember.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BusinessMemberUpdateManyArgs>(args: SelectSubset<T, BusinessMemberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BusinessMembers and returns the data updated in the database.
+     * @param {BusinessMemberUpdateManyAndReturnArgs} args - Arguments to update many BusinessMembers.
+     * @example
+     * // Update many BusinessMembers
+     * const businessMember = await prisma.businessMember.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BusinessMembers and only return the `id`
+     * const businessMemberWithIdOnly = await prisma.businessMember.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BusinessMemberUpdateManyAndReturnArgs>(args: SelectSubset<T, BusinessMemberUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BusinessMember.
+     * @param {BusinessMemberUpsertArgs} args - Arguments to update or create a BusinessMember.
+     * @example
+     * // Update or create a BusinessMember
+     * const businessMember = await prisma.businessMember.upsert({
+     *   create: {
+     *     // ... data to create a BusinessMember
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BusinessMember we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BusinessMemberUpsertArgs>(args: SelectSubset<T, BusinessMemberUpsertArgs<ExtArgs>>): Prisma__BusinessMemberClient<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BusinessMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberCountArgs} args - Arguments to filter BusinessMembers to count.
+     * @example
+     * // Count the number of BusinessMembers
+     * const count = await prisma.businessMember.count({
+     *   where: {
+     *     // ... the filter for the BusinessMembers we want to count
+     *   }
+     * })
+    **/
+    count<T extends BusinessMemberCountArgs>(
+      args?: Subset<T, BusinessMemberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BusinessMemberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BusinessMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BusinessMemberAggregateArgs>(args: Subset<T, BusinessMemberAggregateArgs>): Prisma.PrismaPromise<GetBusinessMemberAggregateType<T>>
+
+    /**
+     * Group by BusinessMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessMemberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BusinessMemberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BusinessMemberGroupByArgs['orderBy'] }
+        : { orderBy?: BusinessMemberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BusinessMemberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusinessMemberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BusinessMember model
+   */
+  readonly fields: BusinessMemberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BusinessMember.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BusinessMemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    business<T extends BusinessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessDefaultArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BusinessMember model
+   */
+  interface BusinessMemberFieldRefs {
+    readonly id: FieldRef<"BusinessMember", 'String'>
+    readonly userId: FieldRef<"BusinessMember", 'String'>
+    readonly businessId: FieldRef<"BusinessMember", 'String'>
+    readonly role: FieldRef<"BusinessMember", 'BusinessRole'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BusinessMember findUnique
+   */
+  export type BusinessMemberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessMember to fetch.
+     */
+    where: BusinessMemberWhereUniqueInput
+  }
+
+  /**
+   * BusinessMember findUniqueOrThrow
+   */
+  export type BusinessMemberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessMember to fetch.
+     */
+    where: BusinessMemberWhereUniqueInput
+  }
+
+  /**
+   * BusinessMember findFirst
+   */
+  export type BusinessMemberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessMember to fetch.
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessMembers to fetch.
+     */
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessMembers.
+     */
+    cursor?: BusinessMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessMembers.
+     */
+    distinct?: BusinessMemberScalarFieldEnum | BusinessMemberScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessMember findFirstOrThrow
+   */
+  export type BusinessMemberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessMember to fetch.
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessMembers to fetch.
+     */
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessMembers.
+     */
+    cursor?: BusinessMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessMembers.
+     */
+    distinct?: BusinessMemberScalarFieldEnum | BusinessMemberScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessMember findMany
+   */
+  export type BusinessMemberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessMembers to fetch.
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessMembers to fetch.
+     */
+    orderBy?: BusinessMemberOrderByWithRelationInput | BusinessMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BusinessMembers.
+     */
+    cursor?: BusinessMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessMembers.
+     */
+    skip?: number
+    distinct?: BusinessMemberScalarFieldEnum | BusinessMemberScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessMember create
+   */
+  export type BusinessMemberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BusinessMember.
+     */
+    data: XOR<BusinessMemberCreateInput, BusinessMemberUncheckedCreateInput>
+  }
+
+  /**
+   * BusinessMember createMany
+   */
+  export type BusinessMemberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BusinessMembers.
+     */
+    data: BusinessMemberCreateManyInput | BusinessMemberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BusinessMember createManyAndReturn
+   */
+  export type BusinessMemberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * The data used to create many BusinessMembers.
+     */
+    data: BusinessMemberCreateManyInput | BusinessMemberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BusinessMember update
+   */
+  export type BusinessMemberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BusinessMember.
+     */
+    data: XOR<BusinessMemberUpdateInput, BusinessMemberUncheckedUpdateInput>
+    /**
+     * Choose, which BusinessMember to update.
+     */
+    where: BusinessMemberWhereUniqueInput
+  }
+
+  /**
+   * BusinessMember updateMany
+   */
+  export type BusinessMemberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BusinessMembers.
+     */
+    data: XOR<BusinessMemberUpdateManyMutationInput, BusinessMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which BusinessMembers to update
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * Limit how many BusinessMembers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BusinessMember updateManyAndReturn
+   */
+  export type BusinessMemberUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * The data used to update BusinessMembers.
+     */
+    data: XOR<BusinessMemberUpdateManyMutationInput, BusinessMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which BusinessMembers to update
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * Limit how many BusinessMembers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BusinessMember upsert
+   */
+  export type BusinessMemberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BusinessMember to update in case it exists.
+     */
+    where: BusinessMemberWhereUniqueInput
+    /**
+     * In case the BusinessMember found by the `where` argument doesn't exist, create a new BusinessMember with this data.
+     */
+    create: XOR<BusinessMemberCreateInput, BusinessMemberUncheckedCreateInput>
+    /**
+     * In case the BusinessMember was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BusinessMemberUpdateInput, BusinessMemberUncheckedUpdateInput>
+  }
+
+  /**
+   * BusinessMember delete
+   */
+  export type BusinessMemberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
+    /**
+     * Filter which BusinessMember to delete.
+     */
+    where: BusinessMemberWhereUniqueInput
+  }
+
+  /**
+   * BusinessMember deleteMany
+   */
+  export type BusinessMemberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessMembers to delete
+     */
+    where?: BusinessMemberWhereInput
+    /**
+     * Limit how many BusinessMembers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BusinessMember without action
+   */
+  export type BusinessMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessMember
+     */
+    select?: BusinessMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessMember
+     */
+    omit?: BusinessMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessMemberInclude<ExtArgs> | null
   }
 
 
@@ -6858,13 +8059,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       businessId: string
-      /**
-       * اگر پرسنل اکانت داشته باشد
-       */
       userId: string | null
-      /**
-       * نام نمایشی
-       */
       name: string
       avatar: string | null
       phone: string | null
@@ -8097,9 +9292,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       staffId: string
-      /**
-       * 0 = شنبه ، 6 = جمعه
-       */
       dayOfWeek: number
       startTime: string
       endTime: string
@@ -8963,6 +10155,9 @@ export namespace Prisma {
     staffId: string | null
     date: Date | null
     isClosed: boolean | null
+    startTime: string | null
+    endTime: string | null
+    reason: string | null
   }
 
   export type StaffExceptionMaxAggregateOutputType = {
@@ -8970,6 +10165,9 @@ export namespace Prisma {
     staffId: string | null
     date: Date | null
     isClosed: boolean | null
+    startTime: string | null
+    endTime: string | null
+    reason: string | null
   }
 
   export type StaffExceptionCountAggregateOutputType = {
@@ -8977,6 +10175,9 @@ export namespace Prisma {
     staffId: number
     date: number
     isClosed: number
+    startTime: number
+    endTime: number
+    reason: number
     _all: number
   }
 
@@ -8986,6 +10187,9 @@ export namespace Prisma {
     staffId?: true
     date?: true
     isClosed?: true
+    startTime?: true
+    endTime?: true
+    reason?: true
   }
 
   export type StaffExceptionMaxAggregateInputType = {
@@ -8993,6 +10197,9 @@ export namespace Prisma {
     staffId?: true
     date?: true
     isClosed?: true
+    startTime?: true
+    endTime?: true
+    reason?: true
   }
 
   export type StaffExceptionCountAggregateInputType = {
@@ -9000,6 +10207,9 @@ export namespace Prisma {
     staffId?: true
     date?: true
     isClosed?: true
+    startTime?: true
+    endTime?: true
+    reason?: true
     _all?: true
   }
 
@@ -9080,6 +10290,9 @@ export namespace Prisma {
     staffId: string
     date: Date
     isClosed: boolean
+    startTime: string | null
+    endTime: string | null
+    reason: string | null
     _count: StaffExceptionCountAggregateOutputType | null
     _min: StaffExceptionMinAggregateOutputType | null
     _max: StaffExceptionMaxAggregateOutputType | null
@@ -9104,6 +10317,9 @@ export namespace Prisma {
     staffId?: boolean
     date?: boolean
     isClosed?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    reason?: boolean
     staff?: boolean | StaffMemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["staffException"]>
 
@@ -9112,6 +10328,9 @@ export namespace Prisma {
     staffId?: boolean
     date?: boolean
     isClosed?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    reason?: boolean
     staff?: boolean | StaffMemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["staffException"]>
 
@@ -9120,6 +10339,9 @@ export namespace Prisma {
     staffId?: boolean
     date?: boolean
     isClosed?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    reason?: boolean
     staff?: boolean | StaffMemberDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["staffException"]>
 
@@ -9128,9 +10350,12 @@ export namespace Prisma {
     staffId?: boolean
     date?: boolean
     isClosed?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    reason?: boolean
   }
 
-  export type StaffExceptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "staffId" | "date" | "isClosed", ExtArgs["result"]["staffException"]>
+  export type StaffExceptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "staffId" | "date" | "isClosed" | "startTime" | "endTime" | "reason", ExtArgs["result"]["staffException"]>
   export type StaffExceptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     staff?: boolean | StaffMemberDefaultArgs<ExtArgs>
   }
@@ -9149,11 +10374,11 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       staffId: string
-      /**
-       * تعطیلی خاص
-       */
       date: Date
       isClosed: boolean
+      startTime: string | null
+      endTime: string | null
+      reason: string | null
     }, ExtArgs["result"]["staffException"]>
     composites: {}
   }
@@ -9582,6 +10807,9 @@ export namespace Prisma {
     readonly staffId: FieldRef<"StaffException", 'String'>
     readonly date: FieldRef<"StaffException", 'DateTime'>
     readonly isClosed: FieldRef<"StaffException", 'Boolean'>
+    readonly startTime: FieldRef<"StaffException", 'String'>
+    readonly endTime: FieldRef<"StaffException", 'String'>
+    readonly reason: FieldRef<"StaffException", 'String'>
   }
     
 
@@ -11466,9 +12694,6 @@ export namespace Prisma {
       id: string
       serviceId: string
       staffId: string
-      /**
-       * قیمت اختصاصی
-       */
       overridePrice: number | null
     }, ExtArgs["result"]["serviceStaff"]>
     composites: {}
@@ -12702,9 +13927,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       businessId: string
-      /**
-       * مشتری (OTP)
-       */
       customerId: string
       serviceId: string
       staffId: string
@@ -12717,9 +13939,6 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
-      /**
-       * ثبت‌کننده رزرو
-       */
       createdById: string | null
     }, ExtArgs["result"]["booking"]>
     composites: {}
@@ -13972,9 +15191,6 @@ export namespace Prisma {
       business: Prisma.$BusinessPayload<ExtArgs>
       booking: Prisma.$BookingPayload<ExtArgs>
       verifiedBy: Prisma.$UserPayload<ExtArgs> | null
-      /**
-       * Relations
-       */
       ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
       commission: Prisma.$CommissionPayload<ExtArgs> | null
     }
@@ -16334,9 +17550,6 @@ export namespace Prisma {
       walletType: $Enums.WalletType
       entryType: $Enums.LedgerEntryType
       amount: number
-      /**
-       * برای ردیابی
-       */
       paymentId: string | null
       settlementId: string | null
       businessId: string | null
@@ -20526,6 +21739,16 @@ export namespace Prisma {
   export type BusinessScalarFieldEnum = (typeof BusinessScalarFieldEnum)[keyof typeof BusinessScalarFieldEnum]
 
 
+  export const BusinessMemberScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    businessId: 'businessId',
+    role: 'role'
+  };
+
+  export type BusinessMemberScalarFieldEnum = (typeof BusinessMemberScalarFieldEnum)[keyof typeof BusinessMemberScalarFieldEnum]
+
+
   export const StaffMemberScalarFieldEnum: {
     id: 'id',
     businessId: 'businessId',
@@ -20558,7 +21781,10 @@ export namespace Prisma {
     id: 'id',
     staffId: 'staffId',
     date: 'date',
-    isClosed: 'isClosed'
+    isClosed: 'isClosed',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    reason: 'reason'
   };
 
   export type StaffExceptionScalarFieldEnum = (typeof StaffExceptionScalarFieldEnum)[keyof typeof StaffExceptionScalarFieldEnum]
@@ -20827,6 +22053,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BusinessRole'
+   */
+  export type EnumBusinessRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'BusinessRole[]'
+   */
+  export type ListEnumBusinessRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessRole[]'>
+    
+
+
+  /**
    * Reference to a field of type 'BookingStatus'
    */
   export type EnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus'>
@@ -20930,6 +22170,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     favorites?: FavoriteListRelationFilter
     roles?: UserRoleListRelationFilter
+    businessMembers?: BusinessMemberListRelationFilter
     ownedBusinesses?: BusinessListRelationFilter
     bookings?: BookingListRelationFilter
     createdBookings?: BookingListRelationFilter
@@ -20951,6 +22192,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     favorites?: FavoriteOrderByRelationAggregateInput
     roles?: UserRoleOrderByRelationAggregateInput
+    businessMembers?: BusinessMemberOrderByRelationAggregateInput
     ownedBusinesses?: BusinessOrderByRelationAggregateInput
     bookings?: BookingOrderByRelationAggregateInput
     createdBookings?: BookingOrderByRelationAggregateInput
@@ -20975,6 +22217,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     favorites?: FavoriteListRelationFilter
     roles?: UserRoleListRelationFilter
+    businessMembers?: BusinessMemberListRelationFilter
     ownedBusinesses?: BusinessListRelationFilter
     bookings?: BookingListRelationFilter
     createdBookings?: BookingListRelationFilter
@@ -21099,6 +22342,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryListRelationFilter
     staffMembers?: StaffMemberListRelationFilter
     services?: ServiceListRelationFilter
+    businessMembers?: BusinessMemberListRelationFilter
   }
 
   export type BusinessOrderByWithRelationInput = {
@@ -21135,6 +22379,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryOrderByRelationAggregateInput
     staffMembers?: StaffMemberOrderByRelationAggregateInput
     services?: ServiceOrderByRelationAggregateInput
+    businessMembers?: BusinessMemberOrderByRelationAggregateInput
   }
 
   export type BusinessWhereUniqueInput = Prisma.AtLeast<{
@@ -21174,6 +22419,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryListRelationFilter
     staffMembers?: StaffMemberListRelationFilter
     services?: ServiceListRelationFilter
+    businessMembers?: BusinessMemberListRelationFilter
   }, "id" | "slug" | "identifier">
 
   export type BusinessOrderByWithAggregationInput = {
@@ -21238,6 +22484,60 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Business"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Business"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Business"> | Date | string | null
+  }
+
+  export type BusinessMemberWhereInput = {
+    AND?: BusinessMemberWhereInput | BusinessMemberWhereInput[]
+    OR?: BusinessMemberWhereInput[]
+    NOT?: BusinessMemberWhereInput | BusinessMemberWhereInput[]
+    id?: StringFilter<"BusinessMember"> | string
+    userId?: StringFilter<"BusinessMember"> | string
+    businessId?: StringFilter<"BusinessMember"> | string
+    role?: EnumBusinessRoleFilter<"BusinessMember"> | $Enums.BusinessRole
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+  }
+
+  export type BusinessMemberOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    role?: SortOrder
+    user?: UserOrderByWithRelationInput
+    business?: BusinessOrderByWithRelationInput
+  }
+
+  export type BusinessMemberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_businessId?: BusinessMemberUserIdBusinessIdCompoundUniqueInput
+    AND?: BusinessMemberWhereInput | BusinessMemberWhereInput[]
+    OR?: BusinessMemberWhereInput[]
+    NOT?: BusinessMemberWhereInput | BusinessMemberWhereInput[]
+    userId?: StringFilter<"BusinessMember"> | string
+    businessId?: StringFilter<"BusinessMember"> | string
+    role?: EnumBusinessRoleFilter<"BusinessMember"> | $Enums.BusinessRole
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+  }, "id" | "userId_businessId">
+
+  export type BusinessMemberOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    role?: SortOrder
+    _count?: BusinessMemberCountOrderByAggregateInput
+    _max?: BusinessMemberMaxOrderByAggregateInput
+    _min?: BusinessMemberMinOrderByAggregateInput
+  }
+
+  export type BusinessMemberScalarWhereWithAggregatesInput = {
+    AND?: BusinessMemberScalarWhereWithAggregatesInput | BusinessMemberScalarWhereWithAggregatesInput[]
+    OR?: BusinessMemberScalarWhereWithAggregatesInput[]
+    NOT?: BusinessMemberScalarWhereWithAggregatesInput | BusinessMemberScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BusinessMember"> | string
+    userId?: StringWithAggregatesFilter<"BusinessMember"> | string
+    businessId?: StringWithAggregatesFilter<"BusinessMember"> | string
+    role?: EnumBusinessRoleWithAggregatesFilter<"BusinessMember"> | $Enums.BusinessRole
   }
 
   export type StaffMemberWhereInput = {
@@ -21407,6 +22707,9 @@ export namespace Prisma {
     staffId?: StringFilter<"StaffException"> | string
     date?: DateTimeFilter<"StaffException"> | Date | string
     isClosed?: BoolFilter<"StaffException"> | boolean
+    startTime?: StringNullableFilter<"StaffException"> | string | null
+    endTime?: StringNullableFilter<"StaffException"> | string | null
+    reason?: StringNullableFilter<"StaffException"> | string | null
     staff?: XOR<StaffMemberScalarRelationFilter, StaffMemberWhereInput>
   }
 
@@ -21415,6 +22718,9 @@ export namespace Prisma {
     staffId?: SortOrder
     date?: SortOrder
     isClosed?: SortOrder
+    startTime?: SortOrderInput | SortOrder
+    endTime?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
     staff?: StaffMemberOrderByWithRelationInput
   }
 
@@ -21427,6 +22733,9 @@ export namespace Prisma {
     staffId?: StringFilter<"StaffException"> | string
     date?: DateTimeFilter<"StaffException"> | Date | string
     isClosed?: BoolFilter<"StaffException"> | boolean
+    startTime?: StringNullableFilter<"StaffException"> | string | null
+    endTime?: StringNullableFilter<"StaffException"> | string | null
+    reason?: StringNullableFilter<"StaffException"> | string | null
     staff?: XOR<StaffMemberScalarRelationFilter, StaffMemberWhereInput>
   }, "id" | "staffId_date">
 
@@ -21435,6 +22744,9 @@ export namespace Prisma {
     staffId?: SortOrder
     date?: SortOrder
     isClosed?: SortOrder
+    startTime?: SortOrderInput | SortOrder
+    endTime?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
     _count?: StaffExceptionCountOrderByAggregateInput
     _max?: StaffExceptionMaxOrderByAggregateInput
     _min?: StaffExceptionMinOrderByAggregateInput
@@ -21448,6 +22760,9 @@ export namespace Prisma {
     staffId?: StringWithAggregatesFilter<"StaffException"> | string
     date?: DateTimeWithAggregatesFilter<"StaffException"> | Date | string
     isClosed?: BoolWithAggregatesFilter<"StaffException"> | boolean
+    startTime?: StringNullableWithAggregatesFilter<"StaffException"> | string | null
+    endTime?: StringNullableWithAggregatesFilter<"StaffException"> | string | null
+    reason?: StringNullableWithAggregatesFilter<"StaffException"> | string | null
   }
 
   export type ServiceWhereInput = {
@@ -22165,6 +23480,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
@@ -22186,6 +23502,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22207,6 +23524,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
@@ -22228,6 +23546,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22351,6 +23670,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateInput = {
@@ -22386,6 +23706,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUpdateInput = {
@@ -22421,6 +23742,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateInput = {
@@ -22456,6 +23778,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateManyInput = {
@@ -22539,6 +23862,53 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BusinessMemberCreateInput = {
+    id?: string
+    role: $Enums.BusinessRole
+    user: UserCreateNestedOneWithoutBusinessMembersInput
+    business: BusinessCreateNestedOneWithoutBusinessMembersInput
+  }
+
+  export type BusinessMemberUncheckedCreateInput = {
+    id?: string
+    userId: string
+    businessId: string
+    role: $Enums.BusinessRole
+  }
+
+  export type BusinessMemberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+    user?: UserUpdateOneRequiredWithoutBusinessMembersNestedInput
+    business?: BusinessUpdateOneRequiredWithoutBusinessMembersNestedInput
+  }
+
+  export type BusinessMemberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
+  export type BusinessMemberCreateManyInput = {
+    id?: string
+    userId: string
+    businessId: string
+    role: $Enums.BusinessRole
+  }
+
+  export type BusinessMemberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
+  export type BusinessMemberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
   }
 
   export type StaffMemberCreateInput = {
@@ -22712,6 +24082,9 @@ export namespace Prisma {
     id?: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
     staff: StaffMemberCreateNestedOneWithoutExceptionsInput
   }
 
@@ -22720,12 +24093,18 @@ export namespace Prisma {
     staffId: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
   }
 
   export type StaffExceptionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     staff?: StaffMemberUpdateOneRequiredWithoutExceptionsNestedInput
   }
 
@@ -22734,6 +24113,9 @@ export namespace Prisma {
     staffId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StaffExceptionCreateManyInput = {
@@ -22741,12 +24123,18 @@ export namespace Prisma {
     staffId: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
   }
 
   export type StaffExceptionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StaffExceptionUncheckedUpdateManyInput = {
@@ -22754,6 +24142,9 @@ export namespace Prisma {
     staffId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ServiceCreateInput = {
@@ -23538,6 +24929,12 @@ export namespace Prisma {
     none?: UserRoleWhereInput
   }
 
+  export type BusinessMemberListRelationFilter = {
+    every?: BusinessMemberWhereInput
+    some?: BusinessMemberWhereInput
+    none?: BusinessMemberWhereInput
+  }
+
   export type BusinessListRelationFilter = {
     every?: BusinessWhereInput
     some?: BusinessWhereInput
@@ -23572,6 +24969,10 @@ export namespace Prisma {
   }
 
   export type UserRoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BusinessMemberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23964,9 +25365,52 @@ export namespace Prisma {
     _max?: NestedEnumBusinessTypeFilter<$PrismaModel>
   }
 
+  export type EnumBusinessRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRole | EnumBusinessRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRoleFilter<$PrismaModel> | $Enums.BusinessRole
+  }
+
   export type BusinessScalarRelationFilter = {
     is?: BusinessWhereInput
     isNot?: BusinessWhereInput
+  }
+
+  export type BusinessMemberUserIdBusinessIdCompoundUniqueInput = {
+    userId: string
+    businessId: string
+  }
+
+  export type BusinessMemberCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    role?: SortOrder
+  }
+
+  export type BusinessMemberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    role?: SortOrder
+  }
+
+  export type BusinessMemberMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    role?: SortOrder
+  }
+
+  export type EnumBusinessRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRole | EnumBusinessRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRoleWithAggregatesFilter<$PrismaModel> | $Enums.BusinessRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessRoleFilter<$PrismaModel>
+    _max?: NestedEnumBusinessRoleFilter<$PrismaModel>
   }
 
   export type UserNullableScalarRelationFilter = {
@@ -24103,6 +25547,9 @@ export namespace Prisma {
     staffId?: SortOrder
     date?: SortOrder
     isClosed?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    reason?: SortOrder
   }
 
   export type StaffExceptionMaxOrderByAggregateInput = {
@@ -24110,6 +25557,9 @@ export namespace Prisma {
     staffId?: SortOrder
     date?: SortOrder
     isClosed?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    reason?: SortOrder
   }
 
   export type StaffExceptionMinOrderByAggregateInput = {
@@ -24117,6 +25567,9 @@ export namespace Prisma {
     staffId?: SortOrder
     date?: SortOrder
     isClosed?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    reason?: SortOrder
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -24678,6 +26131,13 @@ export namespace Prisma {
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
   }
 
+  export type BusinessMemberCreateNestedManyWithoutUserInput = {
+    create?: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput> | BusinessMemberCreateWithoutUserInput[] | BusinessMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutUserInput | BusinessMemberCreateOrConnectWithoutUserInput[]
+    createMany?: BusinessMemberCreateManyUserInputEnvelope
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+  }
+
   export type BusinessCreateNestedManyWithoutOwnerInput = {
     create?: XOR<BusinessCreateWithoutOwnerInput, BusinessUncheckedCreateWithoutOwnerInput> | BusinessCreateWithoutOwnerInput[] | BusinessUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: BusinessCreateOrConnectWithoutOwnerInput | BusinessCreateOrConnectWithoutOwnerInput[]
@@ -24725,6 +26185,13 @@ export namespace Prisma {
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
     createMany?: UserRoleCreateManyUserInputEnvelope
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+  }
+
+  export type BusinessMemberUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput> | BusinessMemberCreateWithoutUserInput[] | BusinessMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutUserInput | BusinessMemberCreateOrConnectWithoutUserInput[]
+    createMany?: BusinessMemberCreateManyUserInputEnvelope
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
   }
 
   export type BusinessUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -24808,6 +26275,20 @@ export namespace Prisma {
     update?: UserRoleUpdateWithWhereUniqueWithoutUserInput | UserRoleUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserRoleUpdateManyWithWhereWithoutUserInput | UserRoleUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+  }
+
+  export type BusinessMemberUpdateManyWithoutUserNestedInput = {
+    create?: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput> | BusinessMemberCreateWithoutUserInput[] | BusinessMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutUserInput | BusinessMemberCreateOrConnectWithoutUserInput[]
+    upsert?: BusinessMemberUpsertWithWhereUniqueWithoutUserInput | BusinessMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: BusinessMemberCreateManyUserInputEnvelope
+    set?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    disconnect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    delete?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    update?: BusinessMemberUpdateWithWhereUniqueWithoutUserInput | BusinessMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: BusinessMemberUpdateManyWithWhereWithoutUserInput | BusinessMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
   }
 
   export type BusinessUpdateManyWithoutOwnerNestedInput = {
@@ -24906,6 +26387,20 @@ export namespace Prisma {
     update?: UserRoleUpdateWithWhereUniqueWithoutUserInput | UserRoleUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserRoleUpdateManyWithWhereWithoutUserInput | UserRoleUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+  }
+
+  export type BusinessMemberUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput> | BusinessMemberCreateWithoutUserInput[] | BusinessMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutUserInput | BusinessMemberCreateOrConnectWithoutUserInput[]
+    upsert?: BusinessMemberUpsertWithWhereUniqueWithoutUserInput | BusinessMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: BusinessMemberCreateManyUserInputEnvelope
+    set?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    disconnect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    delete?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    update?: BusinessMemberUpdateWithWhereUniqueWithoutUserInput | BusinessMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: BusinessMemberUpdateManyWithWhereWithoutUserInput | BusinessMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
   }
 
   export type BusinessUncheckedUpdateManyWithoutOwnerNestedInput = {
@@ -25051,6 +26546,13 @@ export namespace Prisma {
     connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
   }
 
+  export type BusinessMemberCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput> | BusinessMemberCreateWithoutBusinessInput[] | BusinessMemberUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutBusinessInput | BusinessMemberCreateOrConnectWithoutBusinessInput[]
+    createMany?: BusinessMemberCreateManyBusinessInputEnvelope
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+  }
+
   export type FavoriteUncheckedCreateNestedManyWithoutBusinessInput = {
     create?: XOR<FavoriteCreateWithoutBusinessInput, FavoriteUncheckedCreateWithoutBusinessInput> | FavoriteCreateWithoutBusinessInput[] | FavoriteUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutBusinessInput | FavoriteCreateOrConnectWithoutBusinessInput[]
@@ -25098,6 +26600,13 @@ export namespace Prisma {
     connectOrCreate?: ServiceCreateOrConnectWithoutBusinessInput | ServiceCreateOrConnectWithoutBusinessInput[]
     createMany?: ServiceCreateManyBusinessInputEnvelope
     connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+  }
+
+  export type BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput> | BusinessMemberCreateWithoutBusinessInput[] | BusinessMemberUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutBusinessInput | BusinessMemberCreateOrConnectWithoutBusinessInput[]
+    createMany?: BusinessMemberCreateManyBusinessInputEnvelope
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -25230,6 +26739,20 @@ export namespace Prisma {
     deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
   }
 
+  export type BusinessMemberUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput> | BusinessMemberCreateWithoutBusinessInput[] | BusinessMemberUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutBusinessInput | BusinessMemberCreateOrConnectWithoutBusinessInput[]
+    upsert?: BusinessMemberUpsertWithWhereUniqueWithoutBusinessInput | BusinessMemberUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: BusinessMemberCreateManyBusinessInputEnvelope
+    set?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    disconnect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    delete?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    update?: BusinessMemberUpdateWithWhereUniqueWithoutBusinessInput | BusinessMemberUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: BusinessMemberUpdateManyWithWhereWithoutBusinessInput | BusinessMemberUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
+  }
+
   export type FavoriteUncheckedUpdateManyWithoutBusinessNestedInput = {
     create?: XOR<FavoriteCreateWithoutBusinessInput, FavoriteUncheckedCreateWithoutBusinessInput> | FavoriteCreateWithoutBusinessInput[] | FavoriteUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutBusinessInput | FavoriteCreateOrConnectWithoutBusinessInput[]
@@ -25326,6 +26849,52 @@ export namespace Prisma {
     update?: ServiceUpdateWithWhereUniqueWithoutBusinessInput | ServiceUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: ServiceUpdateManyWithWhereWithoutBusinessInput | ServiceUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+  }
+
+  export type BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput> | BusinessMemberCreateWithoutBusinessInput[] | BusinessMemberUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: BusinessMemberCreateOrConnectWithoutBusinessInput | BusinessMemberCreateOrConnectWithoutBusinessInput[]
+    upsert?: BusinessMemberUpsertWithWhereUniqueWithoutBusinessInput | BusinessMemberUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: BusinessMemberCreateManyBusinessInputEnvelope
+    set?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    disconnect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    delete?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    connect?: BusinessMemberWhereUniqueInput | BusinessMemberWhereUniqueInput[]
+    update?: BusinessMemberUpdateWithWhereUniqueWithoutBusinessInput | BusinessMemberUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: BusinessMemberUpdateManyWithWhereWithoutBusinessInput | BusinessMemberUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutBusinessMembersInput = {
+    create?: XOR<UserCreateWithoutBusinessMembersInput, UserUncheckedCreateWithoutBusinessMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessMembersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BusinessCreateNestedOneWithoutBusinessMembersInput = {
+    create?: XOR<BusinessCreateWithoutBusinessMembersInput, BusinessUncheckedCreateWithoutBusinessMembersInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutBusinessMembersInput
+    connect?: BusinessWhereUniqueInput
+  }
+
+  export type EnumBusinessRoleFieldUpdateOperationsInput = {
+    set?: $Enums.BusinessRole
+  }
+
+  export type UserUpdateOneRequiredWithoutBusinessMembersNestedInput = {
+    create?: XOR<UserCreateWithoutBusinessMembersInput, UserUncheckedCreateWithoutBusinessMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessMembersInput
+    upsert?: UserUpsertWithoutBusinessMembersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBusinessMembersInput, UserUpdateWithoutBusinessMembersInput>, UserUncheckedUpdateWithoutBusinessMembersInput>
+  }
+
+  export type BusinessUpdateOneRequiredWithoutBusinessMembersNestedInput = {
+    create?: XOR<BusinessCreateWithoutBusinessMembersInput, BusinessUncheckedCreateWithoutBusinessMembersInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutBusinessMembersInput
+    upsert?: BusinessUpsertWithoutBusinessMembersInput
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutBusinessMembersInput, BusinessUpdateWithoutBusinessMembersInput>, BusinessUncheckedUpdateWithoutBusinessMembersInput>
   }
 
   export type BusinessCreateNestedOneWithoutStaffMembersInput = {
@@ -26342,6 +27911,23 @@ export namespace Prisma {
     _max?: NestedEnumBusinessTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumBusinessRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRole | EnumBusinessRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRoleFilter<$PrismaModel> | $Enums.BusinessRole
+  }
+
+  export type NestedEnumBusinessRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRole | EnumBusinessRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRole[] | ListEnumBusinessRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRoleWithAggregatesFilter<$PrismaModel> | $Enums.BusinessRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessRoleFilter<$PrismaModel>
+    _max?: NestedEnumBusinessRoleFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -26502,6 +28088,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type BusinessMemberCreateWithoutUserInput = {
+    id?: string
+    role: $Enums.BusinessRole
+    business: BusinessCreateNestedOneWithoutBusinessMembersInput
+  }
+
+  export type BusinessMemberUncheckedCreateWithoutUserInput = {
+    id?: string
+    businessId: string
+    role: $Enums.BusinessRole
+  }
+
+  export type BusinessMemberCreateOrConnectWithoutUserInput = {
+    where: BusinessMemberWhereUniqueInput
+    create: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type BusinessMemberCreateManyUserInputEnvelope = {
+    data: BusinessMemberCreateManyUserInput | BusinessMemberCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BusinessCreateWithoutOwnerInput = {
     id?: string
     slug: string
@@ -26534,6 +28142,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutOwnerInput = {
@@ -26568,6 +28177,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutOwnerInput = {
@@ -26809,6 +28419,32 @@ export namespace Prisma {
     role?: EnumRoleFilter<"UserRole"> | $Enums.Role
   }
 
+  export type BusinessMemberUpsertWithWhereUniqueWithoutUserInput = {
+    where: BusinessMemberWhereUniqueInput
+    update: XOR<BusinessMemberUpdateWithoutUserInput, BusinessMemberUncheckedUpdateWithoutUserInput>
+    create: XOR<BusinessMemberCreateWithoutUserInput, BusinessMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type BusinessMemberUpdateWithWhereUniqueWithoutUserInput = {
+    where: BusinessMemberWhereUniqueInput
+    data: XOR<BusinessMemberUpdateWithoutUserInput, BusinessMemberUncheckedUpdateWithoutUserInput>
+  }
+
+  export type BusinessMemberUpdateManyWithWhereWithoutUserInput = {
+    where: BusinessMemberScalarWhereInput
+    data: XOR<BusinessMemberUpdateManyMutationInput, BusinessMemberUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type BusinessMemberScalarWhereInput = {
+    AND?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
+    OR?: BusinessMemberScalarWhereInput[]
+    NOT?: BusinessMemberScalarWhereInput | BusinessMemberScalarWhereInput[]
+    id?: StringFilter<"BusinessMember"> | string
+    userId?: StringFilter<"BusinessMember"> | string
+    businessId?: StringFilter<"BusinessMember"> | string
+    role?: EnumBusinessRoleFilter<"BusinessMember"> | $Enums.BusinessRole
+  }
+
   export type BusinessUpsertWithWhereUniqueWithoutOwnerInput = {
     where: BusinessWhereUniqueInput
     update: XOR<BusinessUpdateWithoutOwnerInput, BusinessUncheckedUpdateWithoutOwnerInput>
@@ -26989,6 +28625,7 @@ export namespace Prisma {
     createdAt?: Date | string
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
@@ -27009,6 +28646,7 @@ export namespace Prisma {
     createdAt?: Date | string
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27045,6 +28683,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
@@ -27065,6 +28704,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27086,6 +28726,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifiedByInput
@@ -27106,6 +28747,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27371,6 +29013,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type BusinessMemberCreateWithoutBusinessInput = {
+    id?: string
+    role: $Enums.BusinessRole
+    user: UserCreateNestedOneWithoutBusinessMembersInput
+  }
+
+  export type BusinessMemberUncheckedCreateWithoutBusinessInput = {
+    id?: string
+    userId: string
+    role: $Enums.BusinessRole
+  }
+
+  export type BusinessMemberCreateOrConnectWithoutBusinessInput = {
+    where: BusinessMemberWhereUniqueInput
+    create: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type BusinessMemberCreateManyBusinessInputEnvelope = {
+    data: BusinessMemberCreateManyBusinessInput | BusinessMemberCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutOwnedBusinessesInput = {
     update: XOR<UserUpdateWithoutOwnedBusinessesInput, UserUncheckedUpdateWithoutOwnedBusinessesInput>
     create: XOR<UserCreateWithoutOwnedBusinessesInput, UserUncheckedCreateWithoutOwnedBusinessesInput>
@@ -27396,6 +29060,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
     verifiedPayments?: PaymentUpdateManyWithoutVerifiedByNestedInput
@@ -27416,6 +29081,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -27578,6 +29244,278 @@ export namespace Prisma {
     businessId?: StringFilter<"Service"> | string
   }
 
+  export type BusinessMemberUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: BusinessMemberWhereUniqueInput
+    update: XOR<BusinessMemberUpdateWithoutBusinessInput, BusinessMemberUncheckedUpdateWithoutBusinessInput>
+    create: XOR<BusinessMemberCreateWithoutBusinessInput, BusinessMemberUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type BusinessMemberUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: BusinessMemberWhereUniqueInput
+    data: XOR<BusinessMemberUpdateWithoutBusinessInput, BusinessMemberUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type BusinessMemberUpdateManyWithWhereWithoutBusinessInput = {
+    where: BusinessMemberScalarWhereInput
+    data: XOR<BusinessMemberUpdateManyMutationInput, BusinessMemberUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type UserCreateWithoutBusinessMembersInput = {
+    id?: string
+    phone: string
+    email?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    fullName?: string | null
+    avatar?: string | null
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    favorites?: FavoriteCreateNestedManyWithoutUserInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
+    bookings?: BookingCreateNestedManyWithoutCustomerInput
+    createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
+    verifiedPayments?: PaymentCreateNestedManyWithoutVerifiedByInput
+    staffMembers?: StaffMemberCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutBusinessMembersInput = {
+    id?: string
+    phone: string
+    email?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    fullName?: string | null
+    avatar?: string | null
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
+    createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
+    verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifiedByInput
+    staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBusinessMembersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBusinessMembersInput, UserUncheckedCreateWithoutBusinessMembersInput>
+  }
+
+  export type BusinessCreateWithoutBusinessMembersInput = {
+    id?: string
+    slug: string
+    businessName: string
+    ownerName: string
+    description?: string | null
+    logo?: string | null
+    banner?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    timezone?: string
+    allowOnlinePayment?: boolean
+    allowOfflinePayment?: boolean
+    commissionRate?: number
+    identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
+    isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    businessType?: $Enums.BusinessType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutOwnedBusinessesInput
+    favorites?: FavoriteCreateNestedManyWithoutBusinessInput
+    bookings?: BookingCreateNestedManyWithoutBusinessInput
+    payments?: PaymentCreateNestedManyWithoutBusinessInput
+    settlements?: SettlementCreateNestedManyWithoutBusinessInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
+    staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
+    services?: ServiceCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessUncheckedCreateWithoutBusinessMembersInput = {
+    id?: string
+    slug: string
+    businessName: string
+    ownerName: string
+    description?: string | null
+    logo?: string | null
+    banner?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    timezone?: string
+    allowOnlinePayment?: boolean
+    allowOfflinePayment?: boolean
+    commissionRate?: number
+    ownerId: string
+    identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
+    isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    businessType?: $Enums.BusinessType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    favorites?: FavoriteUncheckedCreateNestedManyWithoutBusinessInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBusinessInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutBusinessInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
+    staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
+    services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessCreateOrConnectWithoutBusinessMembersInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutBusinessMembersInput, BusinessUncheckedCreateWithoutBusinessMembersInput>
+  }
+
+  export type UserUpsertWithoutBusinessMembersInput = {
+    update: XOR<UserUpdateWithoutBusinessMembersInput, UserUncheckedUpdateWithoutBusinessMembersInput>
+    create: XOR<UserCreateWithoutBusinessMembersInput, UserUncheckedCreateWithoutBusinessMembersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBusinessMembersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBusinessMembersInput, UserUncheckedUpdateWithoutBusinessMembersInput>
+  }
+
+  export type UserUpdateWithoutBusinessMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    favorites?: FavoriteUpdateManyWithoutUserNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
+    bookings?: BookingUpdateManyWithoutCustomerNestedInput
+    createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
+    verifiedPayments?: PaymentUpdateManyWithoutVerifiedByNestedInput
+    staffMembers?: StaffMemberUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBusinessMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
+    createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
+    verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    staffMembers?: StaffMemberUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BusinessUpsertWithoutBusinessMembersInput = {
+    update: XOR<BusinessUpdateWithoutBusinessMembersInput, BusinessUncheckedUpdateWithoutBusinessMembersInput>
+    create: XOR<BusinessCreateWithoutBusinessMembersInput, BusinessUncheckedCreateWithoutBusinessMembersInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutBusinessMembersInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutBusinessMembersInput, BusinessUncheckedUpdateWithoutBusinessMembersInput>
+  }
+
+  export type BusinessUpdateWithoutBusinessMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    ownerName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    banner?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    allowOnlinePayment?: BoolFieldUpdateOperationsInput | boolean
+    allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
+    commissionRate?: IntFieldUpdateOperationsInput | number
+    identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
+    favorites?: FavoriteUpdateManyWithoutBusinessNestedInput
+    bookings?: BookingUpdateManyWithoutBusinessNestedInput
+    payments?: PaymentUpdateManyWithoutBusinessNestedInput
+    settlements?: SettlementUpdateManyWithoutBusinessNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
+    staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
+    services?: ServiceUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutBusinessMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    ownerName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    banner?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    allowOnlinePayment?: BoolFieldUpdateOperationsInput | boolean
+    allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
+    commissionRate?: IntFieldUpdateOperationsInput | number
+    ownerId?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    favorites?: FavoriteUncheckedUpdateManyWithoutBusinessNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBusinessNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutBusinessNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
+    staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
   export type BusinessCreateWithoutStaffMembersInput = {
     id?: string
     slug: string
@@ -27610,6 +29548,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutStaffMembersInput = {
@@ -27644,6 +29583,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutStaffMembersInput = {
@@ -27665,6 +29605,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
@@ -27685,6 +29626,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27726,12 +29668,18 @@ export namespace Prisma {
     id?: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
   }
 
   export type StaffExceptionUncheckedCreateWithoutStaffInput = {
     id?: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
   }
 
   export type StaffExceptionCreateOrConnectWithoutStaffInput = {
@@ -27855,6 +29803,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutStaffMembersInput = {
@@ -27889,6 +29838,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserUpsertWithoutStaffMembersInput = {
@@ -27916,6 +29866,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
@@ -27936,6 +29887,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27994,6 +29946,9 @@ export namespace Prisma {
     staffId?: StringFilter<"StaffException"> | string
     date?: DateTimeFilter<"StaffException"> | Date | string
     isClosed?: BoolFilter<"StaffException"> | boolean
+    startTime?: StringNullableFilter<"StaffException"> | string | null
+    endTime?: StringNullableFilter<"StaffException"> | string | null
+    reason?: StringNullableFilter<"StaffException"> | string | null
   }
 
   export type ServiceStaffUpsertWithWhereUniqueWithoutStaffInput = {
@@ -28230,6 +30185,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutServicesInput = {
@@ -28264,6 +30220,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutServicesInput = {
@@ -28382,6 +30339,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutServicesInput = {
@@ -28416,6 +30374,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type ServiceStaffUpsertWithWhereUniqueWithoutServiceInput = {
@@ -28634,6 +30593,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutBookingsInput = {
@@ -28668,6 +30628,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutBookingsInput = {
@@ -28689,6 +30650,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifiedByInput
@@ -28709,6 +30671,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -28804,6 +30767,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifiedByInput
@@ -28824,6 +30788,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -28922,6 +30887,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutBookingsInput = {
@@ -28956,6 +30922,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserUpsertWithoutBookingsInput = {
@@ -28983,6 +30950,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
     verifiedPayments?: PaymentUpdateManyWithoutVerifiedByNestedInput
@@ -29003,6 +30971,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -29116,6 +31085,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     verifiedPayments?: PaymentUpdateManyWithoutVerifiedByNestedInput
@@ -29136,6 +31106,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -29190,6 +31161,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutPaymentsInput = {
@@ -29224,6 +31196,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutPaymentsInput = {
@@ -29286,6 +31259,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
@@ -29306,6 +31280,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29413,6 +31388,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutPaymentsInput = {
@@ -29447,6 +31423,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BookingUpsertWithoutPaymentsInput = {
@@ -29521,6 +31498,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
@@ -29541,6 +31519,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29774,6 +31753,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutLedgerEntriesInput = {
@@ -29808,6 +31788,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutLedgerEntriesInput = {
@@ -29936,6 +31917,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutLedgerEntriesInput = {
@@ -29970,6 +31952,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateWithoutSettlementsInput = {
@@ -30004,6 +31987,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutSettlementsInput = {
@@ -30038,6 +32022,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutSettlementsInput = {
@@ -30118,6 +32103,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutSettlementsInput = {
@@ -30152,6 +32138,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type LedgerEntryUpsertWithWhereUniqueWithoutSettlementInput = {
@@ -30183,6 +32170,7 @@ export namespace Prisma {
     createdAt?: Date | string
     deletedAt?: Date | string | null
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessCreateNestedManyWithoutOwnerInput
     bookings?: BookingCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingCreateNestedManyWithoutCreatedByInput
@@ -30203,6 +32191,7 @@ export namespace Prisma {
     createdAt?: Date | string
     deletedAt?: Date | string | null
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     ownedBusinesses?: BusinessUncheckedCreateNestedManyWithoutOwnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutCustomerInput
     createdBookings?: BookingUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30247,6 +32236,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
     services?: ServiceCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutFavoritesInput = {
@@ -30281,6 +32271,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
     services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutFavoritesInput = {
@@ -30312,6 +32303,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUpdateManyWithoutCreatedByNestedInput
@@ -30332,6 +32324,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     ownedBusinesses?: BusinessUncheckedUpdateManyWithoutOwnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutCustomerNestedInput
     createdBookings?: BookingUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30382,6 +32375,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutFavoritesInput = {
@@ -30416,6 +32410,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type FavoriteCreateManyUserInput = {
@@ -30427,6 +32422,12 @@ export namespace Prisma {
   export type UserRoleCreateManyUserInput = {
     id?: string
     role: $Enums.Role
+  }
+
+  export type BusinessMemberCreateManyUserInput = {
+    id?: string
+    businessId: string
+    role: $Enums.BusinessRole
   }
 
   export type BusinessCreateManyOwnerInput = {
@@ -30550,6 +32551,24 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
   }
 
+  export type BusinessMemberUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+    business?: BusinessUpdateOneRequiredWithoutBusinessMembersNestedInput
+  }
+
+  export type BusinessMemberUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
+  export type BusinessMemberUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
   export type BusinessUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -30582,6 +32601,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
     services?: ServiceUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutOwnerInput = {
@@ -30616,6 +32636,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
     services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateManyWithoutOwnerInput = {
@@ -30926,6 +32947,12 @@ export namespace Prisma {
     isActive?: boolean
   }
 
+  export type BusinessMemberCreateManyBusinessInput = {
+    id?: string
+    userId: string
+    role: $Enums.BusinessRole
+  }
+
   export type FavoriteUpdateWithoutBusinessInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31192,6 +33219,24 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type BusinessMemberUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+    user?: UserUpdateOneRequiredWithoutBusinessMembersNestedInput
+  }
+
+  export type BusinessMemberUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
+  export type BusinessMemberUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  }
+
   export type StaffAvailabilityCreateManyStaffInput = {
     id?: string
     dayOfWeek: number
@@ -31204,6 +33249,9 @@ export namespace Prisma {
     id?: string
     date: Date | string
     isClosed?: boolean
+    startTime?: string | null
+    endTime?: string | null
+    reason?: string | null
   }
 
   export type ServiceStaffCreateManyStaffInput = {
@@ -31257,18 +33305,27 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StaffExceptionUncheckedUpdateWithoutStaffInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StaffExceptionUncheckedUpdateManyWithoutStaffInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     isClosed?: BoolFieldUpdateOperationsInput | boolean
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ServiceStaffUpdateWithoutStaffInput = {
