@@ -125,11 +125,17 @@ export const authOptions: AuthOptions = {
         password: { label: "رمز عبور", type: "password" },
       },
 
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials?.identifier || !credentials.password) return null;
 
         const business = await prisma.business.findUnique({
-          where: { identifier: credentials.identifier },
+          where: {
+            identifier: credentials.identifier,
+            // TODO: change the content of dashboard in future
+            registrationStatus: {
+              equals: "APPROVED",
+            },
+          },
           include: {
             owner: {
               include: {

@@ -36,7 +36,7 @@ const Header = () => {
               <CalendarCheck className="w-6 h-6" />
             </div>
             <span className="text-2xl font-bold tracking-tight text-slate-900">
-              نوبت‌یار
+              رزرویتو
             </span>
           </Link>
 

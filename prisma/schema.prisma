@@ -73,6 +73,12 @@ enum SettlementStatus {
   FAILED
 }
 
+enum BusinessRegistrationStatus {
+  PENDING    // در انتظار تایید مدیر
+  APPROVED   // تایید شده (فعال)
+  REJECTED   // رد شده
+}
+
 // ==========================================
 // USERS & AUTH
 // ==========================================
@@ -136,39 +142,44 @@ model UserRole {
 // ==========================================
 
 model Business {
-  id                  String         @id @default(cuid())
-  slug                String         @unique
+  id                  String                      @id @default(cuid())
+  slug                String                      @unique
 
   businessName        String
   ownerName           String
 
-  description         String?        @db.Text
+  description         String?                     @db.Text
   logo                String?
   banner              String?
 
-  address             String?        @db.Text
+  address             String?                     @db.Text
   latitude            Float?
   longitude           Float?
 
-  timezone            String         @default("Asia/Tehran")
+  timezone            String                      @default("Asia/Tehran")
 
-  allowOnlinePayment  Boolean        @default(true)
-  allowOfflinePayment Boolean        @default(false)
+  allowOnlinePayment  Boolean                     @default(true)
+  allowOfflinePayment Boolean                     @default(false)
 
-  commissionRate      Int            @default(10)
+  commissionRate      Int                         @default(10)
 
   ownerId             String
-  owner               User          @relation(fields: [ownerId], references: [id])
+  owner               User                       @relation(fields: [ownerId], references: [id])
+  identifier          String                      @unique
 
-  identifier          String         @unique
-  isActive            Boolean        @default(true)
+  registrationStatus  BusinessRegistrationStatus  @default(PENDING)
+  rejectionReason     String?
+  isActive            Boolean                     @default(false)
+  activatedAt         DateTime?
+  rejectedAt          DateTime?
+
 
   favorites           Favorite[]
 
-  businessType        BusinessType   @default(OTHER)
+  businessType        BusinessType                @default(OTHER)
 
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
+  createdAt           DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
   deletedAt           DateTime?
 
   // ================= Relations =================

@@ -73,6 +73,12 @@ enum SettlementStatus {
   FAILED
 }
 
+enum BusinessRegistrationStatus {
+  PENDING // در انتظار تایید مدیر
+  APPROVED // تایید شده (فعال)
+  REJECTED // رد شده
+}
+
 // ==========================================
 // USERS & AUTH
 // ==========================================
@@ -157,11 +163,15 @@ model Business {
 
   commissionRate Int @default(10)
 
-  ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId    String
+  owner      User   @relation(fields: [ownerId], references: [id])
+  identifier String @unique
 
-  identifier String  @unique
-  isActive   Boolean @default(true)
+  registrationStatus BusinessRegistrationStatus @default(PENDING)
+  rejectionReason    String?
+  isActive           Boolean                    @default(false)
+  activatedAt        DateTime?
+  rejectedAt         DateTime?
 
   favorites Favorite[]
 

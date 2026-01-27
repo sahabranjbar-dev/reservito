@@ -157,7 +157,7 @@ const BusinessLoginPage = () => {
         </div>
 
         <p className="mt-12 text-center text-xs text-slate-400 border-t border-slate-100 pt-6">
-          تمامی حقوق برای پلتفرم نوبت‌یار محفوظ است &copy; ۱۴۰۳
+          تمامی حقوق برای پلتفرم رزرویتو محفوظ است &copy; ۱۴۰۳
         </p>
       </div>
 

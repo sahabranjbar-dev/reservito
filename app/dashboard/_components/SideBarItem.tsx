@@ -62,6 +62,11 @@ const businessSideBarItems: SidebarItem[] = [
     url: "/users-reservations",
     icon: SquareMousePointer,
   },
+  {
+    title: "پرداخت‌ها و فاکتورها",
+    url: "/payments-invoices",
+    icon: BookmarkCheck,
+  },
 ];
 
 const customerSideBarItems: SidebarItem[] = [
@@ -74,6 +79,7 @@ const customerSideBarItems: SidebarItem[] = [
 const adminSideBarItems: SidebarItem[] = [
   { title: "داشبورد", url: "/", icon: Home },
   { title: "کاربران", url: "/users", icon: Users },
+  { title: "کسب‌وکار", url: "/businesses", icon: Users },
   { title: "خدمات", url: "/services", icon: Workflow },
   { title: "رزرو‌های کاربران", url: "/users-reservations", icon: Inbox },
   { title: "پیام‌ها", url: "/messages", icon: Inbox },

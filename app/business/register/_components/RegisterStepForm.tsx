@@ -82,7 +82,7 @@ export default function RegisterStepForm() {
         businessType: BusinessType.OTHER,
         username: "",
       }}
-      className="p-10"
+      className="p-8"
     >
       <StepProgress step={step} />
       <CurrentStep />

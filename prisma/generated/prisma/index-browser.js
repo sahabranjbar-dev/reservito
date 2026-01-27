@@ -157,7 +157,11 @@ exports.Prisma.BusinessScalarFieldEnum = {
   commissionRate: 'commissionRate',
   ownerId: 'ownerId',
   identifier: 'identifier',
+  registrationStatus: 'registrationStatus',
+  rejectionReason: 'rejectionReason',
   isActive: 'isActive',
+  activatedAt: 'activatedAt',
+  rejectedAt: 'rejectedAt',
   businessType: 'businessType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -313,6 +317,12 @@ exports.Role = exports.$Enums.Role = {
   BUSINESS_OWNER: 'BUSINESS_OWNER',
   STAFF: 'STAFF',
   CUSTOMER: 'CUSTOMER'
+};
+
+exports.BusinessRegistrationStatus = exports.$Enums.BusinessRegistrationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
 };
 
 exports.BusinessType = exports.$Enums.BusinessType = {

@@ -176,6 +176,15 @@ export const SettlementStatus: {
 
 export type SettlementStatus = (typeof SettlementStatus)[keyof typeof SettlementStatus]
 
+
+export const BusinessRegistrationStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type BusinessRegistrationStatus = (typeof BusinessRegistrationStatus)[keyof typeof BusinessRegistrationStatus]
+
 }
 
 export type Role = $Enums.Role
@@ -209,6 +218,10 @@ export const LedgerEntryType: typeof $Enums.LedgerEntryType
 export type SettlementStatus = $Enums.SettlementStatus
 
 export const SettlementStatus: typeof $Enums.SettlementStatus
+
+export type BusinessRegistrationStatus = $Enums.BusinessRegistrationStatus
+
+export const BusinessRegistrationStatus: typeof $Enums.BusinessRegistrationStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5040,7 +5053,11 @@ export namespace Prisma {
     commissionRate: number | null
     ownerId: string | null
     identifier: string | null
+    registrationStatus: $Enums.BusinessRegistrationStatus | null
+    rejectionReason: string | null
     isActive: boolean | null
+    activatedAt: Date | null
+    rejectedAt: Date | null
     businessType: $Enums.BusinessType | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5064,7 +5081,11 @@ export namespace Prisma {
     commissionRate: number | null
     ownerId: string | null
     identifier: string | null
+    registrationStatus: $Enums.BusinessRegistrationStatus | null
+    rejectionReason: string | null
     isActive: boolean | null
+    activatedAt: Date | null
+    rejectedAt: Date | null
     businessType: $Enums.BusinessType | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5088,7 +5109,11 @@ export namespace Prisma {
     commissionRate: number
     ownerId: number
     identifier: number
+    registrationStatus: number
+    rejectionReason: number
     isActive: number
+    activatedAt: number
+    rejectedAt: number
     businessType: number
     createdAt: number
     updatedAt: number
@@ -5126,7 +5151,11 @@ export namespace Prisma {
     commissionRate?: true
     ownerId?: true
     identifier?: true
+    registrationStatus?: true
+    rejectionReason?: true
     isActive?: true
+    activatedAt?: true
+    rejectedAt?: true
     businessType?: true
     createdAt?: true
     updatedAt?: true
@@ -5150,7 +5179,11 @@ export namespace Prisma {
     commissionRate?: true
     ownerId?: true
     identifier?: true
+    registrationStatus?: true
+    rejectionReason?: true
     isActive?: true
+    activatedAt?: true
+    rejectedAt?: true
     businessType?: true
     createdAt?: true
     updatedAt?: true
@@ -5174,7 +5207,11 @@ export namespace Prisma {
     commissionRate?: true
     ownerId?: true
     identifier?: true
+    registrationStatus?: true
+    rejectionReason?: true
     isActive?: true
+    activatedAt?: true
+    rejectedAt?: true
     businessType?: true
     createdAt?: true
     updatedAt?: true
@@ -5285,7 +5322,11 @@ export namespace Prisma {
     commissionRate: number
     ownerId: string
     identifier: string
+    registrationStatus: $Enums.BusinessRegistrationStatus
+    rejectionReason: string | null
     isActive: boolean
+    activatedAt: Date | null
+    rejectedAt: Date | null
     businessType: $Enums.BusinessType
     createdAt: Date
     updatedAt: Date
@@ -5328,7 +5369,11 @@ export namespace Prisma {
     commissionRate?: boolean
     ownerId?: boolean
     identifier?: boolean
+    registrationStatus?: boolean
+    rejectionReason?: boolean
     isActive?: boolean
+    activatedAt?: boolean
+    rejectedAt?: boolean
     businessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5361,7 +5406,11 @@ export namespace Prisma {
     commissionRate?: boolean
     ownerId?: boolean
     identifier?: boolean
+    registrationStatus?: boolean
+    rejectionReason?: boolean
     isActive?: boolean
+    activatedAt?: boolean
+    rejectedAt?: boolean
     businessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5386,7 +5435,11 @@ export namespace Prisma {
     commissionRate?: boolean
     ownerId?: boolean
     identifier?: boolean
+    registrationStatus?: boolean
+    rejectionReason?: boolean
     isActive?: boolean
+    activatedAt?: boolean
+    rejectedAt?: boolean
     businessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5411,14 +5464,18 @@ export namespace Prisma {
     commissionRate?: boolean
     ownerId?: boolean
     identifier?: boolean
+    registrationStatus?: boolean
+    rejectionReason?: boolean
     isActive?: boolean
+    activatedAt?: boolean
+    rejectedAt?: boolean
     businessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type BusinessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "businessName" | "ownerName" | "description" | "logo" | "banner" | "address" | "latitude" | "longitude" | "timezone" | "allowOnlinePayment" | "allowOfflinePayment" | "commissionRate" | "ownerId" | "identifier" | "isActive" | "businessType" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["business"]>
+  export type BusinessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "businessName" | "ownerName" | "description" | "logo" | "banner" | "address" | "latitude" | "longitude" | "timezone" | "allowOnlinePayment" | "allowOfflinePayment" | "commissionRate" | "ownerId" | "identifier" | "registrationStatus" | "rejectionReason" | "isActive" | "activatedAt" | "rejectedAt" | "businessType" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["business"]>
   export type BusinessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     favorites?: boolean | Business$favoritesArgs<ExtArgs>
@@ -5466,7 +5523,11 @@ export namespace Prisma {
       commissionRate: number
       ownerId: string
       identifier: string
+      registrationStatus: $Enums.BusinessRegistrationStatus
+      rejectionReason: string | null
       isActive: boolean
+      activatedAt: Date | null
+      rejectedAt: Date | null
       businessType: $Enums.BusinessType
       createdAt: Date
       updatedAt: Date
@@ -5918,7 +5979,11 @@ export namespace Prisma {
     readonly commissionRate: FieldRef<"Business", 'Int'>
     readonly ownerId: FieldRef<"Business", 'String'>
     readonly identifier: FieldRef<"Business", 'String'>
+    readonly registrationStatus: FieldRef<"Business", 'BusinessRegistrationStatus'>
+    readonly rejectionReason: FieldRef<"Business", 'String'>
     readonly isActive: FieldRef<"Business", 'Boolean'>
+    readonly activatedAt: FieldRef<"Business", 'DateTime'>
+    readonly rejectedAt: FieldRef<"Business", 'DateTime'>
     readonly businessType: FieldRef<"Business", 'BusinessType'>
     readonly createdAt: FieldRef<"Business", 'DateTime'>
     readonly updatedAt: FieldRef<"Business", 'DateTime'>
@@ -20447,7 +20512,11 @@ export namespace Prisma {
     commissionRate: 'commissionRate',
     ownerId: 'ownerId',
     identifier: 'identifier',
+    registrationStatus: 'registrationStatus',
+    rejectionReason: 'rejectionReason',
     isActive: 'isActive',
+    activatedAt: 'activatedAt',
+    rejectedAt: 'rejectedAt',
     businessType: 'businessType',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -20730,6 +20799,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BusinessRegistrationStatus'
+   */
+  export type EnumBusinessRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessRegistrationStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BusinessRegistrationStatus[]'
+   */
+  export type ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessRegistrationStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'BusinessType'
    */
   export type EnumBusinessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessType'>
@@ -20999,7 +21082,11 @@ export namespace Prisma {
     commissionRate?: IntFilter<"Business"> | number
     ownerId?: StringFilter<"Business"> | string
     identifier?: StringFilter<"Business"> | string
+    registrationStatus?: EnumBusinessRegistrationStatusFilter<"Business"> | $Enums.BusinessRegistrationStatus
+    rejectionReason?: StringNullableFilter<"Business"> | string | null
     isActive?: BoolFilter<"Business"> | boolean
+    activatedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
+    rejectedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
     businessType?: EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
     createdAt?: DateTimeFilter<"Business"> | Date | string
     updatedAt?: DateTimeFilter<"Business"> | Date | string
@@ -21031,7 +21118,11 @@ export namespace Prisma {
     commissionRate?: SortOrder
     ownerId?: SortOrder
     identifier?: SortOrder
+    registrationStatus?: SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    activatedAt?: SortOrderInput | SortOrder
+    rejectedAt?: SortOrderInput | SortOrder
     businessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21066,7 +21157,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFilter<"Business"> | boolean
     commissionRate?: IntFilter<"Business"> | number
     ownerId?: StringFilter<"Business"> | string
+    registrationStatus?: EnumBusinessRegistrationStatusFilter<"Business"> | $Enums.BusinessRegistrationStatus
+    rejectionReason?: StringNullableFilter<"Business"> | string | null
     isActive?: BoolFilter<"Business"> | boolean
+    activatedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
+    rejectedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
     businessType?: EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
     createdAt?: DateTimeFilter<"Business"> | Date | string
     updatedAt?: DateTimeFilter<"Business"> | Date | string
@@ -21098,7 +21193,11 @@ export namespace Prisma {
     commissionRate?: SortOrder
     ownerId?: SortOrder
     identifier?: SortOrder
+    registrationStatus?: SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    activatedAt?: SortOrderInput | SortOrder
+    rejectedAt?: SortOrderInput | SortOrder
     businessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21130,7 +21229,11 @@ export namespace Prisma {
     commissionRate?: IntWithAggregatesFilter<"Business"> | number
     ownerId?: StringWithAggregatesFilter<"Business"> | string
     identifier?: StringWithAggregatesFilter<"Business"> | string
+    registrationStatus?: EnumBusinessRegistrationStatusWithAggregatesFilter<"Business"> | $Enums.BusinessRegistrationStatus
+    rejectionReason?: StringNullableWithAggregatesFilter<"Business"> | string | null
     isActive?: BoolWithAggregatesFilter<"Business"> | boolean
+    activatedAt?: DateTimeNullableWithAggregatesFilter<"Business"> | Date | string | null
+    rejectedAt?: DateTimeNullableWithAggregatesFilter<"Business"> | Date | string | null
     businessType?: EnumBusinessTypeWithAggregatesFilter<"Business"> | $Enums.BusinessType
     createdAt?: DateTimeWithAggregatesFilter<"Business"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Business"> | Date | string
@@ -22231,7 +22334,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22263,7 +22370,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22293,7 +22404,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22325,7 +22440,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22356,7 +22475,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22379,7 +22502,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22403,7 +22530,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23641,6 +23772,13 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type EnumBusinessRegistrationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRegistrationStatus | EnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel> | $Enums.BusinessRegistrationStatus
+  }
+
   export type EnumBusinessTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
     in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
@@ -23695,7 +23833,11 @@ export namespace Prisma {
     commissionRate?: SortOrder
     ownerId?: SortOrder
     identifier?: SortOrder
+    registrationStatus?: SortOrder
+    rejectionReason?: SortOrder
     isActive?: SortOrder
+    activatedAt?: SortOrder
+    rejectedAt?: SortOrder
     businessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23725,7 +23867,11 @@ export namespace Prisma {
     commissionRate?: SortOrder
     ownerId?: SortOrder
     identifier?: SortOrder
+    registrationStatus?: SortOrder
+    rejectionReason?: SortOrder
     isActive?: SortOrder
+    activatedAt?: SortOrder
+    rejectedAt?: SortOrder
     businessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23749,7 +23895,11 @@ export namespace Prisma {
     commissionRate?: SortOrder
     ownerId?: SortOrder
     identifier?: SortOrder
+    registrationStatus?: SortOrder
+    rejectionReason?: SortOrder
     isActive?: SortOrder
+    activatedAt?: SortOrder
+    rejectedAt?: SortOrder
     businessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23792,6 +23942,16 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumBusinessRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRegistrationStatus | EnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRegistrationStatusWithAggregatesFilter<$PrismaModel> | $Enums.BusinessRegistrationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel>
+    _max?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel>
   }
 
   export type EnumBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -24956,6 +25116,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type EnumBusinessRegistrationStatusFieldUpdateOperationsInput = {
+    set?: $Enums.BusinessRegistrationStatus
+  }
+
   export type EnumBusinessTypeFieldUpdateOperationsInput = {
     set?: $Enums.BusinessType
   }
@@ -26101,6 +26265,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumBusinessRegistrationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRegistrationStatus | EnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel> | $Enums.BusinessRegistrationStatus
+  }
+
   export type NestedEnumBusinessTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.BusinessType | EnumBusinessTypeFieldRefInput<$PrismaModel>
     in?: $Enums.BusinessType[] | ListEnumBusinessTypeFieldRefInput<$PrismaModel>
@@ -26149,6 +26320,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumBusinessRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BusinessRegistrationStatus | EnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BusinessRegistrationStatus[] | ListEnumBusinessRegistrationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBusinessRegistrationStatusWithAggregatesFilter<$PrismaModel> | $Enums.BusinessRegistrationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel>
+    _max?: NestedEnumBusinessRegistrationStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -26337,7 +26518,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26367,7 +26552,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26656,7 +26845,11 @@ export namespace Prisma {
     commissionRate?: IntFilter<"Business"> | number
     ownerId?: StringFilter<"Business"> | string
     identifier?: StringFilter<"Business"> | string
+    registrationStatus?: EnumBusinessRegistrationStatusFilter<"Business"> | $Enums.BusinessRegistrationStatus
+    rejectionReason?: StringNullableFilter<"Business"> | string | null
     isActive?: BoolFilter<"Business"> | boolean
+    activatedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
+    rejectedAt?: DateTimeNullableFilter<"Business"> | Date | string | null
     businessType?: EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
     createdAt?: DateTimeFilter<"Business"> | Date | string
     updatedAt?: DateTimeFilter<"Business"> | Date | string
@@ -27401,7 +27594,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27432,7 +27629,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27638,7 +27839,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27669,7 +27874,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28005,7 +28214,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28036,7 +28249,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28149,7 +28366,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28180,7 +28401,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28393,7 +28618,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28424,7 +28653,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28673,7 +28906,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28704,7 +28941,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28933,7 +29174,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28964,7 +29209,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29148,7 +29397,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29179,7 +29432,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29501,7 +29758,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29532,7 +29793,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29655,7 +29920,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29686,7 +29955,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29715,7 +29988,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29746,7 +30023,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29821,7 +30102,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29852,7 +30137,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29942,7 +30231,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29973,7 +30266,11 @@ export namespace Prisma {
     commissionRate?: number
     ownerId: string
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30069,7 +30366,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30100,7 +30401,11 @@ export namespace Prisma {
     commissionRate?: IntFieldUpdateOperationsInput | number
     ownerId?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30140,7 +30445,11 @@ export namespace Prisma {
     allowOfflinePayment?: boolean
     commissionRate?: number
     identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
     isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
     businessType?: $Enums.BusinessType
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30257,7 +30566,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30287,7 +30600,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30317,7 +30634,11 @@ export namespace Prisma {
     allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
     commissionRate?: IntFieldUpdateOperationsInput | number
     identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

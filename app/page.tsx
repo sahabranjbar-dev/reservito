@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ArrowRight,
   Check,
   Clock,
@@ -226,7 +227,7 @@ const HomePage = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
-              چرا مشتریان نوبت‌یار رو انتخاب می‌کنن؟
+              چرا مشتریان رزرویتو رو انتخاب می‌کنن؟
             </h2>
             <div className="h-1 w-20 bg-indigo-600 mx-auto rounded-full mb-6"></div>
             <p className="text-lg text-slate-600">
@@ -350,10 +351,13 @@ const HomePage = () => {
               <div>
                 <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
                   مدیریت کسب‌وکارت رو <br />
-                  <span className="text-indigo-600">حرفه‌ای و اتوماتیک</span> کن
+                  <span className="text-indigo-600 inline-block my-4">
+                    حرفه‌ای و اتوماتیک
+                  </span>{" "}
+                  کن
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed">
-                  سیستم نوبت‌یار به شما کمک می‌کند تا دفترچه کاغذی و حافظه
+                  سیستم رزرویتو به شما کمک می‌کند تا دفترچه کاغذی و حافظه
                   فرسایشی را دور بریزید. داشبورد مدیریتی قوی به شما دسترسی کامل
                   به مشتریان، کارمندان و درآمدها می‌دهد.
                 </p>
@@ -382,11 +386,12 @@ const HomePage = () => {
 
               <div className="pt-4">
                 <Link
-                  href="/providers/register"
+                  target="_blank"
+                  href="/business/register"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-indigo-900 transition-all duration-300 shadow-lg shadow-slate-300 hover:shadow-indigo-200"
                 >
                   <span>شروع رایگان ۱۴ روزه</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5" />
                 </Link>
               </div>
             </div>
@@ -404,7 +409,7 @@ const HomePage = () => {
 
         <div className="container mx-auto px-6 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-            همین امروز به خانواده بزرگ نوبت‌یار بپیوندید
+            همین امروز به خانواده بزرگ رزرویتو بپیوندید
           </h2>
           <p className="text-xl text-indigo-100 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
             فرقی نمی‌کنه تازه کار هستی یا صاحب یک زنجیره بزرگ؛ ما ابزار مدیریت

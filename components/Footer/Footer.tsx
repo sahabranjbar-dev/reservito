@@ -22,7 +22,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4 text-white">
               <CalendarCheck className="w-6 h-6" />
-              <span className="text-xl font-bold">نوبت‌یار</span>
+              <span className="text-xl font-bold">رزرویتو</span>
             </div>
             <p className="text-sm leading-relaxed">
               پلتفرم جامع رزرو آنلاین برای تمام کسب‌وکارهای خدماتی. مدیریت نوبت،
@@ -33,17 +33,20 @@ const Footer = () => {
             <h4 className="text-white font-bold mb-4">دسترسی سریع</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link href="/business" className="hover:text-indigo-400">
                   جستجوی خدمات
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link
+                  href="/business/register"
+                  className="hover:text-indigo-400"
+                >
                   ثبت کسب‌وکار
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link href="/about-us" className="hover:text-indigo-400">
                   درباره ما
                 </Link>
               </li>
@@ -53,17 +56,17 @@ const Footer = () => {
             <h4 className="text-white font-bold mb-4">پشتیبانی</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link href="/faq" className="hover:text-indigo-400">
                   سوالات متداول
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link href="/terms" className="hover:text-indigo-400">
                   قوانین و مقررات
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-indigo-400">
+                <Link href="/privacy" className="hover:text-indigo-400">
                   حریم خصوصی
                 </Link>
               </li>
@@ -73,7 +76,7 @@ const Footer = () => {
             <h4 className="text-white font-bold mb-4">تماس با ما</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> تهران، خیابان ولیعصر
+                <MapPin className="w-4 h-4" /> مازندران، بابل
               </li>
               <li className="flex items-center gap-2">
                 <Clock className="w-4 h-4" /> شنبه تا پنج‌شنبه ۹ تا ۱۸
@@ -85,7 +88,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-slate-800 pt-8 text-center text-sm">
-          <p>&copy; ۱۴۰۳ نوبت‌یار. تمامی حقوق محفوظ است.</p>
+          <p>&copy; رزرویتو. تمامی حقوق محفوظ است.</p>
         </div>
       </div>
     </footer>
