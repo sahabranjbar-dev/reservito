@@ -5,7 +5,7 @@ import prisma from "./utils/prisma";
 
 type Rule = (
   req: NextRequest,
-  session: Session | null
+  session: Session | null,
 ) => NextResponse | void | Promise<any>;
 
 const redirectToLogin = (req: NextRequest, url?: string) =>
@@ -30,6 +30,7 @@ const adminRules: Rule[] = [
 const customerRules: Rule[] = [
   (req, session) => {
     const roles = session?.user?.roles || [];
+    if (!roles.length) return;
     if (!roles.includes("CUSTOMER")) return redirectToLogin(req);
   },
 ];

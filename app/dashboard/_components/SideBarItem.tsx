@@ -23,6 +23,7 @@ import {
   CalendarCheck,
   CalendarRange,
   ChevronRight,
+  CreditCard,
   Home,
   Inbox,
   ShieldBan,
@@ -68,7 +69,8 @@ const businessSideBarItems: SidebarItem[] = [
 
 const customerSideBarItems: SidebarItem[] = [
   { title: "داشبورد", url: "/", icon: Home },
-  { title: "رزروهای من", url: "/reservations", icon: CalendarCheck },
+  { title: "رزروها", url: "/reservations", icon: CalendarCheck },
+  { title: "پرداخت‌ها", url: "/payments", icon: CreditCard },
   { title: "علاقه‌مندی‌ها", url: "/bookmarks", icon: BookmarkCheck },
   { title: "پیام‌ها", url: "/inbox", icon: Inbox },
 ];
@@ -166,7 +168,7 @@ function SidebarItemComponent({ item, pathname }: SidebarItemProps) {
               <ChevronRight
                 className={cn(
                   "ml-auto transition-transform",
-                  isOpen && "rotate-90"
+                  isOpen && "rotate-90",
                 )}
               />
             </SidebarMenuButton>

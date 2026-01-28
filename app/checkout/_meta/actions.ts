@@ -49,7 +49,7 @@ export async function createBookingAction(params: {
       include: {
         bookings: {
           where: {
-            status: { in: ["PENDING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
             startTime: { lt: endTime },
             endTime: { gt: startTime },
           },
@@ -81,7 +81,7 @@ export async function createBookingAction(params: {
         endTime,
         totalPrice: service.price,
         customerNotes,
-        status: "PENDING_CONFIRMATION",
+        status: "AWAITING_PAYMENT",
       },
     });
 
@@ -143,7 +143,7 @@ export async function getAvailableStaffAction(params: {
     // ساخت بازه زمانی
     const potentialStart = new Date(`${date}T${time}:00`);
     const potentialEnd = new Date(
-      potentialStart.getTime() + serviceDuration * 60000
+      potentialStart.getTime() + serviceDuration * 60000,
     );
 
     // 2. دریافت تمام پرسنل مرتبط
@@ -160,7 +160,7 @@ export async function getAvailableStaffAction(params: {
         bookings: {
           where: {
             // رزروهای تداخل دار
-            status: { in: ["PENDING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
             startTime: { lt: potentialEnd },
             endTime: { gt: potentialStart },
           },
@@ -177,7 +177,7 @@ export async function getAvailableStaffAction(params: {
       const isOffToday = staff.exceptions.some(
         (exc) =>
           exc.isClosed &&
-          new Date(exc.date).toDateString() === potentialStart.toDateString()
+          new Date(exc.date).toDateString() === potentialStart.toDateString(),
       );
       if (isOffToday) continue;
 

@@ -25,11 +25,21 @@ enum BusinessRole {
 }
 
 enum BookingStatus {
-  PENDING_CONFIRMATION
-  CONFIRMED
-  CANCELLED
-  COMPLETED
-  NO_SHOW
+  AWAITING_PAYMENT //هنوز پرداخت نشده
+
+  AWAITING_CONFIRMATION // پرداخت انجام شده، نیاز به تایید
+
+  CONFIRMED //تایید شد، خدمت اجرا می‌شود
+
+  REJECTED //مدیر تایید نکرد
+
+  CANCELED //لغو شد
+
+  COMPLETED // انجام شد
+
+  NO_SHOW_CUSTOMER // مشتری نیامد
+
+  NO_SHOW_STAFF // کارمند نیامد
 }
 
 enum PaymentMethod {
@@ -337,7 +347,7 @@ model Booking {
   startTime DateTime
   endTime   DateTime
 
-  status     BookingStatus @default(PENDING_CONFIRMATION)
+  status     BookingStatus @default(AWAITING_PAYMENT)
   totalPrice Int
 
   customerNotes String?
@@ -359,7 +369,7 @@ model Payment {
   businessId String
   business   Business @relation(fields: [businessId], references: [id])
 
-  bookingId String  @unique
+  bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   method PaymentMethod @default(ONLINE)

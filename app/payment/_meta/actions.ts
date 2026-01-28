@@ -9,10 +9,10 @@ export async function processPaymentAction(params: {
   bookingId: string;
   method: PaymentMethod;
   gateway?: string; // اگر آنلاین باشد
-  discountCode?: string;
 }) {
-  const { bookingId, method, gateway, discountCode } = params;
+  const { bookingId, method, gateway } = params;
   const session = await getServerSession(authOptions);
+  const userId = session?.user.id;
 
   if (!session?.user?.id) {
     return { success: false, error: "نشست شما منقضی شده است" };
@@ -27,37 +27,25 @@ export async function processPaymentAction(params: {
 
     if (!booking) return { success: false, error: "رزرو یافت نشد" };
 
-    let finalAmount = booking.totalPrice;
-
-    // 2. محاسبه تخفیف (Mock)
-    if (discountCode && discountCode.toLowerCase() === "off10") {
-      finalAmount = Math.floor(finalAmount * 0.9); // 10% تخفیف
-    }
-
     // ===========================
     // 3. پرداخت آفلاین
     // ===========================
     if (method === "OFFLINE") {
       const result = await prisma.$transaction(async (tx) => {
-        // آپدیت وضعیت رزرو
-        const updatedBooking = await tx.booking.update({
-          where: { id: bookingId },
-          data: { status: "PENDING_CONFIRMATION" },
-        });
-
         // ثبت پرداخت آفلاین
         const payment = await tx.payment.create({
           data: {
             bookingId: booking.id,
             businessId: booking.businessId,
-            amount: finalAmount,
+            amount: booking?.totalPrice,
             status: "PENDING",
             method: "OFFLINE",
             gatewayName: "OFFLINE",
+            verifiedById: userId,
           },
         });
 
-        return { payment, updatedBooking };
+        return { payment };
       });
 
       return { success: true, isOffline: true, bookingId: booking.id, result };
@@ -68,19 +56,16 @@ export async function processPaymentAction(params: {
     // ===========================
     if (method === "ONLINE") {
       const payment = await prisma.$transaction(async (tx) => {
-        await tx.booking.update({
-          where: { id: bookingId },
-          data: { status: "PENDING_CONFIRMATION" },
-        });
-
         const payment = await tx.payment.create({
           data: {
             bookingId: booking.id,
             businessId: booking.businessId,
-            amount: finalAmount,
+            amount: booking.totalPrice,
             status: "PENDING",
             method: "ONLINE",
             gatewayName: gateway || "ZARINPAL",
+            verifiedById: userId,
+            verifiedAt: new Date(),
           },
         });
 
@@ -88,16 +73,16 @@ export async function processPaymentAction(params: {
       });
 
       // لینک پرداخت (mock)
-      const paymentUrl = await getGatewayUrl(
-        payment.amount,
-        payment.id,
-        gateway
-      );
+      // const paymentUrl = await getGatewayUrl(
+      //   payment.amount,
+      //   payment.id,
+      //   gateway,
+      // );
 
       return {
         success: true,
         isOffline: false,
-        paymentUrl,
+        paymentUrl: `http://localhost:3000/payment/pending?bookingId=${booking.id}&paymentId=${payment.id}`,
         bookingId: booking.id,
         payment,
       };
@@ -114,7 +99,7 @@ export async function processPaymentAction(params: {
 async function getGatewayUrl(
   amount: number,
   paymentId: string,
-  gatewayName?: string
+  gatewayName?: string,
 ) {
   return `https://gateway-sandbox.com/pay?amount=${amount}&ref=${paymentId}`;
 }

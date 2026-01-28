@@ -1,29 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  MoreVertical,
-  X,
-  CheckCircle,
-  ArrowLeft,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { cancelBookingAction } from "../_meta/actions";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { Calendar, Clock, MapPin, MoreVertical, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import { cancelBookingAction } from "../_meta/actions";
 
 // تایپ‌ها
 type Booking = {
@@ -48,50 +39,14 @@ interface Props {
 
 const UserReservations = ({ bookings }: Props) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState<"upcoming" | "history">(
-    "upcoming"
+    "upcoming",
   );
-
-  // فیلتر کردن لیست رزروها
-  const filteredBookings = useMemo(() => {
-    const now = new Date();
-
-    if (activeTab === "upcoming") {
-      return bookings.filter((b) => {
-        const bookingDate = new Date(b.startTime);
-        return (
-          bookingDate > now &&
-          (b.status === "CONFIRMED" || b.status === "PENDING_CONFIRMATION")
-        );
-      });
-    } else {
-      // تاریخچه: رزروهای گذشته (تکمیل شده) یا کنسل شده
-      return bookings.filter((b) => {
-        const bookingDate = new Date(b.startTime);
-        return (
-          bookingDate < now ||
-          b.status === "CANCELLED" ||
-          b.status === "COMPLETED"
-        );
-      });
-    }
-  }, [bookings, activeTab]);
 
   const handleCancel = (bookingId: string) => {
     if (!confirm("آیا مطمئن هستید که می‌خواهید این رزرو را کنسل کنید؟")) {
       return;
     }
-
-    startTransition(async () => {
-      const res = await cancelBookingAction(bookingId);
-      if (res.success) {
-        toast.success(res.message);
-        router.refresh(); // رفرش دیتای سرور
-      } else {
-        toast.error(res.error || "خطا در لغو رزرو");
-      }
-    });
   };
 
   const getStatusBadge = (status: string) => {
@@ -142,10 +97,10 @@ const UserReservations = ({ bookings }: Props) => {
                 "px-6 py-2 rounded-lg text-sm font-medium transition-all",
                 activeTab === "upcoming"
                   ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  : "text-slate-500 hover:text-slate-700",
               )}
             >
-              آینده ({activeTab === "upcoming" ? filteredBookings.length : 0})
+              آینده ({activeTab === "upcoming" ? bookings.length : 0})
             </button>
             <button
               onClick={() => setActiveTab("history")}
@@ -153,10 +108,10 @@ const UserReservations = ({ bookings }: Props) => {
                 "px-6 py-2 rounded-lg text-sm font-medium transition-all",
                 activeTab === "history"
                   ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  : "text-slate-500 hover:text-slate-700",
               )}
             >
-              تاریخچه ({activeTab === "history" ? filteredBookings.length : 0})
+              تاریخچه ({activeTab === "history" ? bookings.length : 0})
             </button>
           </div>
         </div>
@@ -164,7 +119,7 @@ const UserReservations = ({ bookings }: Props) => {
 
       <CardContent>
         {/* لیست رزروها */}
-        {filteredBookings.length === 0 ? (
+        {bookings.length === 0 ? (
           <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center">
             <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-8 h-8 text-slate-300" />
@@ -182,12 +137,12 @@ const UserReservations = ({ bookings }: Props) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {filteredBookings.map((booking) => (
+            {bookings.map((booking) => (
               <Card
                 key={booking.id}
                 className={cn(
                   "border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden",
-                  booking.status === "CANCELLED" && "bg-slate-50 opacity-75"
+                  booking.status === "CANCELLED" && "bg-slate-50 opacity-75",
                 )}
               >
                 <CardContent className="p-0">
@@ -222,7 +177,7 @@ const UserReservations = ({ bookings }: Props) => {
 
                       <div className="flex items-center gap-1 text-xs text-slate-400">
                         <MapPin className="w-3 h-3" />
-                        <span className="line-clamp-1 max-w-[300px]">
+                        <span className="line-clamp-1 max-w-75">
                           {booking.business.address}
                         </span>
                       </div>
@@ -236,7 +191,7 @@ const UserReservations = ({ bookings }: Props) => {
                         </p>
                         <p className="font-bold text-slate-900 text-lg">
                           {new Intl.NumberFormat("fa-IR").format(
-                            booking.totalPrice
+                            booking.totalPrice,
                           )}{" "}
                           <span className="text-sm font-normal text-slate-500">
                             تومان
@@ -258,7 +213,7 @@ const UserReservations = ({ bookings }: Props) => {
                           <DropdownMenuItem
                             onClick={() =>
                               router.push(
-                                `/dashboard/customer/reservations/confirmation?bookingId=${booking.id}`
+                                `/dashboard/customer/reservations/confirmation?bookingId=${booking.id}`,
                               )
                             }
                           >

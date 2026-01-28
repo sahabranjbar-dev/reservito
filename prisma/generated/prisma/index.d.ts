@@ -120,11 +120,14 @@ export type BusinessRole = (typeof BusinessRole)[keyof typeof BusinessRole]
 
 
 export const BookingStatus: {
-  PENDING_CONFIRMATION: 'PENDING_CONFIRMATION',
+  AWAITING_PAYMENT: 'AWAITING_PAYMENT',
+  AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
   CONFIRMED: 'CONFIRMED',
-  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED',
+  CANCELED: 'CANCELED',
   COMPLETED: 'COMPLETED',
-  NO_SHOW: 'NO_SHOW'
+  NO_SHOW_CUSTOMER: 'NO_SHOW_CUSTOMER',
+  NO_SHOW_STAFF: 'NO_SHOW_STAFF'
 };
 
 export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
@@ -24489,11 +24492,11 @@ export namespace Prisma {
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    bookingId?: string
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     businessId?: StringFilter<"Payment"> | string
+    bookingId?: StringFilter<"Payment"> | string
     method?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
     amount?: IntFilter<"Payment"> | number
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
@@ -24509,7 +24512,7 @@ export namespace Prisma {
     verifiedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     ledgerEntries?: LedgerEntryListRelationFilter
     commission?: XOR<CommissionNullableScalarRelationFilter, CommissionWhereInput> | null
-  }, "id" | "bookingId">
+  }, "id">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 const AuthPage = () => {
   const { replace } = useRouter();
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">

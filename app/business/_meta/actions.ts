@@ -146,7 +146,7 @@ export async function getAvailableSlotsAction(params: {
               gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
               lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
             },
-            status: { in: ["PENDING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
           },
           select: { startTime: true, endTime: true },
         },
@@ -207,12 +207,12 @@ export async function getAvailableSlotsAction(params: {
       ) {
         const slotTimeString = `${String(Math.floor(timeMin / 60)).padStart(
           2,
-          "0"
+          "0",
         )}:${String(timeMin % 60).padStart(2, "0")}`;
 
         const potentialStart = new Date(`${date}T${slotTimeString}:00`);
         const potentialEnd = new Date(
-          potentialStart.getTime() + serviceDuration * 60000
+          potentialStart.getTime() + serviceDuration * 60000,
         );
 
         const isBooked = staff.bookings.some((booking) => {

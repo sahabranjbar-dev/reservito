@@ -1,32 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
-import {
-  CreditCard,
-  Wallet,
-  Loader2,
-  Percent,
-  ArrowLeft,
-  ArrowRight,
-} from "lucide-react";
-import { Activity, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
-import { getBookingDetails, processPaymentAction } from "./_meta/actions";
+import { Separator } from "@/components/ui/separator";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
+import { ArrowRight, CreditCard, Percent, Wallet } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Activity, useState } from "react";
+import { toast } from "sonner";
+import { getBookingDetails, processPaymentAction } from "./_meta/actions";
 
 type PaymentMethod = "ONLINE" | "OFFLINE";
 
@@ -66,7 +52,10 @@ const PaymentMethodPage = () => {
       return response;
     },
     onSuccess: (data) => {
-      if (!data.success) return;
+      if (!data.success) {
+        toast.error(data?.error || "خطا در پردازش پرداخت");
+        return;
+      }
 
       if (data.isOffline) {
         toast.success("رزرو با موفقیت انجام شد، در انتظار تایید میباشد");
@@ -75,11 +64,8 @@ const PaymentMethodPage = () => {
         if (!data.paymentUrl) return;
         toast.success("به درگاه منتقل می‌شوید...");
 
-        // window.location.href = data.paymentUrl;
+        window.location.href = data.paymentUrl;
       }
-    },
-    onError: (error: any) => {
-      toast.error(error?.error || "خطا در پردازش پرداخت");
     },
   });
 
@@ -88,7 +74,6 @@ const PaymentMethodPage = () => {
       bookingId,
       method: paymentMethod,
       gateway: paymentMethod === "ONLINE" ? gateway : undefined,
-      discountCode: discountCode.length ? discountCode : undefined,
     });
   };
 

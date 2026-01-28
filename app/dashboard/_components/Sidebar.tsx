@@ -38,13 +38,13 @@ const SidebarDashboard = async () => {
   const displayName = session?.user.name || "کاربر";
 
   return (
-    <Sidebar side="right" className="border-l border-r-0 border-slate-200/50">
-      <SidebarHeader className="bg-slate-50 p-4">
+    <Sidebar side="right" className="border-l border-r-0 border-slate-200">
+      <SidebarHeader className="bg-primary-50 p-4">
         <SideBarHeaderContent />
       </SidebarHeader>
-      <Separator className="bg-slate-200" />
+      <Separator className="bg-primary" />
 
-      <SidebarContent className="bg-slate-50/50">
+      <SidebarContent className="bg-primary-50">
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
             <SideBarDashboardLabel />
@@ -55,7 +55,7 @@ const SidebarDashboard = async () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="bg-slate-50 border-t border-slate-200 p-2">
+      <SidebarFooter className="bg-slate-50 border-t border-primary p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

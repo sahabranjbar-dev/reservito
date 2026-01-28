@@ -39,7 +39,7 @@ export const mobileValidation = () =>
       .pipe(
         zod
           .string()
-          .regex(/^09\d{9}$/, { error: "شماره موبایل باید با ۰۹ شروع شود." })
+          .regex(/^09\d{9}$/, { error: "شماره موبایل باید با ۰۹ شروع شود." }),
       ),
   });
 
@@ -82,12 +82,12 @@ export const getFilePreview = (file?: File | Blob | { publicUrl?: string }) => {
 export const mustBetween = (
   min: number,
   max: number,
-  fieldName = "این مقدار"
+  fieldName = "این مقدار",
 ) => {
   return (value: number) => {
     if (value < min || value > max) {
       return `${fieldName} باید بین ${Number(min).toLocaleString(
-        "fa"
+        "fa",
       )} و ${Number(max).toLocaleString("fa")} باشد.`;
     }
     return true;
@@ -106,7 +106,7 @@ export function timeAgo(date: Date) {
 }
 
 export function getUserRolesSummary(
-  userRoles: UserRole | UserRole[]
+  userRoles: UserRole | UserRole[],
 ): RoleSummary {
   const rolesArray = Array.isArray(userRoles) ? userRoles : [userRoles];
 
@@ -200,4 +200,8 @@ export const getRole = (roles?: string[]) => {
   }
 
   return url;
+};
+
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
 };

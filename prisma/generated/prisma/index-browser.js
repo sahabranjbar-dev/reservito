@@ -370,11 +370,14 @@ exports.BusinessRole = exports.$Enums.BusinessRole = {
 };
 
 exports.BookingStatus = exports.$Enums.BookingStatus = {
-  PENDING_CONFIRMATION: 'PENDING_CONFIRMATION',
+  AWAITING_PAYMENT: 'AWAITING_PAYMENT',
+  AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
   CONFIRMED: 'CONFIRMED',
-  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED',
+  CANCELED: 'CANCELED',
   COMPLETED: 'COMPLETED',
-  NO_SHOW: 'NO_SHOW'
+  NO_SHOW_CUSTOMER: 'NO_SHOW_CUSTOMER',
+  NO_SHOW_STAFF: 'NO_SHOW_STAFF'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
