@@ -23,7 +23,6 @@ import {
   CheckCircle2,
   Clock,
   History,
-  Loader2,
   RefreshCcw,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -95,11 +94,7 @@ const CheckoutPage = () => {
     enabled: !!businessId && !!serviceId && !!date && !!time,
   });
 
-  const {
-    data: bookingId,
-    isPending,
-    mutateAsync,
-  } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: async (data: IData) => {
       const response = await createBookingAction(data);
 
@@ -287,7 +282,7 @@ const CheckoutPage = () => {
                         "relative p-4 rounded-xl border-2 text-right transition-all group hover:border-indigo-200",
                         selectedStaffId === staff.id
                           ? "border-indigo-600 bg-indigo-50 ring-1 ring-indigo-600"
-                          : "border-slate-100 bg-white hover:bg-slate-50"
+                          : "border-slate-100 bg-white hover:bg-slate-50",
                       )}
                     >
                       <div className="flex flex-col items-center gap-3">
@@ -303,7 +298,7 @@ const CheckoutPage = () => {
                               "text-sm font-bold",
                               selectedStaffId === staff.id
                                 ? "text-indigo-900"
-                                : "text-slate-800"
+                                : "text-slate-800",
                             )}
                           >
                             {staff.name}
@@ -353,7 +348,7 @@ const CheckoutPage = () => {
                 {isServiceLoading
                   ? "..."
                   : new Intl.NumberFormat("fa-IR").format(
-                      serviceData?.price || 0
+                      serviceData?.price || 0,
                     )}{" "}
                 تومان
               </span>

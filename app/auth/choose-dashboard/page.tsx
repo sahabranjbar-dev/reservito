@@ -81,7 +81,9 @@ export default function HubPage() {
               className="w-full flex items-center justify-center gap-3 p-4 border-2 border-indigo-100 rounded-xl hover:bg-indigo-50 transition group"
             >
               <Briefcase className="text-indigo-600 group-hover:scale-110 transition" />
-              <span className="font-bold text-gray-700">مدیریت کسب‌وکار</span>
+              <span className="font-bold text-gray-700">
+                مدیریت کسب‌وکار {businessMemberData?.business?.businessName}
+              </span>
             </button>
           )}
 
@@ -91,7 +93,9 @@ export default function HubPage() {
               className="w-full flex items-center justify-center gap-3 p-4 border-2 border-indigo-100 rounded-xl hover:bg-indigo-50 transition group"
             >
               <Briefcase className="text-indigo-600 group-hover:scale-110 transition" />
-              <span className="font-bold text-gray-700">مدیریت کسب‌وکار</span>
+              <span className="font-bold text-gray-700">
+                همکار کسب‌وکار {businessMemberData?.business?.businessName}
+              </span>
             </button>
           )}
 

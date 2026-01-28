@@ -36,7 +36,7 @@ export async function getStaffListAction(businessId: string) {
 
 export async function createStaffAction(
   formData: FormData,
-  businessId: string
+  businessId: string,
 ) {
   try {
     const name = formData.get("name") as string;
@@ -112,25 +112,82 @@ export async function createStaffAction(
   }
 }
 // --- 3. ویرایش پرسنل ---
+// --- ویرایش پرسنل ---
 export async function updateStaffAction(formData: FormData, staffId: string) {
   try {
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const resolvedPhone = convertToEnglishDigits(phone);
+
     if (!name || !resolvedPhone) {
       return { success: false, error: "اطلاعات ناقص است" };
     }
 
-    await prisma.staffMember.update({
-      where: { id: staffId },
-      data: { name, phone: resolvedPhone },
+    await prisma.$transaction(async (tx) => {
+      // 1. گرفتن استاف فعلی
+      const staff = await tx.staffMember.findUnique({
+        where: { id: staffId },
+      });
+
+      if (!staff) {
+        throw new Error("Staff not found");
+      }
+
+      // 2. آپدیت اطلاعات استاف
+      await tx.staffMember.update({
+        where: { id: staffId },
+        data: {
+          name,
+          phone: resolvedPhone,
+        },
+      });
+
+      // 3. بررسی وجود یوزر با این شماره
+      const existingUser = await tx.user.findUnique({
+        where: { phone: resolvedPhone },
+      });
+
+      if (!existingUser) return;
+
+      // 4. آپدیت نام یوزر
+      await tx.user.update({
+        where: { id: existingUser.id },
+        data: { fullName: name },
+      });
+
+      // 5. اتصال StaffMember به User
+      await tx.staffMember.update({
+        where: { id: staffId },
+        data: { userId: existingUser.id },
+      });
+
+      // 6. ساخت BusinessMember در صورت عدم وجود
+      const existsBusinessMember = await tx.businessMember.findUnique({
+        where: {
+          userId_businessId: {
+            userId: existingUser.id,
+            businessId: staff.businessId,
+          },
+        },
+      });
+
+      if (!existsBusinessMember) {
+        await tx.businessMember.create({
+          data: {
+            userId: existingUser.id,
+            businessId: staff.businessId,
+            role: "STAFF",
+          },
+        });
+      }
     });
 
     revalidatePath("/dashboard/business/staff");
-    return { success: true, message: "اطلاعات ویرایش شد" };
+
+    return { success: true, message: "اطلاعات پرسنل با موفقیت ویرایش شد" };
   } catch (error) {
     console.error("Update Staff Error:", error);
-    return { success: false, error: "خطا در ویرایش" };
+    return { success: false, error: "خطا در ویرایش پرسنل" };
   }
 }
 

@@ -65,7 +65,6 @@ const BusinessPaymentsInvoicesPage = async () => {
   // تبدیل Date به String برای ارسال به کلاینت (اگر لازم باشد، البته React معمولا Date را هندل می‌کند)
   // اما برای اطمینان از JSON stringify:
   const serializedPayments = JSON.parse(JSON.stringify(payments));
-  console.log({ serializedPayments, payments });
 
   return (
     <div className="container mx-auto p-6">

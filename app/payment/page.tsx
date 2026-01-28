@@ -43,7 +43,7 @@ const PaymentMethodPage = () => {
   const bookingId = searchParams.get("bookingId") || "";
 
   const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "OFFLINE">(
-    "ONLINE"
+    "ONLINE",
   );
   const [gateway, setGateway] = useState("ZARINPAL");
   const [discountCode, setDiscountCode] = useState("");
@@ -75,7 +75,7 @@ const PaymentMethodPage = () => {
         if (!data.paymentUrl) return;
         toast.success("به درگاه منتقل می‌شوید...");
 
-        window.location.href = data.paymentUrl;
+        // window.location.href = data.paymentUrl;
       }
     },
     onError: (error: any) => {
@@ -196,7 +196,7 @@ const PaymentMethodPage = () => {
                       {
                         "bg-blue-500/20 border-indigo-500":
                           gateway === "ZARINPAL",
-                      }
+                      },
                     )}
                   >
                     <RadioGroupItem
@@ -212,7 +212,7 @@ const PaymentMethodPage = () => {
                       "border font-bold rounded-xl p-3 flex items-center justify-center cursor-pointer hover:border-indigo-500",
                       {
                         "bg-blue-500/10 border-indigo-500": gateway === "IDPAY",
-                      }
+                      },
                     )}
                   >
                     <RadioGroupItem
@@ -264,7 +264,7 @@ const PaymentMethodPage = () => {
                 <span className=""> مبلغ خدمت:</span>
                 <span>
                   {new Intl.NumberFormat("fa-IR").format(
-                    booking?.totalPrice || 0
+                    booking?.totalPrice || 0,
                   )}{" "}
                   تومان
                 </span>
@@ -275,7 +275,7 @@ const PaymentMethodPage = () => {
                   {new Intl.NumberFormat("fa-IR").format(
                     ((booking?.totalPrice ?? 1) *
                       (booking?.business.commissionRate ?? 1)) /
-                      100
+                      100,
                   )}{" "}
                   تومان
                 </span>
@@ -291,7 +291,7 @@ const PaymentMethodPage = () => {
                     ((booking?.totalPrice ?? 1) *
                       (booking?.business.commissionRate ?? 1)) /
                       100 +
-                      (booking?.totalPrice ?? 0)
+                      (booking?.totalPrice ?? 0),
                   )}{" "}
                   تومان
                 </span>

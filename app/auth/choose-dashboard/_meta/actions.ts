@@ -72,7 +72,7 @@ export async function setCustomerRole(userId: string): Promise<response> {
 
 export async function getBusinessMemberHandler(
   userId: string,
-  businessId: string
+  businessId: string,
 ) {
   try {
     if (!userId) {
@@ -85,6 +85,9 @@ export async function getBusinessMemberHandler(
           userId,
           businessId,
         },
+      },
+      include: {
+        business: true,
       },
     });
 

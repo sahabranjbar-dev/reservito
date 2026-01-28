@@ -308,6 +308,21 @@ exports.Prisma.FavoriteScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.StaffServiceChangeRequestScalarFieldEnum = {
+  id: 'id',
+  staffId: 'staffId',
+  serviceId: 'serviceId',
+  requestedPrice: 'requestedPrice',
+  requestedActive: 'requestedActive',
+  requestedName: 'requestedName',
+  requestedDescription: 'requestedDescription',
+  requestedDuration: 'requestedDuration',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -391,6 +406,12 @@ exports.SettlementStatus = exports.$Enums.SettlementStatus = {
   FAILED: 'FAILED'
 };
 
+exports.StaffServiceChangeStatus = exports.$Enums.StaffServiceChangeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserRole: 'UserRole',
@@ -407,7 +428,8 @@ exports.Prisma.ModelName = {
   LedgerEntry: 'LedgerEntry',
   Settlement: 'Settlement',
   OtpCode: 'OtpCode',
-  Favorite: 'Favorite'
+  Favorite: 'Favorite',
+  StaffServiceChangeRequest: 'StaffServiceChangeRequest'
 };
 
 /**

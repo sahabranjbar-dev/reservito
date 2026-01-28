@@ -80,6 +80,13 @@ export const authOptions: AuthOptions = {
           where: { phone },
           update: {},
           create: { phone },
+          include: {
+            businessMembers: {
+              include: {
+                business: true,
+              },
+            },
+          },
         });
 
         // فقط roles های واقعی سیستم را برمی‌گردانیم (اگر وجود داشته باشد)
@@ -88,11 +95,32 @@ export const authOptions: AuthOptions = {
           select: { role: true },
         });
 
+        const business = user.businessMembers?.length
+          ? {
+              id: user.businessMembers[0].business.id,
+              slug: user.businessMembers[0].business.slug,
+              businessName: user.businessMembers[0].business.businessName,
+              ownerName: user.businessMembers[0].business.ownerName,
+              address: user.businessMembers[0].business.address,
+              ownerId: user.businessMembers[0].business.ownerId,
+              identifier: user.businessMembers[0].business.identifier,
+              isActive: user.businessMembers[0].business.isActive,
+              businessType: user.businessMembers[0].business.businessType,
+              createdAt:
+                user.businessMembers[0].business.createdAt.toISOString(),
+              updatedAt:
+                user.businessMembers[0].business.updatedAt.toISOString(),
+              deletedAt: user.businessMembers[0].business.deletedAt,
+              businessRole: user.businessMembers[0].role,
+            }
+          : null;
+
         return {
           id: user.id,
           phone: user.phone,
           roles: roles.map((r) => r.role),
           name: user.fullName ?? undefined,
+          business,
         };
       },
     }),
@@ -135,7 +163,7 @@ export const authOptions: AuthOptions = {
 
         const isValid = await bcrypt.compare(
           credentials.password,
-          user.passwordHash
+          user.passwordHash,
         );
         if (!isValid) return null;
 

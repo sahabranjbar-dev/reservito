@@ -8,6 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * =======================
+ * ENUMS
+ * =======================
+ */
+
 enum Role {
   SUPER_ADMIN
   CUSTOMER
@@ -77,6 +83,18 @@ enum BusinessRegistrationStatus {
   REJECTED
 }
 
+enum StaffServiceChangeStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/**
+ * =======================
+ * USER & AUTH
+ * =======================
+ */
+
 model User {
   id String @id @default(cuid())
 
@@ -93,15 +111,15 @@ model User {
   createdAt   DateTime  @default(now())
   deletedAt   DateTime?
 
-  favorites Favorite[]
   roles     UserRole[]
+  favorites Favorite[]
 
   businessMembers BusinessMember[]
-
   ownedBusinesses Business[]
 
-  bookings         Booking[]
-  createdBookings  Booking[] @relation("BookingCreatedBy")
+  bookings        Booking[]
+  createdBookings Booking[] @relation("BookingCreatedBy")
+
   verifiedPayments Payment[] @relation("PaymentVerifiedBy")
 
   staffMembers StaffMember[]
@@ -116,6 +134,12 @@ model UserRole {
 
   @@unique([userId, role])
 }
+
+/**
+ * =======================
+ * BUSINESS
+ * =======================
+ */
 
 model Business {
   id   String @id @default(cuid())
@@ -147,10 +171,9 @@ model Business {
   registrationStatus BusinessRegistrationStatus @default(PENDING)
   rejectionReason    String?
   isActive           Boolean                    @default(true)
-  activatedAt        DateTime?
-  rejectedAt         DateTime?
 
-  favorites Favorite[]
+  activatedAt DateTime?
+  rejectedAt  DateTime?
 
   businessType BusinessType @default(OTHER)
 
@@ -158,15 +181,16 @@ model Business {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  bookings      Booking[]
-  payments      Payment[]
-  settlements   Settlement[]
-  ledgerEntries LedgerEntry[]
+  favorites       Favorite[]
+  businessMembers BusinessMember[]
 
   staffMembers StaffMember[]
   services     Service[]
 
-  businessMembers BusinessMember[]
+  bookings      Booking[]
+  payments      Payment[]
+  settlements   Settlement[]
+  ledgerEntries LedgerEntry[]
 }
 
 model BusinessMember {
@@ -179,9 +203,13 @@ model BusinessMember {
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@unique([userId, businessId])
-  @@index([businessId])
-  @@index([userId])
 }
+
+/**
+ * =======================
+ * STAFF
+ * =======================
+ */
 
 model StaffMember {
   id String @id @default(cuid())
@@ -196,7 +224,8 @@ model StaffMember {
   avatar String?
   phone  String?
 
-  isActive  Boolean   @default(true)
+  isActive Boolean @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -206,9 +235,9 @@ model StaffMember {
   services   ServiceStaff[]
   bookings   Booking[]
 
+  serviceChangeRequests StaffServiceChangeRequest[]
+
   @@unique([businessId, userId])
-  @@index([businessId])
-  @@index([userId])
 }
 
 model StaffAvailability {
@@ -239,8 +268,13 @@ model StaffException {
   reason    String?
 
   @@unique([staffId, date])
-  @@index([staffId, date])
 }
+
+/**
+ * =======================
+ * SERVICE
+ * =======================
+ */
 
 model Service {
   id          String  @id @default(cuid())
@@ -262,7 +296,7 @@ model Service {
   staff    ServiceStaff[]
   bookings Booking[]
 
-  @@index([businessId])
+  staffChangeRequests StaffServiceChangeRequest[]
 }
 
 model ServiceStaff {
@@ -278,6 +312,12 @@ model ServiceStaff {
 
   @@unique([serviceId, staffId])
 }
+
+/**
+ * =======================
+ * BOOKING & PAYMENT
+ * =======================
+ */
 
 model Booking {
   id String @id @default(cuid())
@@ -300,8 +340,8 @@ model Booking {
   status     BookingStatus @default(PENDING_CONFIRMATION)
   totalPrice Int
 
-  customerNotes String? @db.Text
-  internalNotes String? @db.Text
+  customerNotes String?
+  internalNotes String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -311,10 +351,6 @@ model Booking {
   createdBy   User?   @relation("BookingCreatedBy", fields: [createdById], references: [id])
 
   payments Payment[]
-
-  @@index([businessId, startTime])
-  @@index([staffId])
-  @@index([customerId])
 }
 
 model Payment {
@@ -327,7 +363,6 @@ model Payment {
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   method PaymentMethod @default(ONLINE)
-
   amount Int
   status PaymentStatus @default(PENDING)
 
@@ -344,8 +379,6 @@ model Payment {
 
   ledgerEntries LedgerEntry[]
   commission    Commission?
-
-  @@index([businessId])
 }
 
 model Commission {
@@ -362,13 +395,18 @@ model Commission {
   createdAt DateTime @default(now())
 }
 
+/**
+ * =======================
+ * LEDGER & SETTLEMENT
+ * =======================
+ */
+
 model LedgerEntry {
   id String @id @default(cuid())
 
   walletType WalletType
   entryType  LedgerEntryType
-
-  amount Int
+  amount     Int
 
   paymentId String?
   payment   Payment? @relation(fields: [paymentId], references: [id])
@@ -380,9 +418,6 @@ model LedgerEntry {
   business   Business? @relation(fields: [businessId], references: [id])
 
   createdAt DateTime @default(now())
-
-  @@index([walletType])
-  @@index([businessId])
 }
 
 model Settlement {
@@ -401,9 +436,13 @@ model Settlement {
   createdAt DateTime  @default(now())
 
   ledgerEntries LedgerEntry[]
-
-  @@index([businessId, status])
 }
+
+/**
+ * =======================
+ * OTHERS
+ * =======================
+ */
 
 model OtpCode {
   phone     String   @id
@@ -412,8 +451,6 @@ model OtpCode {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([expiresAt])
 }
 
 model Favorite {
@@ -428,4 +465,25 @@ model Favorite {
   createdAt DateTime @default(now())
 
   @@unique([userId, businessId])
+}
+
+model StaffServiceChangeRequest {
+  id String @id @default(cuid())
+
+  staffId String
+  staff   StaffMember @relation(fields: [staffId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  requestedPrice       Int?
+  requestedActive      Boolean?
+  requestedName        String?
+  requestedDescription String?                  @db.Text
+  requestedDuration    Int?
+  status               StaffServiceChangeStatus @default(PENDING)
+  rejectionReason      String?
+
+  createdAt  DateTime  @default(now())
+  reviewedAt DateTime?
 }
