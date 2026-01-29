@@ -25,11 +25,21 @@ export enum BusinessRole {
 }
 
 export enum BookingStatus {
-  PENDING_CONFIRMATION = "PENDING_CONFIRMATION",
-  CONFIRMED = "CONFIRMED",
-  CANCELLED = "CANCELLED",
-  COMPLETED = "COMPLETED",
-  NO_SHOW = "NO_SHOW",
+  AWAITING_PAYMENT = "AWAITING_PAYMENT", //هنوز پرداخت نشده
+
+  AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION", // پرداخت انجام شده، نیاز به تایید
+
+  CONFIRMED = "CONFIRMED", //تایید شد، خدمت اجرا می‌شود
+
+  REJECTED = "REJECTED", //مدیر تایید نکرد
+
+  CANCELED = "CANCELED", //لغو شد
+
+  COMPLETED = "COMPLETED", // انجام شد
+
+  NO_SHOW_CUSTOMER = "NO_SHOW_CUSTOMER", // مشتری نیامد
+
+  NO_SHOW_STAFF = "NO_SHOW_STAFF",
 }
 
 export enum PaymentMethod {
@@ -65,4 +75,20 @@ export enum BusinessRegistrationStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
+}
+
+export enum DiscountType {
+  PERCENTAGE = "PERCENTAGE",
+  FIXED_AMOUNT = "FIXED_AMOUNT",
+}
+
+export enum DiscountScope {
+  PLATFORM = "PLATFORM", // کد عمومی پلتفرم
+  BUSINESS = "BUSINESS", // مخصوص یک بیزنس
+}
+
+export enum DiscountStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  EXPIRED = "EXPIRED",
 }

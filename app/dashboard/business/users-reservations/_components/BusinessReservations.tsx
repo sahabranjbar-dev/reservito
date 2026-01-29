@@ -24,11 +24,13 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { updateBookingStatusAction } from "../_meta/actions";
 import Image from "next/image";
+import { BookingStatus } from "@/constants/enums";
+import { StatusBadge } from "@/components";
 
 // تایپ‌ها
 type Booking = {
   id: string;
-  status: any;
+  status: BookingStatus;
   startTime: Date;
   customer: { name: string | null; phone: string; avatar: string | null };
   service: { name: string };
@@ -91,13 +93,18 @@ const BusinessReservations = ({ bookings }: Props) => {
     }
   };
 
-  const getStatusBadge = (status: any) => {
+  const getStatusBadge = (status: BookingStatus) => {
     const config: Record<
       string,
       { label: string; className: string; icon: any }
     > = {
-      PENDING_CONFIRMATION: {
-        label: "در انتظار",
+      AWAITING_PAYMENT: {
+        label: "در انتظار پرداخت",
+        className: "bg-amber-100 text-amber-700 border-amber-200",
+        icon: Clock,
+      },
+      AWAITING_CONFIRMATION: {
+        label: "در انتظار تائید",
         className: "bg-amber-100 text-amber-700 border-amber-200",
         icon: Clock,
       },
@@ -116,8 +123,13 @@ const BusinessReservations = ({ bookings }: Props) => {
         className: "bg-red-50 text-red-600 border-red-100",
         icon: XCircle,
       },
-      NO_SHOW: {
-        label: "عدم مراجعه",
+      NO_SHOW_CUSTOMER: {
+        label: "عدم مراجعه مشتری",
+        className: "bg-red-100 text-red-700 border-red-200",
+        icon: X,
+      },
+      NO_SHOW_STAFF: {
+        label: "عدم حضور همکار",
         className: "bg-red-100 text-red-700 border-red-200",
         icon: X,
       },
@@ -171,7 +183,7 @@ const BusinessReservations = ({ bookings }: Props) => {
               "pb-3 px-2 text-sm font-medium transition-colors border-b-2",
               filter === tab.id
                 ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                : "border-transparent text-slate-500 hover:text-slate-800",
             )}
           >
             {tab.label}
@@ -192,7 +204,7 @@ const BusinessReservations = ({ bookings }: Props) => {
         </div>
       ) : (
         <div className="space-y-3">
-          {filteredBookings.map((booking: any) => (
+          {filteredBookings.map((booking) => (
             <Card
               key={booking.id}
               className="border-slate-100 hover:shadow-md transition-all overflow-hidden"
@@ -231,7 +243,7 @@ const BusinessReservations = ({ bookings }: Props) => {
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(booking.startTime).toLocaleDateString(
-                            "fa-IR"
+                            "fa-IR",
                           )}
                         </div>
                         <div className="flex items-center gap-1">
@@ -241,7 +253,7 @@ const BusinessReservations = ({ bookings }: Props) => {
                             {
                               hour: "2-digit",
                               minute: "2-digit",
-                            }
+                            },
                           )}
                         </div>
                       </div>
@@ -264,14 +276,14 @@ const BusinessReservations = ({ bookings }: Props) => {
                     <div className="text-right">
                       <div className="font-bold text-slate-900 text-lg">
                         {new Intl.NumberFormat("fa-IR").format(
-                          booking.totalPrice
+                          booking.totalPrice,
                         )}
                         <span className="text-xs font-normal text-slate-500 mr-1">
                           تومان
                         </span>
                       </div>
                       <div className="mb-2">
-                        {getStatusBadge(booking.status)}
+                        <StatusBadge status={booking.status} />
                       </div>
                     </div>
 
@@ -286,7 +298,7 @@ const BusinessReservations = ({ bookings }: Props) => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="center">
-                        {booking.status === "PENDING_CONFIRMATION" && (
+                        {booking.status === "AWAITING_CONFIRMATION" && (
                           <>
                             <DropdownMenuItem
                               onClick={() =>

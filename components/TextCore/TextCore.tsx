@@ -36,8 +36,10 @@ const handleNumberInput = ({ event, onChange }: NumberInputProps) => {
   onChange(numberValue);
 };
 
-interface BaseInputProps
-  extends Omit<React.ComponentProps<"input">, "onChange" | "value"> {
+interface BaseInputProps extends Omit<
+  React.ComponentProps<"input">,
+  "onChange" | "value"
+> {
   value?: string | number | null | undefined;
   icon?: any;
 }
@@ -45,6 +47,7 @@ interface BaseInputProps
 interface StandardInputProps extends BaseInputProps {
   number?: false;
   formatter?: false;
+  label?: string;
   onChange: (value: string) => void;
 }
 
@@ -52,12 +55,14 @@ interface FormatterInputProps extends BaseInputProps {
   formatter: true;
   number?: false;
   onChange: (value: string) => void;
+  label?: string;
 }
 
 interface NumberOnlyInputProps extends BaseInputProps {
   number: true;
   formatter?: false;
   onChange: (value: number | undefined) => void;
+  label?: string;
 }
 
 type InputProps =
@@ -135,7 +140,15 @@ function TextCore({
         data-slot="input"
         className={cn(className)}
         disabled={disabled}
-        placeholder={disabled ? "" : placeholder}
+        placeholder={
+          disabled
+            ? ""
+            : placeholder
+              ? placeholder
+              : props?.label
+                ? `${props?.label} را وارد کنید...`
+                : ""
+        }
         value={displayValue}
         onChange={handleChange}
         type={isNumberInput || isFormatterInput ? "text" : type}

@@ -1,14 +1,14 @@
 "use client";
 
+import { DiscountInput } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { ArrowRight, CreditCard, Percent, Wallet } from "lucide-react";
+import { ArrowRight, CreditCard, Wallet } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Activity, useState } from "react";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ interface IData {
   bookingId: string;
   method: PaymentMethod;
   gateway?: string; // اگر آنلاین باشد
-  discountCode?: string;
+  discountCode?: string | null;
 }
 
 const PaymentMethodPage = () => {
@@ -32,14 +32,26 @@ const PaymentMethodPage = () => {
     "ONLINE",
   );
   const [gateway, setGateway] = useState("ZARINPAL");
-  const [discountCode, setDiscountCode] = useState("");
-
+  const [price, setPrice] = useState<{
+    totalAmount?: number;
+    discountAmount?: number | null;
+    finalAmount?: number;
+    discountCode?: string | null;
+  } | null>();
   // دریافت اطلاعات رزرو برای نمایش مبلغ
   const { data: booking, isLoading } = useQuery({
     queryKey: ["bookingDetail", bookingId],
     queryFn: async () => {
       const response = await getBookingDetails(bookingId);
-
+      if (!response.success) {
+        toast.error("دریافت اطلاعات رزرو با خطا مواجه شد");
+      }
+      setPrice((prev) => ({
+        ...prev,
+        totalAmount: response.booking?.totalPrice,
+        finalAmount: response.booking?.totalPrice,
+        discountAmount: 0,
+      }));
       return response.booking;
     },
     enabled: !!bookingId,
@@ -47,19 +59,26 @@ const PaymentMethodPage = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: IData) => {
-      const response = await processPaymentAction(data);
+      const response = await processPaymentAction({
+        bookingId,
+        discountCode: data?.discountCode ?? "",
+        method: paymentMethod,
+        gateway,
+      });
 
       return response;
     },
     onSuccess: (data) => {
-      if (!data.success) {
+      if (!data?.success) {
         toast.error(data?.error || "خطا در پردازش پرداخت");
         return;
       }
 
-      if (data.isOffline) {
+      if (paymentMethod === "OFFLINE") {
         toast.success("رزرو با موفقیت انجام شد، در انتظار تایید میباشد");
-        router.replace(`/offline-reservation/confirmation/${data.bookingId}`);
+        router.replace(
+          `/offline-reservation/confirmation/${data.payment?.bookingId}`,
+        );
       } else {
         if (!data.paymentUrl) return;
         toast.success("به درگاه منتقل می‌شوید...");
@@ -74,6 +93,7 @@ const PaymentMethodPage = () => {
       bookingId,
       method: paymentMethod,
       gateway: paymentMethod === "ONLINE" ? gateway : undefined,
+      discountCode: price?.discountCode,
     });
   };
 
@@ -110,6 +130,7 @@ const PaymentMethodPage = () => {
               <RadioGroup
                 value={paymentMethod}
                 onValueChange={(v) => setPaymentMethod(v as any)}
+                disabled={isPending}
               >
                 <Activity
                   mode={
@@ -173,6 +194,7 @@ const PaymentMethodPage = () => {
                   value={gateway}
                   onValueChange={setGateway}
                   className="grid grid-cols-2 gap-4"
+                  disabled={isPending}
                 >
                   <Label
                     htmlFor="ZARINPAL"
@@ -214,33 +236,18 @@ const PaymentMethodPage = () => {
             <Separator />
 
             {/* کد تخفیف */}
-            <div className="space-y-2">
-              <Label htmlFor="discountCode" className="flex items-center gap-2">
-                <Percent className="w-4 h-4 text-slate-500" />
-                کد تخفیف (اختیاری)
-              </Label>
-              <div className="flex gap-2">
-                <Input
-                  id="discountCode"
-                  placeholder="کد را وارد کنید..."
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                  className="h-10 text-left dir-ltr"
-                />
-                {/* دکمه اعمال تخفیف (در اینجا شبیه‌سازی شده است) */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => toast.success("کد اعمال شد (تستی)")}
-                  className="h-10 px-4"
-                >
-                  ثبت
-                </Button>
-              </div>
-              <p className="text-xs text-slate-400">
-                برای تست از کد off10 استفاده کنید.
-              </p>
-            </div>
+            <DiscountInput
+              businessId={booking?.businessId}
+              orderAmount={booking?.totalPrice}
+              onApplied={({ discountAmount, finalAmount, discountCode }) => {
+                setPrice((prev) => ({
+                  ...prev,
+                  discountAmount,
+                  finalAmount,
+                  discountCode,
+                }));
+              }}
+            />
 
             <Separator />
 
@@ -249,34 +256,30 @@ const PaymentMethodPage = () => {
                 <span className=""> مبلغ خدمت:</span>
                 <span>
                   {new Intl.NumberFormat("fa-IR").format(
-                    booking?.totalPrice || 0,
+                    price?.totalAmount || 0,
                   )}{" "}
                   تومان
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className=""> مالیات + ارزش‌افزوده: </span>
-                <span>
-                  {new Intl.NumberFormat("fa-IR").format(
-                    ((booking?.totalPrice ?? 1) *
-                      (booking?.business.commissionRate ?? 1)) /
-                      100,
-                  )}{" "}
-                  تومان
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-green-600">
-                <span className=""> تخفیف: </span>
-                <span>{new Intl.NumberFormat("fa-IR").format(0)} تومان</span>
-              </div>
+
+              <Activity mode={price?.discountAmount ? "visible" : "hidden"}>
+                <div className="flex justify-between items-center text-green-600">
+                  <span className=""> تخفیف: </span>
+                  <span>
+                    {price?.discountAmount
+                      ? new Intl.NumberFormat("fa-IR").format(
+                          price?.discountAmount,
+                        )
+                      : 0}{" "}
+                    تومان
+                  </span>
+                </div>
+              </Activity>
               <div className="flex justify-between items-center">
                 <span className="font-semibold"> مبلغ قابل پرداخت:</span>
                 <span>
                   {new Intl.NumberFormat("fa-IR").format(
-                    ((booking?.totalPrice ?? 1) *
-                      (booking?.business.commissionRate ?? 1)) /
-                      100 +
-                      (booking?.totalPrice ?? 0),
+                    price?.finalAmount ? price?.finalAmount : 0,
                   )}{" "}
                   تومان
                 </span>

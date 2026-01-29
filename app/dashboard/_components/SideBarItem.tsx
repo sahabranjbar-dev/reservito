@@ -28,6 +28,7 @@ import {
   Inbox,
   ShieldBan,
   SquareMousePointer,
+  SquarePercent,
   Users,
   Workflow,
   type LucideIcon,
@@ -65,6 +66,7 @@ const businessSideBarItems: SidebarItem[] = [
     url: "/payments-invoices",
     icon: BookmarkCheck,
   },
+  { title: "کد تخفیف", url: "/discount", icon: SquarePercent },
 ];
 
 const customerSideBarItems: SidebarItem[] = [

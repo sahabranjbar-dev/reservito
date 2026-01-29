@@ -26,6 +26,8 @@ const UserReservationsPage = async () => {
           slug: true,
         },
       },
+      payments: true,
+      discountUsages: true,
       service: {
         select: {
           name: true,
@@ -38,7 +40,7 @@ const UserReservationsPage = async () => {
     },
   });
 
-  return <UserReservations bookings={bookings} />;
+  return <UserReservations bookings={bookings as any} />;
 };
 
 export default UserReservationsPage;

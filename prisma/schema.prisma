@@ -99,6 +99,7 @@ enum StaffServiceChangeStatus {
   REJECTED
 }
 
+
 /**
  * =======================
  * USER & AUTH
@@ -133,6 +134,8 @@ model User {
   verifiedPayments Payment[]        @relation("PaymentVerifiedBy")
 
   staffMembers     StaffMember[]
+
+  discountUsages   DiscountUsage[]
 }
 
 model UserRole {
@@ -201,6 +204,7 @@ model Business {
   payments            Payment[]
   settlements         Settlement[]
   ledgerEntries       LedgerEntry[]
+  discounts           Discount[]
 }
 
 model BusinessMember {
@@ -330,66 +334,75 @@ model ServiceStaff {
  */
 
 model Booking {
-  id            String         @id @default(cuid())
+  id             String           @id @default(cuid())
 
-  businessId    String
-  business      Business      @relation(fields: [businessId], references: [id])
+  businessId     String
+  business       Business        @relation(fields: [businessId], references: [id])
 
-  customerId    String
-  customer      User          @relation(fields: [customerId], references: [id])
+  customerId     String
+  customer       User            @relation(fields: [customerId], references: [id])
 
-  serviceId     String
-  service       Service       @relation(fields: [serviceId], references: [id])
+  serviceId      String
+  service        Service         @relation(fields: [serviceId], references: [id])
 
-  staffId       String
-  staff         StaffMember   @relation(fields: [staffId], references: [id])
+  staffId        String
+  staff          StaffMember     @relation(fields: [staffId], references: [id])
 
-  startTime     DateTime
-  endTime       DateTime
+  startTime      DateTime
+  endTime        DateTime
 
-  status        BookingStatus  @default(AWAITING_PAYMENT)
-  totalPrice    Int
+  status         BookingStatus    @default(AWAITING_PAYMENT)
+  totalPrice     Int
 
-  customerNotes String?
-  internalNotes String?
+  customerNotes  String?
+  internalNotes  String?
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
 
-  createdById   String?
-  createdBy     User?         @relation("BookingCreatedBy", fields: [createdById], references: [id])
+  createdById    String?
+  createdBy      User?           @relation("BookingCreatedBy", fields: [createdById], references: [id])
 
-  payments      Payment[]
+  payments       Payment[]
+
+  discountUsages DiscountUsage[]
 }
 
 model Payment {
-  id            String         @id @default(cuid())
+  id             String           @id @default(cuid())
 
-  businessId    String
-  business      Business      @relation(fields: [businessId], references: [id])
+  businessId     String
+  business       Business        @relation(fields: [businessId], references: [id])
 
-  bookingId     String
-  booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId      String
+  booking        Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  method        PaymentMethod  @default(ONLINE)
-  amount        Int
-  status        PaymentStatus  @default(PENDING)
+  method         PaymentMethod    @default(ONLINE)
+  amount         Int
+  status         PaymentStatus    @default(PENDING)
 
-  authority     String?
-  refId         String?
-  gatewayName   String?
+  authority      String?
+  refId          String?
+  gatewayName    String?
 
-  verifiedById  String?
-  verifiedBy    User?         @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id])
-  verifiedAt    DateTime?
+  verifiedById   String?
+  verifiedBy     User?           @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id])
+  verifiedAt     DateTime?
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
-  ledgerEntries LedgerEntry[]
-  commission    Commission?
+
+  discountId     String?
+  discount       Discount?       @relation(fields: [discountId], references: [id])
+
+  discountUsages DiscountUsage[]
+
+  ledgerEntries  LedgerEntry[]
+  commission     Commission?
 }
+
 
 model Commission {
   id            String    @id @default(cuid())
@@ -496,4 +509,60 @@ model StaffServiceChangeRequest {
 
   createdAt            DateTime                  @default(now())
   reviewedAt           DateTime?
+}
+
+model Discount {
+  id                                                       String           @id @default(cuid())
+
+  code                                                     String           @unique
+  type                                                     DiscountType
+  value           Int             // درصد یا مبلغ
+
+  scope                                                    DiscountScope    @default(PLATFORM)
+
+  businessId                                               String?
+  business                                                 Business?       @relation(fields: [businessId], references: [id])
+
+  maxDiscount     Int?            // سقف تخفیف
+  minOrderAmount  Int?            // حداقل مبلغ سفارش
+
+  usageLimit      Int?            // کل دفعات مجاز
+  usedCount                                                Int              @default(0)
+
+  perUserLimit    Int?            // محدودیت برای هر کاربر
+
+  startsAt                                                 DateTime
+  expiresAt                                                DateTime
+
+  status                                                   DiscountStatus   @default(ACTIVE)
+
+  createdAt                                                DateTime         @default(now())
+  updatedAt                                                DateTime         @updatedAt
+
+  usages                                                   DiscountUsage[]
+
+  payments                                                 Payment[]
+
+}
+
+model DiscountUsage {
+  id             String    @id @default(cuid())
+
+  discountId     String
+  discount       Discount @relation(fields: [discountId], references: [id])
+
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+
+  bookingId      String
+  booking        Booking  @relation(fields: [bookingId], references: [id])
+
+  paymentId      String?
+  payment        Payment? @relation(fields: [paymentId], references: [id])
+
+  discountAmount Int
+
+  usedAt         DateTime  @default(now())
+
+  @@unique([discountId, userId, bookingId])
 }

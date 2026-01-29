@@ -258,7 +258,8 @@ exports.Prisma.PaymentScalarFieldEnum = {
   verifiedById: 'verifiedById',
   verifiedAt: 'verifiedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  discountId: 'discountId'
 };
 
 exports.Prisma.CommissionScalarFieldEnum = {
@@ -321,6 +322,35 @@ exports.Prisma.StaffServiceChangeRequestScalarFieldEnum = {
   rejectionReason: 'rejectionReason',
   createdAt: 'createdAt',
   reviewedAt: 'reviewedAt'
+};
+
+exports.Prisma.DiscountScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  type: 'type',
+  value: 'value',
+  scope: 'scope',
+  businessId: 'businessId',
+  maxDiscount: 'maxDiscount',
+  minOrderAmount: 'minOrderAmount',
+  usageLimit: 'usageLimit',
+  usedCount: 'usedCount',
+  perUserLimit: 'perUserLimit',
+  startsAt: 'startsAt',
+  expiresAt: 'expiresAt',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DiscountUsageScalarFieldEnum = {
+  id: 'id',
+  discountId: 'discountId',
+  userId: 'userId',
+  bookingId: 'bookingId',
+  paymentId: 'paymentId',
+  discountAmount: 'discountAmount',
+  usedAt: 'usedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -415,6 +445,22 @@ exports.StaffServiceChangeStatus = exports.$Enums.StaffServiceChangeStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.DiscountType = exports.$Enums.DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT'
+};
+
+exports.DiscountScope = exports.$Enums.DiscountScope = {
+  PLATFORM: 'PLATFORM',
+  BUSINESS: 'BUSINESS'
+};
+
+exports.DiscountStatus = exports.$Enums.DiscountStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  EXPIRED: 'EXPIRED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserRole: 'UserRole',
@@ -432,7 +478,9 @@ exports.Prisma.ModelName = {
   Settlement: 'Settlement',
   OtpCode: 'OtpCode',
   Favorite: 'Favorite',
-  StaffServiceChangeRequest: 'StaffServiceChangeRequest'
+  StaffServiceChangeRequest: 'StaffServiceChangeRequest',
+  Discount: 'Discount',
+  DiscountUsage: 'DiscountUsage'
 };
 
 /**

@@ -30,9 +30,10 @@ function Combobox({
   loading,
   getLabel,
   getKey,
+  defaultValue,
   ...rest
 }: ICombobox) {
-  const resolvedOptions = options?.length ? options : data?.resultList ?? [];
+  const resolvedOptions = options?.length ? options : (data?.resultList ?? []);
 
   const getItemKey = (item: any) =>
     keyField === "id" ? item.id : getKey ? getKey(item) : item.englishTitle;
@@ -83,6 +84,7 @@ function Combobox({
       disabled={disabled}
       value={rest.value}
       onValueChange={onChange}
+      defaultValue={defaultValue}
     >
       <SelectTrigger className={clsx("w-full", className)}>
         <SelectValue placeholder={placeholder} />

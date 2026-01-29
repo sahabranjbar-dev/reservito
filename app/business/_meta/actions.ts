@@ -121,7 +121,7 @@ export async function getAvailableSlotsAction(params: {
     // 1. دریافت اطلاعات سرویس
     const service = await prisma.service.findUnique({
       where: { id: serviceId },
-      select: { duration: true },
+      select: { duration: true, staff: true },
     });
 
     if (!service) throw new Error("Service not found");

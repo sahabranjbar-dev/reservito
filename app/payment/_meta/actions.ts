@@ -1,4 +1,5 @@
 "use server";
+import { applyDiscount, validateAndCalculateDiscount } from "@/utils/actions";
 import { authOptions } from "@/utils/authOptions";
 import prisma from "@/utils/prisma";
 import { getServerSession } from "next-auth";
@@ -9,14 +10,17 @@ export async function processPaymentAction(params: {
   bookingId: string;
   method: PaymentMethod;
   gateway?: string; // اگر آنلاین باشد
+  discountCode?: string;
 }) {
-  const { bookingId, method, gateway } = params;
+  const { bookingId, method, gateway, discountCode } = params;
   const session = await getServerSession(authOptions);
-  const userId = session?.user.id;
-
-  if (!session?.user?.id) {
-    return { success: false, error: "نشست شما منقضی شده است" };
+  if (!session || !session.user?.id) {
+    return {
+      success: false,
+      error: "برای انجام پرداخت باید وارد حساب کاربری شوید",
+    };
   }
+  const userId = session?.user.id;
 
   try {
     // 1. دریافت اطلاعات رزرو
@@ -27,68 +31,60 @@ export async function processPaymentAction(params: {
 
     if (!booking) return { success: false, error: "رزرو یافت نشد" };
 
-    // ===========================
-    // 3. پرداخت آفلاین
-    // ===========================
-    if (method === "OFFLINE") {
-      const result = await prisma.$transaction(async (tx) => {
-        // ثبت پرداخت آفلاین
-        const payment = await tx.payment.create({
+    const payment = await prisma.$transaction(async (tx) => {
+      const discountResult = await validateAndCalculateDiscount({
+        tx,
+        businessId: booking.businessId,
+        code: discountCode,
+        orderAmount: booking.totalPrice,
+      });
+
+      const payment = await tx.payment.create({
+        data: {
+          bookingId: booking.id,
+          businessId: booking.businessId,
+          amount: discountResult.finalAmount,
+          status: "PENDING",
+          method,
+          gatewayName: method === "ONLINE" ? gateway || "ZARINPAL" : "OFFLINE",
+          verifiedById: userId,
+        },
+      });
+
+      if (discountResult.discountId) {
+        await tx.discount.update({
+          where: { id: discountResult.discountId },
           data: {
-            bookingId: booking.id,
-            businessId: booking.businessId,
-            amount: booking?.totalPrice,
-            status: "PENDING",
-            method: "OFFLINE",
-            gatewayName: "OFFLINE",
-            verifiedById: userId,
+            usedCount: { increment: 1 },
           },
         });
 
-        return { payment };
-      });
-
-      return { success: true, isOffline: true, bookingId: booking.id, result };
-    }
-
-    // ===========================
-    // 4. پرداخت آنلاین
-    // ===========================
-    if (method === "ONLINE") {
-      const payment = await prisma.$transaction(async (tx) => {
-        const payment = await tx.payment.create({
+        await tx.discountUsage.create({
           data: {
-            bookingId: booking.id,
-            businessId: booking.businessId,
-            amount: booking.totalPrice,
-            status: "PENDING",
-            method: "ONLINE",
-            gatewayName: gateway || "ZARINPAL",
-            verifiedById: userId,
-            verifiedAt: new Date(),
+            discountId: discountResult.discountId,
+            userId,
+            bookingId,
+            discountAmount: discountResult.discountAmount,
           },
         });
+      }
 
-        return payment;
-      });
+      return payment;
+    });
 
-      // لینک پرداخت (mock)
-      // const paymentUrl = await getGatewayUrl(
-      //   payment.amount,
-      //   payment.id,
-      //   gateway,
-      // );
+    // لینک پرداخت (mock)
+    // const paymentUrl = await getGatewayUrl(
+    //   payment.amount,
+    //   payment.id,
+    //   gateway,
+    // );
 
-      return {
-        success: true,
-        isOffline: false,
-        paymentUrl: `http://localhost:3000/payment/pending?bookingId=${booking.id}&paymentId=${payment.id}`,
-        bookingId: booking.id,
-        payment,
-      };
-    }
-
-    return { success: false, error: "روش پرداخت نامعتبر است" };
+    return {
+      success: true,
+      paymentUrl: `http://localhost:3000/payment/pending?bookingId=${booking.id}&paymentId=${payment.id}`,
+      bookingId: booking.id,
+      payment,
+    };
   } catch (error) {
     console.error("Payment Process Error:", error);
     return { success: false, error: "خطا در پردازش پرداخت" };

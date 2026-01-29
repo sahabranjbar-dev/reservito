@@ -18,21 +18,24 @@ import {
   XCircle,
   Hourglass,
   ReceiptText,
+  User,
+  Building2,
+  Calendar,
+  Wallet,
+  ExternalLink,
+  QrCode,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { businessTypeLabelsFa } from "@/app/business/_meta/utils";
-import { BusinessType } from "@/constants/enums";
-
-// تایپ‌ها (بر اساس اسکیما شما)
-type BookingStatus =
-  | "PENDING_CONFIRMATION"
-  | "CONFIRMED"
-  | "CANCELLED"
-  | "COMPLETED"
-  | "NO_SHOW";
-
-type PaymentStatus = "UNPAID" | "PAID" | "REFUNDED";
+import {
+  BookingStatus,
+  BusinessType,
+  PaymentMethod,
+  PaymentStatus,
+} from "@/constants/enums";
+import { useMemo } from "react";
 
 type Booking = {
   id: string;
@@ -60,10 +63,9 @@ type Booking = {
     fullName: string | null;
     phone: string | null;
   };
-  // اگر دیتای پرداخت را هم فرستاده باشید
   payments?: {
     status: PaymentStatus;
-    method: "ONLINE" | "OFFLINE";
+    method: PaymentMethod;
     amount: number;
     bookingId: string;
     businessId: string;
@@ -87,9 +89,16 @@ const IconWrapper = ({
 );
 
 const ReservationReceipt = ({ booking }: Props) => {
+  // پیدا کردن پرداخت مربوطه
   const payment = booking.payments?.find(
-    (item) => item.bookingId === booking.id
+    (item) => item.bookingId === booking.id,
   );
+
+  // فرمت تاریخ برای تقویم
+  const formatDateForICS = (date: Date) => {
+    return date.toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+  };
+
   // --- 1. چاپ ---
   const handlePrint = () => {
     window.print();
@@ -97,133 +106,266 @@ const ReservationReceipt = ({ booking }: Props) => {
 
   // --- 2. دانلود تقویم ---
   const downloadCalendarEvent = () => {
-    const eventStart = new Date(booking.startTime);
-    const eventEnd = new Date(
-      eventStart.getTime() + booking.service.duration * 60000
-    );
+    try {
+      const eventStart = new Date(booking.startTime);
+      const eventEnd = new Date(
+        eventStart.getTime() + booking.service.duration * 60000,
+      );
 
-    const icsMsg = `BEGIN:VCALENDAR
+      const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Pro Reserve//Event//FA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
 BEGIN:VEVENT
+UID:${booking.id}@proreserve.ir
+DTSTAMP:${formatDateForICS(new Date())}
 DTSTART:${formatDateForICS(eventStart)}
 DTEND:${formatDateForICS(eventEnd)}
 SUMMARY:رزرو ${booking.business.businessName} - ${booking.service.name}
-DESCRIPTION:شماره رزرو: ${booking.id}
-LOCATION:${booking.business.address}
+DESCRIPTION:شماره رزرو: ${booking.id}\\nخدمت: ${booking.service.name}\\nمدت: ${booking.service.duration} دقیقه\\nآدرس: ${booking.business.address || "آدرس مشخص نشده"}
+LOCATION:${booking.business.address || ""}
+STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`;
 
-    const blob = new Blob([icsMsg], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+      const blob = new Blob([icsContent], {
+        type: "text/calendar;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `booking-${booking.id}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `booking-${booking.id}.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-    toast.success("فایل تقویم دانلود شد");
-  };
-
-  const formatDateForICS = (date: Date) => {
-    return date.toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+      toast.success("فایل تقویم با موفقیت دانلود شد");
+    } catch (error) {
+      toast.error("خطا در دانلود تقویم");
+      console.error("Error downloading calendar:", error);
+    }
   };
 
   // --- 3. کپی لینک ---
   const copyLink = () => {
-    // change into public url
     navigator.clipboard.writeText(window.location.href);
-    toast.success("لینک رسید کپی شد");
+    toast.success("لینک رسید در کلیپ‌بورد کپی شد");
   };
 
-  // ==========================================
-  // 4. تنظیمات وضعیت (Config System)
-  // ==========================================
+  // --- 4. دریافت کد QR ---
+  const generateQRCode = () => {
+    const qrData = {
+      bookingId: booking.id,
+      business: booking.business.businessName,
+      service: booking.service.name,
+      time: booking.startTime.toISOString(),
+      customer: booking.customer.fullName,
+    };
 
-  const getStatusConfig = () => {
+    // در حالت واقعی اینجا QR code generator استفاده کنید
+    // console.log("QR Code Data:", qrData);
+    toast.info("QR Code برای نمایش در پنل کسب‌وکار آماده است");
+  };
+
+  // --- 5. تنظیمات وضعیت با useMemo برای بهینه‌سازی ---
+  const statusConfig = useMemo(() => {
     const status = booking.status;
+    const paymentStatus = payment?.status;
 
     // حالت‌های موفقیت
-    if (status === "CONFIRMED" || status === "COMPLETED") {
+    if (status === BookingStatus.CONFIRMED) {
       return {
-        title: status === "CONFIRMED" ? "رزرو تایید شد" : "تکمیل شد",
-        description: "از همراهی شما سپاسگزاریم",
-        gradient: "bg-gradient-to-br from-emerald-600 to-teal-700",
+        title: "رزرو تأیید شد",
+        description:
+          "رزرو شما توسط کسب‌وکار تأیید شد. لطفاً سر وقت مراجعه کنید.",
+        gradient: "bg-gradient-to-br from-emerald-500 to-teal-600",
         icon: CheckCircle2,
-        iconColor: "text-emerald-400 print:text-black",
-        textClass: "text-emerald-400 print:text-black",
+        iconColor: "text-emerald-300",
+        textClass: "text-emerald-50",
         actionAllowed: true,
+        statusColor: "success",
       };
     }
 
-    // حالت‌های در انتظار (پرداخت یا تایید ادمین)
-    if (status === "PENDING_CONFIRMATION") {
-      const paymentStatus = payment?.status;
+    if (status === BookingStatus.COMPLETED) {
+      return {
+        title: "تکمیل شده",
+        description: "خدمت با موفقیت ارائه شد. از همراهی شما سپاسگزاریم.",
+        gradient: "bg-gradient-to-br from-slate-600 to-gray-700",
+        icon: CheckCircle2,
+        iconColor: "text-slate-300",
+        textClass: "text-slate-50",
+        actionAllowed: false,
+        statusColor: "neutral",
+      };
+    }
 
-      if (paymentStatus === "UNPAID" || paymentStatus === "REFUNDED") {
+    // حالت‌های در انتظار
+    if (status === BookingStatus.AWAITING_PAYMENT) {
+      return {
+        title: "در انتظار پرداخت",
+        description: "لطفاً برای نهایی‌سازی رزرو، مبلغ را پرداخت کنید.",
+        gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
+        icon: AlertCircle,
+        iconColor: "text-amber-300",
+        textClass: "text-amber-50",
+        actionAllowed: true,
+        statusColor: "warning",
+      };
+    }
+
+    if (status === BookingStatus.AWAITING_CONFIRMATION) {
+      if (paymentStatus === "UNPAID" || paymentStatus === "PENDING") {
         return {
           title: "در انتظار پرداخت",
-          description: "لطفاً برای نهایی‌سازی رزرو، مبلغ را پرداخت کنید",
+          description: "پرداخت شما در حال بررسی است. لطفاً منتظر بمانید.",
           gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
-          icon: AlertCircle,
-          iconColor: "text-amber-300 print:text-black",
-          textClass: "text-amber-100 print:text-black",
-          actionAllowed: true, // برای رفتن به درگاه
-        };
-      } else {
-        // پرداخت شده ولی تایید نشده (Admin action)
-        return {
-          title: "در انتظار تایید مرکز",
-          description: "رزرو شما ثبت شد و منتظر تایید پرسنل هستیم",
-          gradient: "bg-gradient-to-br from-sky-500 to-blue-600",
           icon: Hourglass,
-          iconColor: "text-sky-300 print:text-black",
-          textClass: "text-sky-100 print:text-black",
+          iconColor: "text-amber-300",
+          textClass: "text-amber-50",
           actionAllowed: false,
+          statusColor: "warning",
         };
       }
-    }
-
-    // حالت لغو شده
-    if (status === "CANCELLED" || status === "NO_SHOW") {
       return {
-        title: status === "NO_SHOW" ? "عدم مراجعه" : "رزرو لغو شد",
-        description:
-          status === "NO_SHOW"
-            ? "متاسفانه شما سر وقت معین مراجعه نکردید"
-            : "این رزرو توسط شما یا مرکز لغو شده است",
-        gradient: "bg-gradient-to-br from-rose-600 to-red-700",
-        icon: XCircle,
-        iconColor: "text-rose-300 print:text-black",
-        textClass: "text-rose-100 print:text-black",
+        title: "در انتظار تأیید",
+        description: "پرداخت موفق. منتظر تأیید نهایی کسب‌وکار باشید.",
+        gradient: "bg-gradient-to-br from-blue-500 to-cyan-600",
+        icon: Hourglass,
+        iconColor: "text-blue-300",
+        textClass: "text-blue-50",
         actionAllowed: false,
+        statusColor: "info",
       };
     }
 
-    // پیش‌فرض (مثلا اگر وضعیتی جدید اضافه شود)
+    // حالت‌های لغو و عدم حضور
+    if (status === BookingStatus.CANCELED) {
+      return {
+        title: "لغو شده",
+        description: "این رزرو توسط شما یا کسب‌وکار لغو شده است.",
+        gradient: "bg-gradient-to-br from-rose-500 to-pink-600",
+        icon: XCircle,
+        iconColor: "text-rose-300",
+        textClass: "text-rose-50",
+        actionAllowed: false,
+        statusColor: "error",
+      };
+    }
+
+    if (status === BookingStatus.NO_SHOW_CUSTOMER) {
+      return {
+        title: "عدم مراجعه مشتری",
+        description: "متأسفانه شما در زمان مقرر مراجعه نکردید.",
+        gradient: "bg-gradient-to-br from-red-500 to-rose-600",
+        icon: User,
+        iconColor: "text-red-300",
+        textClass: "text-red-50",
+        actionAllowed: false,
+        statusColor: "error",
+      };
+    }
+
+    if (status === BookingStatus.NO_SHOW_STAFF) {
+      return {
+        title: "عدم حضور کارمند",
+        description: "متأسفانه کارمند در زمان مقرر حاضر نشد.",
+        gradient: "bg-gradient-to-br from-red-500 to-rose-600",
+        icon: User,
+        iconColor: "text-red-300",
+        textClass: "text-red-50",
+        actionAllowed: false,
+        statusColor: "error",
+      };
+    }
+
+    if (status === BookingStatus.REJECTED) {
+      return {
+        title: "رد شده",
+        description: "این رزرو توسط کسب‌وکار رد شده است.",
+        gradient: "bg-gradient-to-br from-red-600 to-rose-700",
+        icon: XCircle,
+        iconColor: "text-red-300",
+        textClass: "text-red-50",
+        actionAllowed: false,
+        statusColor: "error",
+      };
+    }
+
+    // پیش‌فرض
     return {
-      title: "وضعیت نامشخص",
-      description: "لطفاً با پشتیبانی تماس بگیرید",
-      gradient: "bg-slate-800",
+      title: "در حال بررسی",
+      description: "وضعیت رزرو در حال بررسی است.",
+      gradient: "bg-gradient-to-br from-slate-500 to-gray-600",
       icon: AlertCircle,
-      iconColor: "text-slate-400",
-      textClass: "text-slate-300",
+      iconColor: "text-slate-300",
+      textClass: "text-slate-50",
       actionAllowed: false,
+      statusColor: "neutral",
     };
+  }, [booking.status, payment?.status]);
+
+  // --- فرمت تاریخ فارسی ---
+  const formatPersianDate = (date: Date) => {
+    return new Intl.DateTimeFormat("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long",
+    }).format(date);
   };
 
-  const config = getStatusConfig();
+  const formatPersianTime = (date: Date) => {
+    return new Intl.DateTimeFormat("fa-IR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  };
+
+  // --- محاسبه زمان پایان ---
+  const endTime = useMemo(() => {
+    const start = new Date(booking.startTime);
+    const end = new Date(start.getTime() + booking.service.duration * 60000);
+    return formatPersianTime(end);
+  }, [booking.startTime, booking.service.duration]);
+
+  // --- بازگشت به لیست رزروها ---
+  const handleBackToList = () => {
+    window.history.back();
+  };
+
+  // --- اشتراک‌گذاری ---
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `رزرو ${booking.business.businessName}`,
+        text: `رزرو ${booking.service.name} در ${booking.business.businessName}`,
+        url: window.location.href,
+      });
+    } else {
+      copyLink();
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex justify-center">
-      <div className="w-full max-w-4xl space-y-4">
-        {/* دکمه‌های اکشن (فقط اگر عملیات مجاز باشد) */}
-        {config.actionAllowed && (
-          <div className="flex justify-end gap-2 no-print">
-            <Button variant="outline" size="sm" onClick={copyLink}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8 print:p-0">
+      <div className="w-full max-w-6xl mx-auto space-y-6">
+        {/* هدر و دکمه‌های اکشن */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:hidden">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">رسید رزرو</h1>
+            <p className="text-slate-600">
+              مشاهده و مدیریت رزرو شماره {booking.id}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={handleBackToList}>
+              بازگشت به لیست
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleShare}>
               <Share2 className="w-4 h-4 ml-2" />
               اشتراک
             </Button>
@@ -233,255 +375,354 @@ END:VCALENDAR`;
             </Button>
             <Button size="sm" onClick={handlePrint}>
               <Printer className="w-4 h-4 ml-2" />
-              چاپ
+              چاپ رسید
+            </Button>
+            <Button variant="outline" size="sm" onClick={generateQRCode}>
+              <QrCode className="w-4 h-4 ml-2" />
+              QR Code
             </Button>
           </div>
-        )}
+        </div>
 
         {/* کارت اصلی رسید */}
         <Card className="border-slate-200 shadow-2xl overflow-hidden print:shadow-none print:border-none">
           {/* هدر داینامیک */}
           <div
             className={cn(
-              "p-8 text-white print:bg-white print:text-black print:border-b-2 print:border-black",
-              config.gradient
+              "p-8 text-white print:bg-white",
+              statusConfig.gradient,
             )}
           >
-            <div className="flex justify-between items-start max-w-4xl mx-auto">
-              <div className="space-y-2">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm border border-white/30">
-                    <config.icon className={cn("w-8 h-8", config.iconColor)} />
+                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm border border-white/30">
+                    <statusConfig.icon
+                      className={cn("w-8 h-8", statusConfig.iconColor)}
+                    />
                   </div>
-                  <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-                    {config.title}
-                  </h1>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                      {statusConfig.title}
+                    </h1>
+                    <p
+                      className={cn(
+                        "mt-2 opacity-90 max-w-xl",
+                        statusConfig.textClass,
+                      )}
+                    >
+                      {statusConfig.description}
+                    </p>
+                  </div>
                 </div>
-                <p className={cn("opacity-90 max-w-md", config.textClass)}>
-                  {config.description}
-                </p>
+
                 {/* کد رزرو */}
-                <div className="mt-6 inline-block">
-                  <span className="text-xs font-bold uppercase opacity-70">
-                    کد رزرو:
-                  </span>
-                  <div
-                    className={cn(
-                      "font-mono text-lg font-bold bg-black/20 px-3 py-1 rounded-lg border border-white/20 mt-1 inline-block print:bg-slate-100 print:border-black print:text-black"
-                    )}
+                <div className="flex items-center gap-3">
+                  <Badge
+                    variant="secondary"
+                    className="bg-white/20 border-white/30 text-white"
                   >
+                    کد رزرو
+                  </Badge>
+                  <code className="font-mono text-lg font-bold bg-black/20 px-4 py-2 rounded-lg border border-white/30">
                     {booking.id}
-                  </div>
+                  </code>
                 </div>
               </div>
 
-              {/* برند */}
-              <div className="text-right hidden md:block">
-                <div className="font-bold text-2xl tracking-tighter opacity-90 print:text-black">
-                  PRO<span className="font-light opacity-70">RESERVE</span>
+              {/* برند و اطلاعات */}
+              <div className="text-right">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 opacity-70" />
+                  <span className="text-sm opacity-80">رسید رسمی</span>
                 </div>
-                <div className="text-[10px] uppercase tracking-[0.2em] opacity-60 print:text-black">
-                  Official Ticket
+                <div className="mt-2">
+                  <div className="font-bold text-xl tracking-tight opacity-90">
+                    PRO<span className="font-light opacity-70">RESERVE</span>
+                  </div>
+                  <div className="text-xs uppercase tracking-widest opacity-60 mt-1">
+                    Electronic Receipt
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* بدنه رسید */}
-          <div className="p-8 max-w-4xl mx-auto space-y-8 print:p-0 print:max-w-none">
-            {/* دو ستون: مشتری و بیزنس */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* ستون مشتری */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-8 bg-slate-200 rounded-full print:bg-black" />
-                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
-                    اطلاعات مشتری
-                  </h3>
+          <CardContent className="p-8 print:p-6">
+            <div className="space-y-8">
+              {/* بخش اول: اطلاعات مشتری و کسب‌وکار */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* اطلاعات مشتری */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1 w-6 bg-slate-300 rounded-full" />
+                    <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider">
+                      اطلاعات مشتری
+                    </h3>
+                  </div>
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white rounded-lg border border-slate-200">
+                        <User className="w-5 h-5 text-slate-600" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-lg text-slate-900">
+                          {booking.customer.fullName || "مشتری گرامی"}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 text-slate-600">
+                          <Phone className="w-4 h-4" />
+                          <span dir="ltr" className="font-mono text-sm">
+                            {booking.customer.phone || "شماره ثبت نشده"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 print:bg-white print:border-none">
-                  <p className="font-bold text-xl text-slate-800 print:text-black">
-                    {booking.customer.fullName || "مشتری گرامی"}
-                  </p>
-                  <div className="flex items-center gap-2 mt-3 text-slate-600 print:text-black">
-                    <Phone className="w-4 h-4" />
-                    <span dir="ltr" className="font-mono text-sm">
-                      {booking.customer.phone}
-                    </span>
+
+                {/* اطلاعات کسب‌وکار */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1 w-6 bg-slate-300 rounded-full" />
+                    <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider">
+                      مرکز خدمات
+                    </h3>
+                  </div>
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white rounded-lg border border-slate-200">
+                        <Building2 className="w-5 h-5 text-slate-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-lg text-slate-900">
+                          {booking.business.businessName}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-slate-600">
+                          <Badge variant="outline" className="text-xs">
+                            {businessTypeLabelsFa[
+                              booking.business.businessType
+                            ] || "خدمات"}
+                          </Badge>
+                          <span>مدیر: {booking.business.owner.fullName}</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2 text-slate-600">
+                          <Phone className="w-4 h-4" />
+                          <span dir="ltr" className="font-mono text-sm">
+                            {booking.business.owner.phone}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* ستون بیزنس */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-8 bg-slate-200 rounded-full print:bg-black" />
-                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
-                    مرکز خدمات
-                  </h3>
+              {/* جداکننده تزئینی */}
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-200" />
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">نام مرکز</p>
-                    <p className="font-bold text-lg text-slate-900 print:text-black">
-                      {booking.business.businessName}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
-                    {businessTypeLabelsFa[booking.business.businessType] ||
-                      "خدمات عمومی"}
-                    <span className="w-1 h-1 bg-slate-300 rounded-full" />
-                    <span>مدیر: {booking.business.owner.fullName}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 print:text-black">
-                    <Phone className="w-4 h-4" />
-                    <span dir="ltr" className="font-mono">
-                      {booking.business.owner.phone}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* خط برش (Dashed Line) */}
-            <div className="relative py-6 flex items-center gap-4">
-              <div className="h-px flex-1 border-t-2 border-dashed border-slate-200 print:border-black print:border-t"></div>
-              <div className="w-8 h-8 rounded-full bg-slate-50 -my-2 border border-slate-200 flex items-center justify-center print:bg-white print:border-black">
-                <ReceiptText className="w-4 h-4 text-slate-400 print:text-black" />
-              </div>
-              <div className="h-px flex-1 border-t-2 border-dashed border-slate-200 print:border-black print:border-t"></div>
-            </div>
-
-            {/* جزئیات سرویس و زمان */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="space-y-3">
-                <h4 className="font-bold text-slate-800 print:text-black flex items-center gap-2">
-                  <IconWrapper>
-                    <CalendarDays className="w-5 h-5" />
-                  </IconWrapper>
-                  زمان مراجعه
-                </h4>
-                <div className="bg-white border border-slate-100 p-4 rounded-xl min-h-24 h-32">
-                  <p className="text-xl font-bold text-slate-900 print:text-black">
-                    {new Intl.DateTimeFormat("fa-IR", {
-                      month: "long",
-                      day: "numeric",
-                    }).format(new Date(booking.startTime))}
-                  </p>
-                  <p className="text-slate-600 text-lg mt-1 tabular-nums print:text-black">
-                    ساعت{" "}
-                    {new Intl.DateTimeFormat("fa-IR", {
-                      timeStyle: "short",
-                    }).format(new Date(booking.startTime))}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-slate-800 print:text-black flex items-center gap-2">
-                  <IconWrapper color="bg-indigo-50 text-indigo-600 print:bg-transparent print:text-black">
-                    <Clock className="w-5 h-5" />
-                  </IconWrapper>
-                  خدمت انتخابی
-                </h4>
-                <div className="bg-white border border-slate-100 p-4 rounded-xl min-h-24 h-32">
-                  <p className="font-bold text-slate-900 print:text-black">
-                    {booking.service.name}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2 text-sm text-slate-500 print:text-black">
-                    <span>مدت زمان: {booking.service.duration} دقیقه</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full" />
-                    <span>با: {booking.staff.name}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-slate-800 print:text-black flex items-center gap-2">
-                  <IconWrapper color="bg-emerald-50 text-emerald-600 print:bg-transparent print:text-black">
-                    <MapPin className="w-5 h-5" />
-                  </IconWrapper>
-                  آدرس
-                </h4>
-                <div className="bg-white border border-slate-100 p-4 rounded-xl min-h-24 h-32">
-                  <p className="text-slate-700 leading-relaxed text-sm md:text-base print:text-black">
-                    {booking.business.address}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* بخش مالی */}
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4 pt-4 border-t border-slate-100">
-              <div>
-                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
-                  روش پرداخت
-                </p>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="secondary"
-                    className="text-xs print:border print:border-black bg-slate-100 text-slate-600 print:text-black"
-                  >
-                    {payment?.method === "OFFLINE"
-                      ? "پرداخت در محل"
-                      : "پرداخت آنلاین"}
-                  </Badge>
-                  {payment?.status === "PAID" ? (
-                    <span className="text-sm font-bold text-slate-700 print:text-black">
-                      پرداخت شد
-                    </span>
-                  ) : payment?.status === "REFUNDED" ? (
-                    <span className="text-sm font-bold text-red-600 print:text-black">
-                      بازگردانده شد
-                    </span>
-                  ) : (
-                    <span className="text-sm font-medium text-slate-500 print:text-black">
-                      در انتظار پرداخت
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="text-right md:text-left">
-                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
-                  مبلغ کل
-                </p>
-                <p className="text-4xl font-extrabold text-slate-900 print:text-black tabular-nums">
-                  {new Intl.NumberFormat("fa-IR").format(booking.totalPrice)}
-                  <span className="text-sm font-normal text-slate-500 mr-1 print:text-black">
-                    تومان
+                <div className="relative flex justify-center">
+                  <span className="px-4 bg-white text-slate-400">
+                    <ReceiptText className="w-5 h-5" />
                   </span>
-                </p>
+                </div>
+              </div>
+
+              {/* بخش دوم: جزئیات سرویس */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* زمان مراجعه */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <IconWrapper color="bg-blue-50 text-blue-600">
+                      <CalendarDays className="w-5 h-5" />
+                    </IconWrapper>
+                    <h4 className="font-bold text-slate-800">زمان مراجعه</h4>
+                  </div>
+                  <div className="bg-white border border-slate-100 p-5 rounded-xl">
+                    <div className="space-y-2">
+                      <p className="text-2xl font-bold text-slate-900">
+                        {formatPersianDate(new Date(booking.startTime))}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <div className="space-y-1">
+                          <p className="text-sm text-slate-500">ساعت شروع</p>
+                          <p className="text-lg font-semibold text-slate-900 tabular-nums">
+                            {formatPersianTime(new Date(booking.startTime))}
+                          </p>
+                        </div>
+                        <div className="h-8 w-px bg-slate-200" />
+                        <div className="space-y-1">
+                          <p className="text-sm text-slate-500">ساعت پایان</p>
+                          <p className="text-lg font-semibold text-slate-900 tabular-nums">
+                            {endTime}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* خدمت انتخابی */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <IconWrapper color="bg-emerald-50 text-emerald-600">
+                      <Scissors className="w-5 h-5" />
+                    </IconWrapper>
+                    <h4 className="font-bold text-slate-800">خدمت انتخابی</h4>
+                  </div>
+                  <div className="bg-white border border-slate-100 p-5 rounded-xl">
+                    <div className="space-y-2">
+                      <p className="text-lg font-bold text-slate-900">
+                        {booking.service.name}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          مدت زمان: {booking.service.duration} دقیقه
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          مسئول: {booking.staff.name}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* آدرس و اطلاعات */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <IconWrapper color="bg-amber-50 text-amber-600">
+                      <MapPin className="w-5 h-5" />
+                    </IconWrapper>
+                    <h4 className="font-bold text-slate-800">آدرس مرکز</h4>
+                  </div>
+                  <div className="bg-white border border-slate-100 p-5 rounded-xl">
+                    <div className="space-y-2">
+                      {booking.business.address ? (
+                        <p className="text-slate-700 leading-relaxed">
+                          {booking.business.address}
+                        </p>
+                      ) : (
+                        <p className="text-slate-500">آدرس ثبت نشده است</p>
+                      )}
+                      <div className="pt-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-2"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          مشاهده روی نقشه
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* بخش سوم: اطلاعات مالی */}
+              <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-2xl border border-slate-200">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Wallet className="w-5 h-5 text-slate-600" />
+                      <h4 className="font-bold text-slate-800">
+                        اطلاعات پرداخت
+                      </h4>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <Badge
+                        className={cn(
+                          payment?.status === "PAID"
+                            ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+                            : payment?.status === "PENDING"
+                              ? "bg-amber-100 text-amber-800 border-amber-200"
+                              : "bg-slate-100 text-slate-800 border-slate-200",
+                        )}
+                      >
+                        {payment?.status === "PAID"
+                          ? "پرداخت شده"
+                          : payment?.status === "PENDING"
+                            ? "در حال پرداخت"
+                            : "پرداخت نشده"}
+                      </Badge>
+                      <Badge variant="outline">
+                        {payment?.method === "OFFLINE"
+                          ? "پرداخت حضوری"
+                          : "پرداخت آنلاین"}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="text-left lg:text-right">
+                    <p className="text-sm text-slate-600 mb-1">مبلغ کل</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-bold text-slate-900">
+                        {new Intl.NumberFormat("fa-IR").format(
+                          booking.totalPrice,
+                        )}
+                      </span>
+                      <span className="text-lg text-slate-600">تومان</span>
+                    </div>
+                    {payment?.status === "PAID" && (
+                      <p className="text-sm text-emerald-600 mt-2">
+                        ✅ پرداخت در تاریخ{" "}
+                        {new Intl.DateTimeFormat("fa-IR").format(new Date())}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* نکات مهم */}
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-2">
+                    <h5 className="font-bold text-amber-800">نکات مهم</h5>
+                    <ul className="text-sm text-amber-700 space-y-1 list-disc list-inside">
+                      <li>لطفاً ۱۰ دقیقه قبل از زمان مقرر در محل حاضر شوید.</li>
+                      <li>این رسید به منزله تأیید رزرو می‌باشد.</li>
+                      <li>
+                        در صورت نیاز به لغو، حداقل ۲ ساعت قبل اقدام فرمایید.
+                      </li>
+                      <li>
+                        جهت هرگونه سؤال با شماره {booking.business.owner.phone}{" "}
+                        تماس بگیرید.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </CardContent>
 
-          {/* فوتر پرینت */}
-          <div className="bg-slate-50 border-t border-slate-200 p-4 text-center print:bg-white print:border-none print:text-black">
-            <p className="text-xs text-slate-400 print:text-black">
-              این رسید به صورت الکترونیکی صادر شده و دارای اعتبار قانونی
-              می‌باشد. ممنونیم از اعتماد شما.
-            </p>
-            <div className="mt-2 flex justify-center gap-4 no-print">
-              {config.actionAllowed && (
-                <>
-                  <button
-                    onClick={downloadCalendarEvent}
-                    className="text-xs text-indigo-600 hover:underline flex items-center gap-1"
-                  >
-                    <Download className="w-3 h-3" />
-                    افزودن به تقویم
-                  </button>
-                  <span className="text-slate-300">|</span>
-                  <button
-                    onClick={handlePrint}
-                    className="text-xs text-slate-600 hover:underline flex items-center gap-1"
-                  >
-                    <Printer className="w-3 h-3" />
-                    چاپ رسید
-                  </button>
-                </>
-              )}
+          {/* فوتر */}
+          <div className="bg-slate-50 border-t border-slate-200 p-6 text-center">
+            <div className="max-w-2xl mx-auto">
+              <p className="text-sm text-slate-600 mb-4">
+                این رسید به صورت الکترونیکی صادر شده و دارای اعتبار قانونی
+                می‌باشد. برای مشاهده جزئیات بیشتر به پنل کاربری خود مراجعه کنید.
+              </p>
+              <div className="flex justify-center gap-4 print:hidden">
+                <Button variant="outline" size="sm" onClick={handleShare}>
+                  <Share2 className="w-4 h-4 ml-2" />
+                  اشتراک
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={downloadCalendarEvent}
+                >
+                  <Download className="w-4 h-4 ml-2" />
+                  افزودن به تقویم
+                </Button>
+                <Button size="sm" onClick={handlePrint}>
+                  <Printer className="w-4 h-4 ml-2" />
+                  چاپ رسید
+                </Button>
+              </div>
             </div>
           </div>
         </Card>
