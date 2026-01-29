@@ -34,12 +34,12 @@ const CustomerDashboardPage = async () => {
 
   // کل پول خرج شده (فقط رزروهای تکمیل شده یا کنسل نشده)
   const totalSpent = bookings
-    .filter((b) => b.status !== "CANCELLED")
+    .filter((b) => b.financialStatus !== "UNPAID")
     .reduce((sum, b) => sum + b.totalPrice, 0);
 
   // رزرو بعدی که زودترین است
   const nextBooking = upcomingBookings.sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
   )[0];
 
   return (

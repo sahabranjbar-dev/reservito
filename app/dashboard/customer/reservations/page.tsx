@@ -36,7 +36,7 @@ const UserReservationsPage = async () => {
       },
     },
     orderBy: {
-      startTime: "desc",
+      createdAt: "desc",
     },
   });
 

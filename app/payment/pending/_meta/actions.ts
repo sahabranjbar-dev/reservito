@@ -14,6 +14,19 @@ export async function paymentChecking(paymentId: string, bookingId: string) {
     // 1️⃣ دریافت Payment
     const payment = await prisma.payment.findUnique({
       where: { id: paymentId },
+      include: {
+        booking: {
+          select: {
+            discountUsages: {
+              select: {
+                id: true,
+                discountId: true,
+                paymentId: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!payment) {
@@ -55,37 +68,137 @@ export async function paymentChecking(paymentId: string, bookingId: string) {
     //   };
     // }
 
-    // 6️⃣ اگر پرداخت ناموفق بود
+    // // 6️⃣ اگر پرداخت ناموفق بود
     // if (paymentStatusFromGateway === "failed") {
-    //   await prisma.payment.update({
-    //     where: { id: paymentId },
-    //     data: { status: "FAILED" },
+    //   await prisma.$transaction(async (tx) => {
+    //     // 1️⃣ fail payment
+    //     await tx.payment.update({
+    //       where: { id: paymentId },
+    //       data: { status: "FAILED" },
+    //     });
+
+    //     // 2️⃣ پیدا کردن discountUsage از روی booking
+    //     const discountUsage = await tx.discountUsage.findFirst({
+    //       where: {
+    //         bookingId,
+    //         paymentId,
+    //         disCountUsageStatus: "RESERVED", // خیلی مهم
+    //       },
+    //     });
+
+    //     if (!discountUsage) return;
+
+    //     // 3️⃣ cancel usage
+    //     await tx.discountUsage.update({
+    //       where: { id: discountUsage.id },
+    //       data: {
+    //         disCountUsageStatus: "CANCELED",
+    //       },
+    //     });
+
+    //     // 4️⃣ rollback usedCount
+    //     await tx.discount.update({
+    //       where: { id: discountUsage.discountId },
+    //       data: {
+    //         usedCount: { decrement: 1 },
+    //       },
+    //     });
     //   });
 
     //   return {
     //     paymentStatus: "FAILED",
     //     redirectUrl: "/payment/failure",
-    //     message: "پرداخت ناموفق بود. مبلغی از حساب شما کسر نشد.",
+    //     message: "پرداخت ناموفق بود.",
+    //     paymentId,
     //   };
     // }
 
     // 7️⃣ پرداخت موفق → تراکنش اتمیک
-    const [updatedPayment, updatedBooking] = await prisma.$transaction([
-      prisma.payment.update({
-        where: { id: paymentId },
-        data: {
-          status: "PAID",
-          verifiedAt: new Date(),
-          verifiedById: userId,
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        business: {
+          select: {
+            id: true,
+            commissionRate: true,
+          },
         },
-      }),
-      prisma.booking.update({
-        where: { id: bookingId },
-        data: {
-          status: "AWAITING_CONFIRMATION",
-        },
-      }),
-    ]);
+        commission: true,
+        discountUsages: true,
+      },
+    });
+
+    if (!booking) {
+      return { success: false, message: "رزرو یافت نشد" };
+    }
+
+    if (booking.commission) {
+      return {
+        paymentStatus: "PAID",
+        redirectUrl: "/booking/waiting-confirmation",
+        message: "کمیسیون این رزرو قبلاً ثبت شده است.",
+      };
+    }
+
+    const grossAmount = payment.amount;
+    const commissionRate = booking.business.commissionRate;
+
+    const platformFee = Math.round((grossAmount * commissionRate) / 100);
+    const businessShare = grossAmount - platformFee;
+
+    const { updatedBooking, updatedCommission, updatedPayment } =
+      await prisma.$transaction(async (tx) => {
+        // 1️⃣ update payment
+        const updatedPayment = await tx.payment.update({
+          where: { id: paymentId },
+          data: {
+            status: "PAID",
+            verifiedAt: new Date(),
+            verifiedById: userId,
+          },
+        });
+
+        // 2️⃣ update booking
+        const updatedBooking = await tx.booking.update({
+          where: { id: bookingId },
+          data: {
+            status: "AWAITING_CONFIRMATION",
+            finalPrice: updatedPayment.amount,
+            financialStatus: "PAID",
+          },
+        });
+
+        // 3️⃣ create commission
+        const updatedCommission = await tx.commission.create({
+          data: {
+            bookingId: booking.id,
+            businessId: booking.businessId,
+            grossAmount,
+            platformFee,
+            businessShare,
+          },
+        });
+
+        // 4️⃣ confirm discount usage (soft lock → final)
+        const discountUsage = booking.discountUsages.find(
+          (item) => item.paymentId === paymentId,
+        );
+
+        if (discountUsage) {
+          await tx.discountUsage.update({
+            where: { id: discountUsage.id },
+            data: {
+              disCountUsageStatus: "CONFIRMED",
+            },
+          });
+        }
+
+        return {
+          updatedPayment,
+          updatedBooking,
+          updatedCommission,
+        };
+      });
 
     return {
       paymentStatus: "PAID",
@@ -94,6 +207,7 @@ export async function paymentChecking(paymentId: string, bookingId: string) {
         "پرداخت با موفقیت انجام شد و رزرو شما در انتظار تأیید کسب‌وکار است.",
       updatedPayment,
       updatedBooking,
+      updatedCommission,
     };
   } catch (error: any) {
     console.error("Payment Checking Error:", error);

@@ -135,8 +135,8 @@ const DiscountForm = ({ onCancel, id, onSuccess, businessId }: Props) => {
               component={Combobox}
               label="نوع تخفیف"
               options={[
-                { id: "PERCENTAGE", farsiTitle: "درصدی (%)" },
-                { id: "FIXED_AMOUNT", farsiTitle: "مبلغی (تومان)" },
+                { id: DiscountType.PERCENT, farsiTitle: "درصدی (%)" },
+                { id: DiscountType.PERCENT, farsiTitle: "مبلغی (تومان)" },
               ]}
               required
             />

@@ -82,6 +82,7 @@ export async function createBookingAction(params: {
         totalPrice: service.price,
         customerNotes,
         status: "AWAITING_PAYMENT",
+        finalPrice: service.price,
       },
     });
 

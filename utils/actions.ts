@@ -1,5 +1,6 @@
 "use server";
 
+import { DiscountType } from "@/constants/enums";
 import prisma from "@/utils/prisma";
 
 interface ApplyDiscountInput {
@@ -78,11 +79,11 @@ export async function applyDiscount({
     // 5. محاسبه مبلغ تخفیف
     let discountAmount = 0;
 
-    if (discount.type === "PERCENTAGE") {
+    if (discount.type === DiscountType.PERCENT) {
       discountAmount = Math.floor((orderAmount * discount.value) / 100);
     }
 
-    if (discount.type === "FIXED_AMOUNT") {
+    if (discount.type === DiscountType.FIXED) {
       discountAmount = discount.value;
     }
 
@@ -174,7 +175,7 @@ export async function validateAndCalculateDiscount({
 
   let discountAmount = 0;
 
-  if (discount.type === "PERCENTAGE") {
+  if (discount.type === DiscountType.PERCENT) {
     discountAmount = Math.floor((orderAmount * discount.value) / 100);
   } else {
     discountAmount = discount.value;

@@ -1,36 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  CheckCircle,
-  FileText,
-  Download,
-  Share2,
-  Clock,
-  Calendar,
-  User,
-  CreditCard,
-  ArrowLeft,
-  Home,
-  QrCode,
-  ShieldCheck,
-  BellRing,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { faIR } from "date-fns/locale";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  BellRing,
+  Calendar,
+  CheckCircle,
+  Clock,
+  CreditCard,
+  FileText,
+  Home,
+  QrCode,
+  Share2,
+  ShieldCheck,
+  User,
+} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface BookingDetails {
   id: string;

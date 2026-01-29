@@ -224,9 +224,18 @@ export const StaffServiceChangeStatus: {
 export type StaffServiceChangeStatus = (typeof StaffServiceChangeStatus)[keyof typeof StaffServiceChangeStatus]
 
 
+export const FinancialStatus: {
+  UNPAID: 'UNPAID',
+  PAID: 'PAID',
+  FINALIZED: 'FINALIZED'
+};
+
+export type FinancialStatus = (typeof FinancialStatus)[keyof typeof FinancialStatus]
+
+
 export const DiscountType: {
-  PERCENTAGE: 'PERCENTAGE',
-  FIXED_AMOUNT: 'FIXED_AMOUNT'
+  PERCENT: 'PERCENT',
+  FIXED: 'FIXED'
 };
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
@@ -247,6 +256,15 @@ export const DiscountStatus: {
 };
 
 export type DiscountStatus = (typeof DiscountStatus)[keyof typeof DiscountStatus]
+
+
+export const DiscountUsageStatus: {
+  RESERVED: 'RESERVED',
+  CONFIRMED: 'CONFIRMED',
+  CANCELED: 'CANCELED'
+};
+
+export type DiscountUsageStatus = (typeof DiscountUsageStatus)[keyof typeof DiscountUsageStatus]
 
 }
 
@@ -294,6 +312,10 @@ export type StaffServiceChangeStatus = $Enums.StaffServiceChangeStatus
 
 export const StaffServiceChangeStatus: typeof $Enums.StaffServiceChangeStatus
 
+export type FinancialStatus = $Enums.FinancialStatus
+
+export const FinancialStatus: typeof $Enums.FinancialStatus
+
 export type DiscountType = $Enums.DiscountType
 
 export const DiscountType: typeof $Enums.DiscountType
@@ -305,6 +327,10 @@ export const DiscountScope: typeof $Enums.DiscountScope
 export type DiscountStatus = $Enums.DiscountStatus
 
 export const DiscountStatus: typeof $Enums.DiscountStatus
+
+export type DiscountUsageStatus = $Enums.DiscountUsageStatus
+
+export const DiscountUsageStatus: typeof $Enums.DiscountUsageStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2816,6 +2842,7 @@ export namespace Prisma {
     settlements: number
     ledgerEntries: number
     discounts: number
+    commissions: number
   }
 
   export type BusinessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2828,6 +2855,7 @@ export namespace Prisma {
     settlements?: boolean | BusinessCountOutputTypeCountSettlementsArgs
     ledgerEntries?: boolean | BusinessCountOutputTypeCountLedgerEntriesArgs
     discounts?: boolean | BusinessCountOutputTypeCountDiscountsArgs
+    commissions?: boolean | BusinessCountOutputTypeCountCommissionsArgs
   }
 
   // Custom InputTypes
@@ -2902,6 +2930,13 @@ export namespace Prisma {
    */
   export type BusinessCountOutputTypeCountDiscountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DiscountWhereInput
+  }
+
+  /**
+   * BusinessCountOutputType without action
+   */
+  export type BusinessCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionWhereInput
   }
 
 
@@ -3138,12 +3173,10 @@ export namespace Prisma {
 
   export type DiscountCountOutputType = {
     usages: number
-    payments: number
   }
 
   export type DiscountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     usages?: boolean | DiscountCountOutputTypeCountUsagesArgs
-    payments?: boolean | DiscountCountOutputTypeCountPaymentsArgs
   }
 
   // Custom InputTypes
@@ -3162,13 +3195,6 @@ export namespace Prisma {
    */
   export type DiscountCountOutputTypeCountUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DiscountUsageWhereInput
-  }
-
-  /**
-   * DiscountCountOutputType without action
-   */
-  export type DiscountCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PaymentWhereInput
   }
 
 
@@ -5956,6 +5982,7 @@ export namespace Prisma {
     settlements?: boolean | Business$settlementsArgs<ExtArgs>
     ledgerEntries?: boolean | Business$ledgerEntriesArgs<ExtArgs>
     discounts?: boolean | Business$discountsArgs<ExtArgs>
+    commissions?: boolean | Business$commissionsArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business"]>
 
@@ -6057,6 +6084,7 @@ export namespace Prisma {
     settlements?: boolean | Business$settlementsArgs<ExtArgs>
     ledgerEntries?: boolean | Business$ledgerEntriesArgs<ExtArgs>
     discounts?: boolean | Business$discountsArgs<ExtArgs>
+    commissions?: boolean | Business$commissionsArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BusinessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6079,6 +6107,7 @@ export namespace Prisma {
       settlements: Prisma.$SettlementPayload<ExtArgs>[]
       ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
       discounts: Prisma.$DiscountPayload<ExtArgs>[]
+      commissions: Prisma.$CommissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6510,6 +6539,7 @@ export namespace Prisma {
     settlements<T extends Business$settlementsArgs<ExtArgs> = {}>(args?: Subset<T, Business$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ledgerEntries<T extends Business$ledgerEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Business$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     discounts<T extends Business$discountsArgs<ExtArgs> = {}>(args?: Subset<T, Business$discountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    commissions<T extends Business$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, Business$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7173,6 +7203,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DiscountScalarFieldEnum | DiscountScalarFieldEnum[]
+  }
+
+  /**
+   * Business.commissions
+   */
+  export type Business$commissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    where?: CommissionWhereInput
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    cursor?: CommissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
   }
 
   /**
@@ -14084,10 +14138,14 @@ export namespace Prisma {
 
   export type BookingAvgAggregateOutputType = {
     totalPrice: number | null
+    finalPrice: number | null
+    penaltyAmount: number | null
   }
 
   export type BookingSumAggregateOutputType = {
     totalPrice: number | null
+    finalPrice: number | null
+    penaltyAmount: number | null
   }
 
   export type BookingMinAggregateOutputType = {
@@ -14100,6 +14158,9 @@ export namespace Prisma {
     endTime: Date | null
     status: $Enums.BookingStatus | null
     totalPrice: number | null
+    finalPrice: number | null
+    penaltyAmount: number | null
+    financialStatus: $Enums.FinancialStatus | null
     customerNotes: string | null
     internalNotes: string | null
     createdAt: Date | null
@@ -14118,6 +14179,9 @@ export namespace Prisma {
     endTime: Date | null
     status: $Enums.BookingStatus | null
     totalPrice: number | null
+    finalPrice: number | null
+    penaltyAmount: number | null
+    financialStatus: $Enums.FinancialStatus | null
     customerNotes: string | null
     internalNotes: string | null
     createdAt: Date | null
@@ -14136,6 +14200,9 @@ export namespace Prisma {
     endTime: number
     status: number
     totalPrice: number
+    finalPrice: number
+    penaltyAmount: number
+    financialStatus: number
     customerNotes: number
     internalNotes: number
     createdAt: number
@@ -14148,10 +14215,14 @@ export namespace Prisma {
 
   export type BookingAvgAggregateInputType = {
     totalPrice?: true
+    finalPrice?: true
+    penaltyAmount?: true
   }
 
   export type BookingSumAggregateInputType = {
     totalPrice?: true
+    finalPrice?: true
+    penaltyAmount?: true
   }
 
   export type BookingMinAggregateInputType = {
@@ -14164,6 +14235,9 @@ export namespace Prisma {
     endTime?: true
     status?: true
     totalPrice?: true
+    finalPrice?: true
+    penaltyAmount?: true
+    financialStatus?: true
     customerNotes?: true
     internalNotes?: true
     createdAt?: true
@@ -14182,6 +14256,9 @@ export namespace Prisma {
     endTime?: true
     status?: true
     totalPrice?: true
+    finalPrice?: true
+    penaltyAmount?: true
+    financialStatus?: true
     customerNotes?: true
     internalNotes?: true
     createdAt?: true
@@ -14200,6 +14277,9 @@ export namespace Prisma {
     endTime?: true
     status?: true
     totalPrice?: true
+    finalPrice?: true
+    penaltyAmount?: true
+    financialStatus?: true
     customerNotes?: true
     internalNotes?: true
     createdAt?: true
@@ -14305,6 +14385,9 @@ export namespace Prisma {
     endTime: Date
     status: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount: number
+    financialStatus: $Enums.FinancialStatus
     customerNotes: string | null
     internalNotes: string | null
     createdAt: Date
@@ -14342,6 +14425,9 @@ export namespace Prisma {
     endTime?: boolean
     status?: boolean
     totalPrice?: boolean
+    finalPrice?: boolean
+    penaltyAmount?: boolean
+    financialStatus?: boolean
     customerNotes?: boolean
     internalNotes?: boolean
     createdAt?: boolean
@@ -14355,6 +14441,7 @@ export namespace Prisma {
     createdBy?: boolean | Booking$createdByArgs<ExtArgs>
     payments?: boolean | Booking$paymentsArgs<ExtArgs>
     discountUsages?: boolean | Booking$discountUsagesArgs<ExtArgs>
+    commission?: boolean | Booking$commissionArgs<ExtArgs>
     _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
@@ -14368,6 +14455,9 @@ export namespace Prisma {
     endTime?: boolean
     status?: boolean
     totalPrice?: boolean
+    finalPrice?: boolean
+    penaltyAmount?: boolean
+    financialStatus?: boolean
     customerNotes?: boolean
     internalNotes?: boolean
     createdAt?: boolean
@@ -14391,6 +14481,9 @@ export namespace Prisma {
     endTime?: boolean
     status?: boolean
     totalPrice?: boolean
+    finalPrice?: boolean
+    penaltyAmount?: boolean
+    financialStatus?: boolean
     customerNotes?: boolean
     internalNotes?: boolean
     createdAt?: boolean
@@ -14414,6 +14507,9 @@ export namespace Prisma {
     endTime?: boolean
     status?: boolean
     totalPrice?: boolean
+    finalPrice?: boolean
+    penaltyAmount?: boolean
+    financialStatus?: boolean
     customerNotes?: boolean
     internalNotes?: boolean
     createdAt?: boolean
@@ -14422,7 +14518,7 @@ export namespace Prisma {
     createdById?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "customerId" | "serviceId" | "staffId" | "startTime" | "endTime" | "status" | "totalPrice" | "customerNotes" | "internalNotes" | "createdAt" | "updatedAt" | "deletedAt" | "createdById", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "customerId" | "serviceId" | "staffId" | "startTime" | "endTime" | "status" | "totalPrice" | "finalPrice" | "penaltyAmount" | "financialStatus" | "customerNotes" | "internalNotes" | "createdAt" | "updatedAt" | "deletedAt" | "createdById", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     customer?: boolean | UserDefaultArgs<ExtArgs>
@@ -14431,6 +14527,7 @@ export namespace Prisma {
     createdBy?: boolean | Booking$createdByArgs<ExtArgs>
     payments?: boolean | Booking$paymentsArgs<ExtArgs>
     discountUsages?: boolean | Booking$discountUsagesArgs<ExtArgs>
+    commission?: boolean | Booking$commissionArgs<ExtArgs>
     _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14458,6 +14555,7 @@ export namespace Prisma {
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       payments: Prisma.$PaymentPayload<ExtArgs>[]
       discountUsages: Prisma.$DiscountUsagePayload<ExtArgs>[]
+      commission: Prisma.$CommissionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14469,6 +14567,9 @@ export namespace Prisma {
       endTime: Date
       status: $Enums.BookingStatus
       totalPrice: number
+      finalPrice: number
+      penaltyAmount: number
+      financialStatus: $Enums.FinancialStatus
       customerNotes: string | null
       internalNotes: string | null
       createdAt: Date
@@ -14876,6 +14977,7 @@ export namespace Prisma {
     createdBy<T extends Booking$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Booking$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payments<T extends Booking$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Booking$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     discountUsages<T extends Booking$discountUsagesArgs<ExtArgs> = {}>(args?: Subset<T, Booking$discountUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    commission<T extends Booking$commissionArgs<ExtArgs> = {}>(args?: Subset<T, Booking$commissionArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14914,6 +15016,9 @@ export namespace Prisma {
     readonly endTime: FieldRef<"Booking", 'DateTime'>
     readonly status: FieldRef<"Booking", 'BookingStatus'>
     readonly totalPrice: FieldRef<"Booking", 'Int'>
+    readonly finalPrice: FieldRef<"Booking", 'Int'>
+    readonly penaltyAmount: FieldRef<"Booking", 'Int'>
+    readonly financialStatus: FieldRef<"Booking", 'FinancialStatus'>
     readonly customerNotes: FieldRef<"Booking", 'String'>
     readonly internalNotes: FieldRef<"Booking", 'String'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
@@ -15383,6 +15488,25 @@ export namespace Prisma {
   }
 
   /**
+   * Booking.commission
+   */
+  export type Booking$commissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    where?: CommissionWhereInput
+  }
+
+  /**
    * Booking without action
    */
   export type BookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15435,7 +15559,6 @@ export namespace Prisma {
     verifiedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    discountId: string | null
   }
 
   export type PaymentMaxAggregateOutputType = {
@@ -15452,7 +15575,6 @@ export namespace Prisma {
     verifiedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    discountId: string | null
   }
 
   export type PaymentCountAggregateOutputType = {
@@ -15469,7 +15591,6 @@ export namespace Prisma {
     verifiedAt: number
     createdAt: number
     updatedAt: number
-    discountId: number
     _all: number
   }
 
@@ -15496,7 +15617,6 @@ export namespace Prisma {
     verifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    discountId?: true
   }
 
   export type PaymentMaxAggregateInputType = {
@@ -15513,7 +15633,6 @@ export namespace Prisma {
     verifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    discountId?: true
   }
 
   export type PaymentCountAggregateInputType = {
@@ -15530,7 +15649,6 @@ export namespace Prisma {
     verifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    discountId?: true
     _all?: true
   }
 
@@ -15634,7 +15752,6 @@ export namespace Prisma {
     verifiedAt: Date | null
     createdAt: Date
     updatedAt: Date
-    discountId: string | null
     _count: PaymentCountAggregateOutputType | null
     _avg: PaymentAvgAggregateOutputType | null
     _sum: PaymentSumAggregateOutputType | null
@@ -15670,14 +15787,11 @@ export namespace Prisma {
     verifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    discountId?: boolean
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
     discountUsages?: boolean | Payment$discountUsagesArgs<ExtArgs>
     ledgerEntries?: boolean | Payment$ledgerEntriesArgs<ExtArgs>
-    commission?: boolean | Payment$commissionArgs<ExtArgs>
     _count?: boolean | PaymentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
@@ -15695,11 +15809,9 @@ export namespace Prisma {
     verifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    discountId?: boolean
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
   export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15716,11 +15828,9 @@ export namespace Prisma {
     verifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    discountId?: boolean
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
   export type PaymentSelectScalar = {
@@ -15737,31 +15847,26 @@ export namespace Prisma {
     verifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    discountId?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "bookingId" | "method" | "amount" | "status" | "authority" | "refId" | "gatewayName" | "verifiedById" | "verifiedAt" | "createdAt" | "updatedAt" | "discountId", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "bookingId" | "method" | "amount" | "status" | "authority" | "refId" | "gatewayName" | "verifiedById" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
     discountUsages?: boolean | Payment$discountUsagesArgs<ExtArgs>
     ledgerEntries?: boolean | Payment$ledgerEntriesArgs<ExtArgs>
-    commission?: boolean | Payment$commissionArgs<ExtArgs>
     _count?: boolean | PaymentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
   }
   export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
     verifiedBy?: boolean | Payment$verifiedByArgs<ExtArgs>
-    discount?: boolean | Payment$discountArgs<ExtArgs>
   }
 
   export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15770,10 +15875,8 @@ export namespace Prisma {
       business: Prisma.$BusinessPayload<ExtArgs>
       booking: Prisma.$BookingPayload<ExtArgs>
       verifiedBy: Prisma.$UserPayload<ExtArgs> | null
-      discount: Prisma.$DiscountPayload<ExtArgs> | null
       discountUsages: Prisma.$DiscountUsagePayload<ExtArgs>[]
       ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
-      commission: Prisma.$CommissionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15789,7 +15892,6 @@ export namespace Prisma {
       verifiedAt: Date | null
       createdAt: Date
       updatedAt: Date
-      discountId: string | null
     }, ExtArgs["result"]["payment"]>
     composites: {}
   }
@@ -16187,10 +16289,8 @@ export namespace Prisma {
     business<T extends BusinessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessDefaultArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     verifiedBy<T extends Payment$verifiedByArgs<ExtArgs> = {}>(args?: Subset<T, Payment$verifiedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    discount<T extends Payment$discountArgs<ExtArgs> = {}>(args?: Subset<T, Payment$discountArgs<ExtArgs>>): Prisma__DiscountClient<$Result.GetResult<Prisma.$DiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     discountUsages<T extends Payment$discountUsagesArgs<ExtArgs> = {}>(args?: Subset<T, Payment$discountUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ledgerEntries<T extends Payment$ledgerEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Payment$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    commission<T extends Payment$commissionArgs<ExtArgs> = {}>(args?: Subset<T, Payment$commissionArgs<ExtArgs>>): Prisma__CommissionClient<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16233,7 +16333,6 @@ export namespace Prisma {
     readonly verifiedAt: FieldRef<"Payment", 'DateTime'>
     readonly createdAt: FieldRef<"Payment", 'DateTime'>
     readonly updatedAt: FieldRef<"Payment", 'DateTime'>
-    readonly discountId: FieldRef<"Payment", 'String'>
   }
     
 
@@ -16649,25 +16748,6 @@ export namespace Prisma {
   }
 
   /**
-   * Payment.discount
-   */
-  export type Payment$discountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Discount
-     */
-    select?: DiscountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Discount
-     */
-    omit?: DiscountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DiscountInclude<ExtArgs> | null
-    where?: DiscountWhereInput
-  }
-
-  /**
    * Payment.discountUsages
    */
   export type Payment$discountUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16716,25 +16796,6 @@ export namespace Prisma {
   }
 
   /**
-   * Payment.commission
-   */
-  export type Payment$commissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commission
-     */
-    select?: CommissionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commission
-     */
-    omit?: CommissionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommissionInclude<ExtArgs> | null
-    where?: CommissionWhereInput
-  }
-
-  /**
    * Payment without action
    */
   export type PaymentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16769,43 +16830,47 @@ export namespace Prisma {
     grossAmount: number | null
     platformFee: number | null
     businessShare: number | null
-    taxAmount: number | null
   }
 
   export type CommissionSumAggregateOutputType = {
     grossAmount: number | null
     platformFee: number | null
     businessShare: number | null
-    taxAmount: number | null
   }
 
   export type CommissionMinAggregateOutputType = {
     id: string | null
-    paymentId: string | null
+    bookingId: string | null
+    businessId: string | null
     grossAmount: number | null
     platformFee: number | null
     businessShare: number | null
-    taxAmount: number | null
+    isSettled: boolean | null
+    settledAt: Date | null
     createdAt: Date | null
   }
 
   export type CommissionMaxAggregateOutputType = {
     id: string | null
-    paymentId: string | null
+    bookingId: string | null
+    businessId: string | null
     grossAmount: number | null
     platformFee: number | null
     businessShare: number | null
-    taxAmount: number | null
+    isSettled: boolean | null
+    settledAt: Date | null
     createdAt: Date | null
   }
 
   export type CommissionCountAggregateOutputType = {
     id: number
-    paymentId: number
+    bookingId: number
+    businessId: number
     grossAmount: number
     platformFee: number
     businessShare: number
-    taxAmount: number
+    isSettled: number
+    settledAt: number
     createdAt: number
     _all: number
   }
@@ -16815,43 +16880,47 @@ export namespace Prisma {
     grossAmount?: true
     platformFee?: true
     businessShare?: true
-    taxAmount?: true
   }
 
   export type CommissionSumAggregateInputType = {
     grossAmount?: true
     platformFee?: true
     businessShare?: true
-    taxAmount?: true
   }
 
   export type CommissionMinAggregateInputType = {
     id?: true
-    paymentId?: true
+    bookingId?: true
+    businessId?: true
     grossAmount?: true
     platformFee?: true
     businessShare?: true
-    taxAmount?: true
+    isSettled?: true
+    settledAt?: true
     createdAt?: true
   }
 
   export type CommissionMaxAggregateInputType = {
     id?: true
-    paymentId?: true
+    bookingId?: true
+    businessId?: true
     grossAmount?: true
     platformFee?: true
     businessShare?: true
-    taxAmount?: true
+    isSettled?: true
+    settledAt?: true
     createdAt?: true
   }
 
   export type CommissionCountAggregateInputType = {
     id?: true
-    paymentId?: true
+    bookingId?: true
+    businessId?: true
     grossAmount?: true
     platformFee?: true
     businessShare?: true
-    taxAmount?: true
+    isSettled?: true
+    settledAt?: true
     createdAt?: true
     _all?: true
   }
@@ -16944,11 +17013,13 @@ export namespace Prisma {
 
   export type CommissionGroupByOutputType = {
     id: string
-    paymentId: string
+    bookingId: string
+    businessId: string
     grossAmount: number
     platformFee: number
     businessShare: number
-    taxAmount: number | null
+    isSettled: boolean
+    settledAt: Date | null
     createdAt: Date
     _count: CommissionCountAggregateOutputType | null
     _avg: CommissionAvgAggregateOutputType | null
@@ -16973,70 +17044,87 @@ export namespace Prisma {
 
   export type CommissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    paymentId?: boolean
+    bookingId?: boolean
+    businessId?: boolean
     grossAmount?: boolean
     platformFee?: boolean
     businessShare?: boolean
-    taxAmount?: boolean
+    isSettled?: boolean
+    settledAt?: boolean
     createdAt?: boolean
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    paymentId?: boolean
+    bookingId?: boolean
+    businessId?: boolean
     grossAmount?: boolean
     platformFee?: boolean
     businessShare?: boolean
-    taxAmount?: boolean
+    isSettled?: boolean
+    settledAt?: boolean
     createdAt?: boolean
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    paymentId?: boolean
+    bookingId?: boolean
+    businessId?: boolean
     grossAmount?: boolean
     platformFee?: boolean
     businessShare?: boolean
-    taxAmount?: boolean
+    isSettled?: boolean
+    settledAt?: boolean
     createdAt?: boolean
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectScalar = {
     id?: boolean
-    paymentId?: boolean
+    bookingId?: boolean
+    businessId?: boolean
     grossAmount?: boolean
     platformFee?: boolean
     businessShare?: boolean
-    taxAmount?: boolean
+    isSettled?: boolean
+    settledAt?: boolean
     createdAt?: boolean
   }
 
-  export type CommissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "paymentId" | "grossAmount" | "platformFee" | "businessShare" | "taxAmount" | "createdAt", ExtArgs["result"]["commission"]>
+  export type CommissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "businessId" | "grossAmount" | "platformFee" | "businessShare" | "isSettled" | "settledAt" | "createdAt", ExtArgs["result"]["commission"]>
   export type CommissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }
   export type CommissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }
   export type CommissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    payment?: boolean | PaymentDefaultArgs<ExtArgs>
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
   }
 
   export type $CommissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Commission"
     objects: {
-      payment: Prisma.$PaymentPayload<ExtArgs>
+      booking: Prisma.$BookingPayload<ExtArgs>
+      business: Prisma.$BusinessPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      paymentId: string
+      bookingId: string
+      businessId: string
       grossAmount: number
       platformFee: number
       businessShare: number
-      taxAmount: number | null
+      isSettled: boolean
+      settledAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["commission"]>
     composites: {}
@@ -17432,7 +17520,8 @@ export namespace Prisma {
    */
   export interface Prisma__CommissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    payment<T extends PaymentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PaymentDefaultArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    business<T extends BusinessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessDefaultArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17463,11 +17552,13 @@ export namespace Prisma {
    */
   interface CommissionFieldRefs {
     readonly id: FieldRef<"Commission", 'String'>
-    readonly paymentId: FieldRef<"Commission", 'String'>
+    readonly bookingId: FieldRef<"Commission", 'String'>
+    readonly businessId: FieldRef<"Commission", 'String'>
     readonly grossAmount: FieldRef<"Commission", 'Int'>
     readonly platformFee: FieldRef<"Commission", 'Int'>
     readonly businessShare: FieldRef<"Commission", 'Int'>
-    readonly taxAmount: FieldRef<"Commission", 'Int'>
+    readonly isSettled: FieldRef<"Commission", 'Boolean'>
+    readonly settledAt: FieldRef<"Commission", 'DateTime'>
     readonly createdAt: FieldRef<"Commission", 'DateTime'>
   }
     
@@ -23799,7 +23890,6 @@ export namespace Prisma {
     updatedAt?: boolean
     business?: boolean | Discount$businessArgs<ExtArgs>
     usages?: boolean | Discount$usagesArgs<ExtArgs>
-    payments?: boolean | Discount$paymentsArgs<ExtArgs>
     _count?: boolean | DiscountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["discount"]>
 
@@ -23866,7 +23956,6 @@ export namespace Prisma {
   export type DiscountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | Discount$businessArgs<ExtArgs>
     usages?: boolean | Discount$usagesArgs<ExtArgs>
-    payments?: boolean | Discount$paymentsArgs<ExtArgs>
     _count?: boolean | DiscountCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DiscountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23881,7 +23970,6 @@ export namespace Prisma {
     objects: {
       business: Prisma.$BusinessPayload<ExtArgs> | null
       usages: Prisma.$DiscountUsagePayload<ExtArgs>[]
-      payments: Prisma.$PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24296,7 +24384,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     business<T extends Discount$businessArgs<ExtArgs> = {}>(args?: Subset<T, Discount$businessArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     usages<T extends Discount$usagesArgs<ExtArgs> = {}>(args?: Subset<T, Discount$usagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DiscountUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    payments<T extends Discount$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Discount$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24781,30 +24868,6 @@ export namespace Prisma {
   }
 
   /**
-   * Discount.payments
-   */
-  export type Discount$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Payment
-     */
-    select?: PaymentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Payment
-     */
-    omit?: PaymentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PaymentInclude<ExtArgs> | null
-    where?: PaymentWhereInput
-    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
-    cursor?: PaymentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
-  }
-
-  /**
    * Discount without action
    */
   export type DiscountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24851,6 +24914,7 @@ export namespace Prisma {
     paymentId: string | null
     discountAmount: number | null
     usedAt: Date | null
+    disCountUsageStatus: $Enums.DiscountUsageStatus | null
   }
 
   export type DiscountUsageMaxAggregateOutputType = {
@@ -24861,6 +24925,7 @@ export namespace Prisma {
     paymentId: string | null
     discountAmount: number | null
     usedAt: Date | null
+    disCountUsageStatus: $Enums.DiscountUsageStatus | null
   }
 
   export type DiscountUsageCountAggregateOutputType = {
@@ -24871,6 +24936,7 @@ export namespace Prisma {
     paymentId: number
     discountAmount: number
     usedAt: number
+    disCountUsageStatus: number
     _all: number
   }
 
@@ -24891,6 +24957,7 @@ export namespace Prisma {
     paymentId?: true
     discountAmount?: true
     usedAt?: true
+    disCountUsageStatus?: true
   }
 
   export type DiscountUsageMaxAggregateInputType = {
@@ -24901,6 +24968,7 @@ export namespace Prisma {
     paymentId?: true
     discountAmount?: true
     usedAt?: true
+    disCountUsageStatus?: true
   }
 
   export type DiscountUsageCountAggregateInputType = {
@@ -24911,6 +24979,7 @@ export namespace Prisma {
     paymentId?: true
     discountAmount?: true
     usedAt?: true
+    disCountUsageStatus?: true
     _all?: true
   }
 
@@ -25008,6 +25077,7 @@ export namespace Prisma {
     paymentId: string | null
     discountAmount: number
     usedAt: Date
+    disCountUsageStatus: $Enums.DiscountUsageStatus
     _count: DiscountUsageCountAggregateOutputType | null
     _avg: DiscountUsageAvgAggregateOutputType | null
     _sum: DiscountUsageSumAggregateOutputType | null
@@ -25037,6 +25107,7 @@ export namespace Prisma {
     paymentId?: boolean
     discountAmount?: boolean
     usedAt?: boolean
+    disCountUsageStatus?: boolean
     discount?: boolean | DiscountDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
@@ -25051,6 +25122,7 @@ export namespace Prisma {
     paymentId?: boolean
     discountAmount?: boolean
     usedAt?: boolean
+    disCountUsageStatus?: boolean
     discount?: boolean | DiscountDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
@@ -25065,6 +25137,7 @@ export namespace Prisma {
     paymentId?: boolean
     discountAmount?: boolean
     usedAt?: boolean
+    disCountUsageStatus?: boolean
     discount?: boolean | DiscountDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     booking?: boolean | BookingDefaultArgs<ExtArgs>
@@ -25079,9 +25152,10 @@ export namespace Prisma {
     paymentId?: boolean
     discountAmount?: boolean
     usedAt?: boolean
+    disCountUsageStatus?: boolean
   }
 
-  export type DiscountUsageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "discountId" | "userId" | "bookingId" | "paymentId" | "discountAmount" | "usedAt", ExtArgs["result"]["discountUsage"]>
+  export type DiscountUsageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "discountId" | "userId" | "bookingId" | "paymentId" | "discountAmount" | "usedAt" | "disCountUsageStatus", ExtArgs["result"]["discountUsage"]>
   export type DiscountUsageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     discount?: boolean | DiscountDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -25117,6 +25191,7 @@ export namespace Prisma {
       paymentId: string | null
       discountAmount: number
       usedAt: Date
+      disCountUsageStatus: $Enums.DiscountUsageStatus
     }, ExtArgs["result"]["discountUsage"]>
     composites: {}
   }
@@ -25551,6 +25626,7 @@ export namespace Prisma {
     readonly paymentId: FieldRef<"DiscountUsage", 'String'>
     readonly discountAmount: FieldRef<"DiscountUsage", 'Int'>
     readonly usedAt: FieldRef<"DiscountUsage", 'DateTime'>
+    readonly disCountUsageStatus: FieldRef<"DiscountUsage", 'DiscountUsageStatus'>
   }
     
 
@@ -26142,6 +26218,9 @@ export namespace Prisma {
     endTime: 'endTime',
     status: 'status',
     totalPrice: 'totalPrice',
+    finalPrice: 'finalPrice',
+    penaltyAmount: 'penaltyAmount',
+    financialStatus: 'financialStatus',
     customerNotes: 'customerNotes',
     internalNotes: 'internalNotes',
     createdAt: 'createdAt',
@@ -26166,8 +26245,7 @@ export namespace Prisma {
     verifiedById: 'verifiedById',
     verifiedAt: 'verifiedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    discountId: 'discountId'
+    updatedAt: 'updatedAt'
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -26175,11 +26253,13 @@ export namespace Prisma {
 
   export const CommissionScalarFieldEnum: {
     id: 'id',
-    paymentId: 'paymentId',
+    bookingId: 'bookingId',
+    businessId: 'businessId',
     grossAmount: 'grossAmount',
     platformFee: 'platformFee',
     businessShare: 'businessShare',
-    taxAmount: 'taxAmount',
+    isSettled: 'isSettled',
+    settledAt: 'settledAt',
     createdAt: 'createdAt'
   };
 
@@ -26282,7 +26362,8 @@ export namespace Prisma {
     bookingId: 'bookingId',
     paymentId: 'paymentId',
     discountAmount: 'discountAmount',
-    usedAt: 'usedAt'
+    usedAt: 'usedAt',
+    disCountUsageStatus: 'disCountUsageStatus'
   };
 
   export type DiscountUsageScalarFieldEnum = (typeof DiscountUsageScalarFieldEnum)[keyof typeof DiscountUsageScalarFieldEnum]
@@ -26451,6 +26532,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FinancialStatus'
+   */
+  export type EnumFinancialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'FinancialStatus[]'
+   */
+  export type ListEnumFinancialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'PaymentMethod'
    */
   export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
@@ -26573,6 +26668,20 @@ export namespace Prisma {
    * Reference to a field of type 'DiscountStatus[]'
    */
   export type ListEnumDiscountStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountUsageStatus'
+   */
+  export type EnumDiscountUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountUsageStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountUsageStatus[]'
+   */
+  export type ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountUsageStatus[]'>
     
   /**
    * Deep Input Types
@@ -26773,6 +26882,7 @@ export namespace Prisma {
     settlements?: SettlementListRelationFilter
     ledgerEntries?: LedgerEntryListRelationFilter
     discounts?: DiscountListRelationFilter
+    commissions?: CommissionListRelationFilter
   }
 
   export type BusinessOrderByWithRelationInput = {
@@ -26811,6 +26921,7 @@ export namespace Prisma {
     settlements?: SettlementOrderByRelationAggregateInput
     ledgerEntries?: LedgerEntryOrderByRelationAggregateInput
     discounts?: DiscountOrderByRelationAggregateInput
+    commissions?: CommissionOrderByRelationAggregateInput
   }
 
   export type BusinessWhereUniqueInput = Prisma.AtLeast<{
@@ -26852,6 +26963,7 @@ export namespace Prisma {
     settlements?: SettlementListRelationFilter
     ledgerEntries?: LedgerEntryListRelationFilter
     discounts?: DiscountListRelationFilter
+    commissions?: CommissionListRelationFilter
   }, "id" | "slug" | "identifier">
 
   export type BusinessOrderByWithAggregationInput = {
@@ -27360,6 +27472,9 @@ export namespace Prisma {
     endTime?: DateTimeFilter<"Booking"> | Date | string
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     totalPrice?: IntFilter<"Booking"> | number
+    finalPrice?: IntFilter<"Booking"> | number
+    penaltyAmount?: IntFilter<"Booking"> | number
+    financialStatus?: EnumFinancialStatusFilter<"Booking"> | $Enums.FinancialStatus
     customerNotes?: StringNullableFilter<"Booking"> | string | null
     internalNotes?: StringNullableFilter<"Booking"> | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
@@ -27373,6 +27488,7 @@ export namespace Prisma {
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     payments?: PaymentListRelationFilter
     discountUsages?: DiscountUsageListRelationFilter
+    commission?: XOR<CommissionNullableScalarRelationFilter, CommissionWhereInput> | null
   }
 
   export type BookingOrderByWithRelationInput = {
@@ -27385,6 +27501,9 @@ export namespace Prisma {
     endTime?: SortOrder
     status?: SortOrder
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
+    financialStatus?: SortOrder
     customerNotes?: SortOrderInput | SortOrder
     internalNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -27398,6 +27517,7 @@ export namespace Prisma {
     createdBy?: UserOrderByWithRelationInput
     payments?: PaymentOrderByRelationAggregateInput
     discountUsages?: DiscountUsageOrderByRelationAggregateInput
+    commission?: CommissionOrderByWithRelationInput
   }
 
   export type BookingWhereUniqueInput = Prisma.AtLeast<{
@@ -27413,6 +27533,9 @@ export namespace Prisma {
     endTime?: DateTimeFilter<"Booking"> | Date | string
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     totalPrice?: IntFilter<"Booking"> | number
+    finalPrice?: IntFilter<"Booking"> | number
+    penaltyAmount?: IntFilter<"Booking"> | number
+    financialStatus?: EnumFinancialStatusFilter<"Booking"> | $Enums.FinancialStatus
     customerNotes?: StringNullableFilter<"Booking"> | string | null
     internalNotes?: StringNullableFilter<"Booking"> | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
@@ -27426,6 +27549,7 @@ export namespace Prisma {
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     payments?: PaymentListRelationFilter
     discountUsages?: DiscountUsageListRelationFilter
+    commission?: XOR<CommissionNullableScalarRelationFilter, CommissionWhereInput> | null
   }, "id">
 
   export type BookingOrderByWithAggregationInput = {
@@ -27438,6 +27562,9 @@ export namespace Prisma {
     endTime?: SortOrder
     status?: SortOrder
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
+    financialStatus?: SortOrder
     customerNotes?: SortOrderInput | SortOrder
     internalNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -27464,6 +27591,9 @@ export namespace Prisma {
     endTime?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     status?: EnumBookingStatusWithAggregatesFilter<"Booking"> | $Enums.BookingStatus
     totalPrice?: IntWithAggregatesFilter<"Booking"> | number
+    finalPrice?: IntWithAggregatesFilter<"Booking"> | number
+    penaltyAmount?: IntWithAggregatesFilter<"Booking"> | number
+    financialStatus?: EnumFinancialStatusWithAggregatesFilter<"Booking"> | $Enums.FinancialStatus
     customerNotes?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     internalNotes?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
@@ -27489,14 +27619,11 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    discountId?: StringNullableFilter<"Payment"> | string | null
     business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
     booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
     verifiedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    discount?: XOR<DiscountNullableScalarRelationFilter, DiscountWhereInput> | null
     discountUsages?: DiscountUsageListRelationFilter
     ledgerEntries?: LedgerEntryListRelationFilter
-    commission?: XOR<CommissionNullableScalarRelationFilter, CommissionWhereInput> | null
   }
 
   export type PaymentOrderByWithRelationInput = {
@@ -27513,14 +27640,11 @@ export namespace Prisma {
     verifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    discountId?: SortOrderInput | SortOrder
     business?: BusinessOrderByWithRelationInput
     booking?: BookingOrderByWithRelationInput
     verifiedBy?: UserOrderByWithRelationInput
-    discount?: DiscountOrderByWithRelationInput
     discountUsages?: DiscountUsageOrderByRelationAggregateInput
     ledgerEntries?: LedgerEntryOrderByRelationAggregateInput
-    commission?: CommissionOrderByWithRelationInput
   }
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -27540,14 +27664,11 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    discountId?: StringNullableFilter<"Payment"> | string | null
     business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
     booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
     verifiedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    discount?: XOR<DiscountNullableScalarRelationFilter, DiscountWhereInput> | null
     discountUsages?: DiscountUsageListRelationFilter
     ledgerEntries?: LedgerEntryListRelationFilter
-    commission?: XOR<CommissionNullableScalarRelationFilter, CommissionWhereInput> | null
   }, "id">
 
   export type PaymentOrderByWithAggregationInput = {
@@ -27564,7 +27685,6 @@ export namespace Prisma {
     verifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    discountId?: SortOrderInput | SortOrder
     _count?: PaymentCountOrderByAggregateInput
     _avg?: PaymentAvgOrderByAggregateInput
     _max?: PaymentMaxOrderByAggregateInput
@@ -27589,7 +27709,6 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
-    discountId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
   }
 
   export type CommissionWhereInput = {
@@ -27597,47 +27716,58 @@ export namespace Prisma {
     OR?: CommissionWhereInput[]
     NOT?: CommissionWhereInput | CommissionWhereInput[]
     id?: StringFilter<"Commission"> | string
-    paymentId?: StringFilter<"Commission"> | string
+    bookingId?: StringFilter<"Commission"> | string
+    businessId?: StringFilter<"Commission"> | string
     grossAmount?: IntFilter<"Commission"> | number
     platformFee?: IntFilter<"Commission"> | number
     businessShare?: IntFilter<"Commission"> | number
-    taxAmount?: IntNullableFilter<"Commission"> | number | null
+    isSettled?: BoolFilter<"Commission"> | boolean
+    settledAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
     createdAt?: DateTimeFilter<"Commission"> | Date | string
-    payment?: XOR<PaymentScalarRelationFilter, PaymentWhereInput>
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
   }
 
   export type CommissionOrderByWithRelationInput = {
     id?: SortOrder
-    paymentId?: SortOrder
+    bookingId?: SortOrder
+    businessId?: SortOrder
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrderInput | SortOrder
+    isSettled?: SortOrder
+    settledAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    payment?: PaymentOrderByWithRelationInput
+    booking?: BookingOrderByWithRelationInput
+    business?: BusinessOrderByWithRelationInput
   }
 
   export type CommissionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    paymentId?: string
+    bookingId?: string
     AND?: CommissionWhereInput | CommissionWhereInput[]
     OR?: CommissionWhereInput[]
     NOT?: CommissionWhereInput | CommissionWhereInput[]
+    businessId?: StringFilter<"Commission"> | string
     grossAmount?: IntFilter<"Commission"> | number
     platformFee?: IntFilter<"Commission"> | number
     businessShare?: IntFilter<"Commission"> | number
-    taxAmount?: IntNullableFilter<"Commission"> | number | null
+    isSettled?: BoolFilter<"Commission"> | boolean
+    settledAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
     createdAt?: DateTimeFilter<"Commission"> | Date | string
-    payment?: XOR<PaymentScalarRelationFilter, PaymentWhereInput>
-  }, "id" | "paymentId">
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+  }, "id" | "bookingId">
 
   export type CommissionOrderByWithAggregationInput = {
     id?: SortOrder
-    paymentId?: SortOrder
+    bookingId?: SortOrder
+    businessId?: SortOrder
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrderInput | SortOrder
+    isSettled?: SortOrder
+    settledAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: CommissionCountOrderByAggregateInput
     _avg?: CommissionAvgOrderByAggregateInput
@@ -27651,11 +27781,13 @@ export namespace Prisma {
     OR?: CommissionScalarWhereWithAggregatesInput[]
     NOT?: CommissionScalarWhereWithAggregatesInput | CommissionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Commission"> | string
-    paymentId?: StringWithAggregatesFilter<"Commission"> | string
+    bookingId?: StringWithAggregatesFilter<"Commission"> | string
+    businessId?: StringWithAggregatesFilter<"Commission"> | string
     grossAmount?: IntWithAggregatesFilter<"Commission"> | number
     platformFee?: IntWithAggregatesFilter<"Commission"> | number
     businessShare?: IntWithAggregatesFilter<"Commission"> | number
-    taxAmount?: IntNullableWithAggregatesFilter<"Commission"> | number | null
+    isSettled?: BoolWithAggregatesFilter<"Commission"> | boolean
+    settledAt?: DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Commission"> | Date | string
   }
 
@@ -28035,7 +28167,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Discount"> | Date | string
     business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
     usages?: DiscountUsageListRelationFilter
-    payments?: PaymentListRelationFilter
   }
 
   export type DiscountOrderByWithRelationInput = {
@@ -28057,7 +28188,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     business?: BusinessOrderByWithRelationInput
     usages?: DiscountUsageOrderByRelationAggregateInput
-    payments?: PaymentOrderByRelationAggregateInput
   }
 
   export type DiscountWhereUniqueInput = Prisma.AtLeast<{
@@ -28082,7 +28212,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Discount"> | Date | string
     business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
     usages?: DiscountUsageListRelationFilter
-    payments?: PaymentListRelationFilter
   }, "id" | "code">
 
   export type DiscountOrderByWithAggregationInput = {
@@ -28142,6 +28271,7 @@ export namespace Prisma {
     paymentId?: StringNullableFilter<"DiscountUsage"> | string | null
     discountAmount?: IntFilter<"DiscountUsage"> | number
     usedAt?: DateTimeFilter<"DiscountUsage"> | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFilter<"DiscountUsage"> | $Enums.DiscountUsageStatus
     discount?: XOR<DiscountScalarRelationFilter, DiscountWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
@@ -28156,6 +28286,7 @@ export namespace Prisma {
     paymentId?: SortOrderInput | SortOrder
     discountAmount?: SortOrder
     usedAt?: SortOrder
+    disCountUsageStatus?: SortOrder
     discount?: DiscountOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     booking?: BookingOrderByWithRelationInput
@@ -28174,6 +28305,7 @@ export namespace Prisma {
     paymentId?: StringNullableFilter<"DiscountUsage"> | string | null
     discountAmount?: IntFilter<"DiscountUsage"> | number
     usedAt?: DateTimeFilter<"DiscountUsage"> | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFilter<"DiscountUsage"> | $Enums.DiscountUsageStatus
     discount?: XOR<DiscountScalarRelationFilter, DiscountWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
@@ -28188,6 +28320,7 @@ export namespace Prisma {
     paymentId?: SortOrderInput | SortOrder
     discountAmount?: SortOrder
     usedAt?: SortOrder
+    disCountUsageStatus?: SortOrder
     _count?: DiscountUsageCountOrderByAggregateInput
     _avg?: DiscountUsageAvgOrderByAggregateInput
     _max?: DiscountUsageMaxOrderByAggregateInput
@@ -28206,6 +28339,7 @@ export namespace Prisma {
     paymentId?: StringNullableWithAggregatesFilter<"DiscountUsage"> | string | null
     discountAmount?: IntWithAggregatesFilter<"DiscountUsage"> | number
     usedAt?: DateTimeWithAggregatesFilter<"DiscountUsage"> | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusWithAggregatesFilter<"DiscountUsage"> | $Enums.DiscountUsageStatus
   }
 
   export type UserCreateInput = {
@@ -28418,6 +28552,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateInput = {
@@ -28455,6 +28590,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUpdateInput = {
@@ -28492,6 +28628,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateInput = {
@@ -28529,6 +28666,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateManyInput = {
@@ -29056,6 +29194,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -29068,6 +29209,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateInput = {
@@ -29080,6 +29222,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -29088,6 +29233,7 @@ export namespace Prisma {
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUpdateInput = {
@@ -29096,6 +29242,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29108,6 +29257,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateInput = {
@@ -29120,6 +29270,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29128,6 +29281,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingCreateManyInput = {
@@ -29140,6 +29294,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -29154,6 +29311,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29171,6 +29331,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29193,10 +29356,8 @@ export namespace Prisma {
     business: BusinessCreateNestedOneWithoutPaymentsInput
     booking: BookingCreateNestedOneWithoutPaymentsInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateInput = {
@@ -29213,10 +29374,8 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUpdateInput = {
@@ -29233,10 +29392,8 @@ export namespace Prisma {
     business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
     booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateInput = {
@@ -29253,10 +29410,8 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentCreateManyInput = {
@@ -29273,7 +29428,6 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
   }
 
   export type PaymentUpdateManyMutationInput = {
@@ -29303,7 +29457,6 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CommissionCreateInput = {
@@ -29311,18 +29464,22 @@ export namespace Prisma {
     grossAmount: number
     platformFee: number
     businessShare: number
-    taxAmount?: number | null
+    isSettled?: boolean
+    settledAt?: Date | string | null
     createdAt?: Date | string
-    payment: PaymentCreateNestedOneWithoutCommissionInput
+    booking: BookingCreateNestedOneWithoutCommissionInput
+    business: BusinessCreateNestedOneWithoutCommissionsInput
   }
 
   export type CommissionUncheckedCreateInput = {
     id?: string
-    paymentId: string
+    bookingId: string
+    businessId: string
     grossAmount: number
     platformFee: number
     businessShare: number
-    taxAmount?: number | null
+    isSettled?: boolean
+    settledAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -29331,28 +29488,34 @@ export namespace Prisma {
     grossAmount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    payment?: PaymentUpdateOneRequiredWithoutCommissionNestedInput
+    booking?: BookingUpdateOneRequiredWithoutCommissionNestedInput
+    business?: BusinessUpdateOneRequiredWithoutCommissionsNestedInput
   }
 
   export type CommissionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentId?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
     grossAmount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommissionCreateManyInput = {
     id?: string
-    paymentId: string
+    bookingId: string
+    businessId: string
     grossAmount: number
     platformFee: number
     businessShare: number
-    taxAmount?: number | null
+    isSettled?: boolean
+    settledAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -29361,17 +29524,20 @@ export namespace Prisma {
     grossAmount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommissionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentId?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
     grossAmount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29753,7 +29919,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     business?: BusinessCreateNestedOneWithoutDiscountsInput
     usages?: DiscountUsageCreateNestedManyWithoutDiscountInput
-    payments?: PaymentCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountUncheckedCreateInput = {
@@ -29774,7 +29939,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     usages?: DiscountUsageUncheckedCreateNestedManyWithoutDiscountInput
-    payments?: PaymentUncheckedCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountUpdateInput = {
@@ -29795,7 +29959,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     business?: BusinessUpdateOneWithoutDiscountsNestedInput
     usages?: DiscountUsageUpdateManyWithoutDiscountNestedInput
-    payments?: PaymentUpdateManyWithoutDiscountNestedInput
   }
 
   export type DiscountUncheckedUpdateInput = {
@@ -29816,7 +29979,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usages?: DiscountUsageUncheckedUpdateManyWithoutDiscountNestedInput
-    payments?: PaymentUncheckedUpdateManyWithoutDiscountNestedInput
   }
 
   export type DiscountCreateManyInput = {
@@ -29879,6 +30041,7 @@ export namespace Prisma {
     id?: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
     discount: DiscountCreateNestedOneWithoutUsagesInput
     user: UserCreateNestedOneWithoutDiscountUsagesInput
     booking: BookingCreateNestedOneWithoutDiscountUsagesInput
@@ -29893,12 +30056,14 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
     discount?: DiscountUpdateOneRequiredWithoutUsagesNestedInput
     user?: UserUpdateOneRequiredWithoutDiscountUsagesNestedInput
     booking?: BookingUpdateOneRequiredWithoutDiscountUsagesNestedInput
@@ -29913,6 +30078,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateManyInput = {
@@ -29923,12 +30089,14 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUncheckedUpdateManyInput = {
@@ -29939,6 +30107,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -30302,6 +30471,12 @@ export namespace Prisma {
     none?: DiscountWhereInput
   }
 
+  export type CommissionListRelationFilter = {
+    every?: CommissionWhereInput
+    some?: CommissionWhereInput
+    none?: CommissionWhereInput
+  }
+
   export type ServiceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -30315,6 +30490,10 @@ export namespace Prisma {
   }
 
   export type DiscountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CommissionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -30809,6 +30988,18 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type EnumFinancialStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialStatus | EnumFinancialStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialStatusFilter<$PrismaModel> | $Enums.FinancialStatus
+  }
+
+  export type CommissionNullableScalarRelationFilter = {
+    is?: CommissionWhereInput | null
+    isNot?: CommissionWhereInput | null
+  }
+
   export type BookingCountOrderByAggregateInput = {
     id?: SortOrder
     businessId?: SortOrder
@@ -30819,6 +31010,9 @@ export namespace Prisma {
     endTime?: SortOrder
     status?: SortOrder
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
+    financialStatus?: SortOrder
     customerNotes?: SortOrder
     internalNotes?: SortOrder
     createdAt?: SortOrder
@@ -30829,6 +31023,8 @@ export namespace Prisma {
 
   export type BookingAvgOrderByAggregateInput = {
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
   }
 
   export type BookingMaxOrderByAggregateInput = {
@@ -30841,6 +31037,9 @@ export namespace Prisma {
     endTime?: SortOrder
     status?: SortOrder
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
+    financialStatus?: SortOrder
     customerNotes?: SortOrder
     internalNotes?: SortOrder
     createdAt?: SortOrder
@@ -30859,6 +31058,9 @@ export namespace Prisma {
     endTime?: SortOrder
     status?: SortOrder
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
+    financialStatus?: SortOrder
     customerNotes?: SortOrder
     internalNotes?: SortOrder
     createdAt?: SortOrder
@@ -30869,6 +31071,8 @@ export namespace Prisma {
 
   export type BookingSumOrderByAggregateInput = {
     totalPrice?: SortOrder
+    finalPrice?: SortOrder
+    penaltyAmount?: SortOrder
   }
 
   export type EnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -30879,6 +31083,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type EnumFinancialStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialStatus | EnumFinancialStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialStatusWithAggregatesFilter<$PrismaModel> | $Enums.FinancialStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialStatusFilter<$PrismaModel>
+    _max?: NestedEnumFinancialStatusFilter<$PrismaModel>
   }
 
   export type EnumPaymentMethodFilter<$PrismaModel = never> = {
@@ -30900,16 +31114,6 @@ export namespace Prisma {
     isNot?: BookingWhereInput
   }
 
-  export type DiscountNullableScalarRelationFilter = {
-    is?: DiscountWhereInput | null
-    isNot?: DiscountWhereInput | null
-  }
-
-  export type CommissionNullableScalarRelationFilter = {
-    is?: CommissionWhereInput | null
-    isNot?: CommissionWhereInput | null
-  }
-
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     businessId?: SortOrder
@@ -30924,7 +31128,6 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    discountId?: SortOrder
   }
 
   export type PaymentAvgOrderByAggregateInput = {
@@ -30945,7 +31148,6 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    discountId?: SortOrder
   }
 
   export type PaymentMinOrderByAggregateInput = {
@@ -30962,7 +31164,6 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    discountId?: SortOrder
   }
 
   export type PaymentSumOrderByAggregateInput = {
@@ -30989,18 +31190,15 @@ export namespace Prisma {
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
   }
 
-  export type PaymentScalarRelationFilter = {
-    is?: PaymentWhereInput
-    isNot?: PaymentWhereInput
-  }
-
   export type CommissionCountOrderByAggregateInput = {
     id?: SortOrder
-    paymentId?: SortOrder
+    bookingId?: SortOrder
+    businessId?: SortOrder
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrder
+    isSettled?: SortOrder
+    settledAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -31008,26 +31206,29 @@ export namespace Prisma {
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrder
   }
 
   export type CommissionMaxOrderByAggregateInput = {
     id?: SortOrder
-    paymentId?: SortOrder
+    bookingId?: SortOrder
+    businessId?: SortOrder
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrder
+    isSettled?: SortOrder
+    settledAt?: SortOrder
     createdAt?: SortOrder
   }
 
   export type CommissionMinOrderByAggregateInput = {
     id?: SortOrder
-    paymentId?: SortOrder
+    bookingId?: SortOrder
+    businessId?: SortOrder
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrder
+    isSettled?: SortOrder
+    settledAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -31035,7 +31236,6 @@ export namespace Prisma {
     grossAmount?: SortOrder
     platformFee?: SortOrder
     businessShare?: SortOrder
-    taxAmount?: SortOrder
   }
 
   export type EnumWalletTypeFilter<$PrismaModel = never> = {
@@ -31447,6 +31647,13 @@ export namespace Prisma {
     _max?: NestedEnumDiscountStatusFilter<$PrismaModel>
   }
 
+  export type EnumDiscountUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountUsageStatus | EnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountUsageStatusFilter<$PrismaModel> | $Enums.DiscountUsageStatus
+  }
+
   export type DiscountScalarRelationFilter = {
     is?: DiscountWhereInput
     isNot?: DiscountWhereInput
@@ -31466,6 +31673,7 @@ export namespace Prisma {
     paymentId?: SortOrder
     discountAmount?: SortOrder
     usedAt?: SortOrder
+    disCountUsageStatus?: SortOrder
   }
 
   export type DiscountUsageAvgOrderByAggregateInput = {
@@ -31480,6 +31688,7 @@ export namespace Prisma {
     paymentId?: SortOrder
     discountAmount?: SortOrder
     usedAt?: SortOrder
+    disCountUsageStatus?: SortOrder
   }
 
   export type DiscountUsageMinOrderByAggregateInput = {
@@ -31490,10 +31699,21 @@ export namespace Prisma {
     paymentId?: SortOrder
     discountAmount?: SortOrder
     usedAt?: SortOrder
+    disCountUsageStatus?: SortOrder
   }
 
   export type DiscountUsageSumOrderByAggregateInput = {
     discountAmount?: SortOrder
+  }
+
+  export type EnumDiscountUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountUsageStatus | EnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.DiscountUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumDiscountUsageStatusFilter<$PrismaModel>
   }
 
   export type UserRoleCreateNestedManyWithoutUserInput = {
@@ -31981,6 +32201,13 @@ export namespace Prisma {
     connect?: DiscountWhereUniqueInput | DiscountWhereUniqueInput[]
   }
 
+  export type CommissionCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput> | CommissionCreateWithoutBusinessInput[] | CommissionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutBusinessInput | CommissionCreateOrConnectWithoutBusinessInput[]
+    createMany?: CommissionCreateManyBusinessInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
   export type FavoriteUncheckedCreateNestedManyWithoutBusinessInput = {
     create?: XOR<FavoriteCreateWithoutBusinessInput, FavoriteUncheckedCreateWithoutBusinessInput> | FavoriteCreateWithoutBusinessInput[] | FavoriteUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutBusinessInput | FavoriteCreateOrConnectWithoutBusinessInput[]
@@ -32042,6 +32269,13 @@ export namespace Prisma {
     connectOrCreate?: DiscountCreateOrConnectWithoutBusinessInput | DiscountCreateOrConnectWithoutBusinessInput[]
     createMany?: DiscountCreateManyBusinessInputEnvelope
     connect?: DiscountWhereUniqueInput | DiscountWhereUniqueInput[]
+  }
+
+  export type CommissionUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput> | CommissionCreateWithoutBusinessInput[] | CommissionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutBusinessInput | CommissionCreateOrConnectWithoutBusinessInput[]
+    createMany?: CommissionCreateManyBusinessInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -32202,6 +32436,20 @@ export namespace Prisma {
     deleteMany?: DiscountScalarWhereInput | DiscountScalarWhereInput[]
   }
 
+  export type CommissionUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput> | CommissionCreateWithoutBusinessInput[] | CommissionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutBusinessInput | CommissionCreateOrConnectWithoutBusinessInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutBusinessInput | CommissionUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: CommissionCreateManyBusinessInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutBusinessInput | CommissionUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutBusinessInput | CommissionUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+  }
+
   export type FavoriteUncheckedUpdateManyWithoutBusinessNestedInput = {
     create?: XOR<FavoriteCreateWithoutBusinessInput, FavoriteUncheckedCreateWithoutBusinessInput> | FavoriteCreateWithoutBusinessInput[] | FavoriteUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutBusinessInput | FavoriteCreateOrConnectWithoutBusinessInput[]
@@ -32326,6 +32574,20 @@ export namespace Prisma {
     update?: DiscountUpdateWithWhereUniqueWithoutBusinessInput | DiscountUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: DiscountUpdateManyWithWhereWithoutBusinessInput | DiscountUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: DiscountScalarWhereInput | DiscountScalarWhereInput[]
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput> | CommissionCreateWithoutBusinessInput[] | CommissionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutBusinessInput | CommissionCreateOrConnectWithoutBusinessInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutBusinessInput | CommissionUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: CommissionCreateManyBusinessInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutBusinessInput | CommissionUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutBusinessInput | CommissionUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutBusinessMembersInput = {
@@ -32848,6 +33110,12 @@ export namespace Prisma {
     connect?: DiscountUsageWhereUniqueInput | DiscountUsageWhereUniqueInput[]
   }
 
+  export type CommissionCreateNestedOneWithoutBookingInput = {
+    create?: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: CommissionCreateOrConnectWithoutBookingInput
+    connect?: CommissionWhereUniqueInput
+  }
+
   export type PaymentUncheckedCreateNestedManyWithoutBookingInput = {
     create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
@@ -32862,8 +33130,18 @@ export namespace Prisma {
     connect?: DiscountUsageWhereUniqueInput | DiscountUsageWhereUniqueInput[]
   }
 
+  export type CommissionUncheckedCreateNestedOneWithoutBookingInput = {
+    create?: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: CommissionCreateOrConnectWithoutBookingInput
+    connect?: CommissionWhereUniqueInput
+  }
+
   export type EnumBookingStatusFieldUpdateOperationsInput = {
     set?: $Enums.BookingStatus
+  }
+
+  export type EnumFinancialStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FinancialStatus
   }
 
   export type BusinessUpdateOneRequiredWithoutBookingsNestedInput = {
@@ -32936,6 +33214,16 @@ export namespace Prisma {
     deleteMany?: DiscountUsageScalarWhereInput | DiscountUsageScalarWhereInput[]
   }
 
+  export type CommissionUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: CommissionCreateOrConnectWithoutBookingInput
+    upsert?: CommissionUpsertWithoutBookingInput
+    disconnect?: CommissionWhereInput | boolean
+    delete?: CommissionWhereInput | boolean
+    connect?: CommissionWhereUniqueInput
+    update?: XOR<XOR<CommissionUpdateToOneWithWhereWithoutBookingInput, CommissionUpdateWithoutBookingInput>, CommissionUncheckedUpdateWithoutBookingInput>
+  }
+
   export type PaymentUncheckedUpdateManyWithoutBookingNestedInput = {
     create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
@@ -32964,6 +33252,16 @@ export namespace Prisma {
     deleteMany?: DiscountUsageScalarWhereInput | DiscountUsageScalarWhereInput[]
   }
 
+  export type CommissionUncheckedUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: CommissionCreateOrConnectWithoutBookingInput
+    upsert?: CommissionUpsertWithoutBookingInput
+    disconnect?: CommissionWhereInput | boolean
+    delete?: CommissionWhereInput | boolean
+    connect?: CommissionWhereUniqueInput
+    update?: XOR<XOR<CommissionUpdateToOneWithWhereWithoutBookingInput, CommissionUpdateWithoutBookingInput>, CommissionUncheckedUpdateWithoutBookingInput>
+  }
+
   export type BusinessCreateNestedOneWithoutPaymentsInput = {
     create?: XOR<BusinessCreateWithoutPaymentsInput, BusinessUncheckedCreateWithoutPaymentsInput>
     connectOrCreate?: BusinessCreateOrConnectWithoutPaymentsInput
@@ -32982,12 +33280,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type DiscountCreateNestedOneWithoutPaymentsInput = {
-    create?: XOR<DiscountCreateWithoutPaymentsInput, DiscountUncheckedCreateWithoutPaymentsInput>
-    connectOrCreate?: DiscountCreateOrConnectWithoutPaymentsInput
-    connect?: DiscountWhereUniqueInput
-  }
-
   export type DiscountUsageCreateNestedManyWithoutPaymentInput = {
     create?: XOR<DiscountUsageCreateWithoutPaymentInput, DiscountUsageUncheckedCreateWithoutPaymentInput> | DiscountUsageCreateWithoutPaymentInput[] | DiscountUsageUncheckedCreateWithoutPaymentInput[]
     connectOrCreate?: DiscountUsageCreateOrConnectWithoutPaymentInput | DiscountUsageCreateOrConnectWithoutPaymentInput[]
@@ -33002,12 +33294,6 @@ export namespace Prisma {
     connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
   }
 
-  export type CommissionCreateNestedOneWithoutPaymentInput = {
-    create?: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
-    connectOrCreate?: CommissionCreateOrConnectWithoutPaymentInput
-    connect?: CommissionWhereUniqueInput
-  }
-
   export type DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput = {
     create?: XOR<DiscountUsageCreateWithoutPaymentInput, DiscountUsageUncheckedCreateWithoutPaymentInput> | DiscountUsageCreateWithoutPaymentInput[] | DiscountUsageUncheckedCreateWithoutPaymentInput[]
     connectOrCreate?: DiscountUsageCreateOrConnectWithoutPaymentInput | DiscountUsageCreateOrConnectWithoutPaymentInput[]
@@ -33020,12 +33306,6 @@ export namespace Prisma {
     connectOrCreate?: LedgerEntryCreateOrConnectWithoutPaymentInput | LedgerEntryCreateOrConnectWithoutPaymentInput[]
     createMany?: LedgerEntryCreateManyPaymentInputEnvelope
     connect?: LedgerEntryWhereUniqueInput | LedgerEntryWhereUniqueInput[]
-  }
-
-  export type CommissionUncheckedCreateNestedOneWithoutPaymentInput = {
-    create?: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
-    connectOrCreate?: CommissionCreateOrConnectWithoutPaymentInput
-    connect?: CommissionWhereUniqueInput
   }
 
   export type EnumPaymentMethodFieldUpdateOperationsInput = {
@@ -33062,16 +33342,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVerifiedPaymentsInput, UserUpdateWithoutVerifiedPaymentsInput>, UserUncheckedUpdateWithoutVerifiedPaymentsInput>
   }
 
-  export type DiscountUpdateOneWithoutPaymentsNestedInput = {
-    create?: XOR<DiscountCreateWithoutPaymentsInput, DiscountUncheckedCreateWithoutPaymentsInput>
-    connectOrCreate?: DiscountCreateOrConnectWithoutPaymentsInput
-    upsert?: DiscountUpsertWithoutPaymentsInput
-    disconnect?: DiscountWhereInput | boolean
-    delete?: DiscountWhereInput | boolean
-    connect?: DiscountWhereUniqueInput
-    update?: XOR<XOR<DiscountUpdateToOneWithWhereWithoutPaymentsInput, DiscountUpdateWithoutPaymentsInput>, DiscountUncheckedUpdateWithoutPaymentsInput>
-  }
-
   export type DiscountUsageUpdateManyWithoutPaymentNestedInput = {
     create?: XOR<DiscountUsageCreateWithoutPaymentInput, DiscountUsageUncheckedCreateWithoutPaymentInput> | DiscountUsageCreateWithoutPaymentInput[] | DiscountUsageUncheckedCreateWithoutPaymentInput[]
     connectOrCreate?: DiscountUsageCreateOrConnectWithoutPaymentInput | DiscountUsageCreateOrConnectWithoutPaymentInput[]
@@ -33098,16 +33368,6 @@ export namespace Prisma {
     update?: LedgerEntryUpdateWithWhereUniqueWithoutPaymentInput | LedgerEntryUpdateWithWhereUniqueWithoutPaymentInput[]
     updateMany?: LedgerEntryUpdateManyWithWhereWithoutPaymentInput | LedgerEntryUpdateManyWithWhereWithoutPaymentInput[]
     deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
-  }
-
-  export type CommissionUpdateOneWithoutPaymentNestedInput = {
-    create?: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
-    connectOrCreate?: CommissionCreateOrConnectWithoutPaymentInput
-    upsert?: CommissionUpsertWithoutPaymentInput
-    disconnect?: CommissionWhereInput | boolean
-    delete?: CommissionWhereInput | boolean
-    connect?: CommissionWhereUniqueInput
-    update?: XOR<XOR<CommissionUpdateToOneWithWhereWithoutPaymentInput, CommissionUpdateWithoutPaymentInput>, CommissionUncheckedUpdateWithoutPaymentInput>
   }
 
   export type DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput = {
@@ -33138,28 +33398,32 @@ export namespace Prisma {
     deleteMany?: LedgerEntryScalarWhereInput | LedgerEntryScalarWhereInput[]
   }
 
-  export type CommissionUncheckedUpdateOneWithoutPaymentNestedInput = {
-    create?: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
-    connectOrCreate?: CommissionCreateOrConnectWithoutPaymentInput
-    upsert?: CommissionUpsertWithoutPaymentInput
-    disconnect?: CommissionWhereInput | boolean
-    delete?: CommissionWhereInput | boolean
-    connect?: CommissionWhereUniqueInput
-    update?: XOR<XOR<CommissionUpdateToOneWithWhereWithoutPaymentInput, CommissionUpdateWithoutPaymentInput>, CommissionUncheckedUpdateWithoutPaymentInput>
+  export type BookingCreateNestedOneWithoutCommissionInput = {
+    create?: XOR<BookingCreateWithoutCommissionInput, BookingUncheckedCreateWithoutCommissionInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutCommissionInput
+    connect?: BookingWhereUniqueInput
   }
 
-  export type PaymentCreateNestedOneWithoutCommissionInput = {
-    create?: XOR<PaymentCreateWithoutCommissionInput, PaymentUncheckedCreateWithoutCommissionInput>
-    connectOrCreate?: PaymentCreateOrConnectWithoutCommissionInput
-    connect?: PaymentWhereUniqueInput
+  export type BusinessCreateNestedOneWithoutCommissionsInput = {
+    create?: XOR<BusinessCreateWithoutCommissionsInput, BusinessUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutCommissionsInput
+    connect?: BusinessWhereUniqueInput
   }
 
-  export type PaymentUpdateOneRequiredWithoutCommissionNestedInput = {
-    create?: XOR<PaymentCreateWithoutCommissionInput, PaymentUncheckedCreateWithoutCommissionInput>
-    connectOrCreate?: PaymentCreateOrConnectWithoutCommissionInput
-    upsert?: PaymentUpsertWithoutCommissionInput
-    connect?: PaymentWhereUniqueInput
-    update?: XOR<XOR<PaymentUpdateToOneWithWhereWithoutCommissionInput, PaymentUpdateWithoutCommissionInput>, PaymentUncheckedUpdateWithoutCommissionInput>
+  export type BookingUpdateOneRequiredWithoutCommissionNestedInput = {
+    create?: XOR<BookingCreateWithoutCommissionInput, BookingUncheckedCreateWithoutCommissionInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutCommissionInput
+    upsert?: BookingUpsertWithoutCommissionInput
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutCommissionInput, BookingUpdateWithoutCommissionInput>, BookingUncheckedUpdateWithoutCommissionInput>
+  }
+
+  export type BusinessUpdateOneRequiredWithoutCommissionsNestedInput = {
+    create?: XOR<BusinessCreateWithoutCommissionsInput, BusinessUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutCommissionsInput
+    upsert?: BusinessUpsertWithoutCommissionsInput
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutCommissionsInput, BusinessUpdateWithoutCommissionsInput>, BusinessUncheckedUpdateWithoutCommissionsInput>
   }
 
   export type PaymentCreateNestedOneWithoutLedgerEntriesInput = {
@@ -33355,25 +33619,11 @@ export namespace Prisma {
     connect?: DiscountUsageWhereUniqueInput | DiscountUsageWhereUniqueInput[]
   }
 
-  export type PaymentCreateNestedManyWithoutDiscountInput = {
-    create?: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput> | PaymentCreateWithoutDiscountInput[] | PaymentUncheckedCreateWithoutDiscountInput[]
-    connectOrCreate?: PaymentCreateOrConnectWithoutDiscountInput | PaymentCreateOrConnectWithoutDiscountInput[]
-    createMany?: PaymentCreateManyDiscountInputEnvelope
-    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-  }
-
   export type DiscountUsageUncheckedCreateNestedManyWithoutDiscountInput = {
     create?: XOR<DiscountUsageCreateWithoutDiscountInput, DiscountUsageUncheckedCreateWithoutDiscountInput> | DiscountUsageCreateWithoutDiscountInput[] | DiscountUsageUncheckedCreateWithoutDiscountInput[]
     connectOrCreate?: DiscountUsageCreateOrConnectWithoutDiscountInput | DiscountUsageCreateOrConnectWithoutDiscountInput[]
     createMany?: DiscountUsageCreateManyDiscountInputEnvelope
     connect?: DiscountUsageWhereUniqueInput | DiscountUsageWhereUniqueInput[]
-  }
-
-  export type PaymentUncheckedCreateNestedManyWithoutDiscountInput = {
-    create?: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput> | PaymentCreateWithoutDiscountInput[] | PaymentUncheckedCreateWithoutDiscountInput[]
-    connectOrCreate?: PaymentCreateOrConnectWithoutDiscountInput | PaymentCreateOrConnectWithoutDiscountInput[]
-    createMany?: PaymentCreateManyDiscountInputEnvelope
-    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
   export type EnumDiscountTypeFieldUpdateOperationsInput = {
@@ -33412,20 +33662,6 @@ export namespace Prisma {
     deleteMany?: DiscountUsageScalarWhereInput | DiscountUsageScalarWhereInput[]
   }
 
-  export type PaymentUpdateManyWithoutDiscountNestedInput = {
-    create?: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput> | PaymentCreateWithoutDiscountInput[] | PaymentUncheckedCreateWithoutDiscountInput[]
-    connectOrCreate?: PaymentCreateOrConnectWithoutDiscountInput | PaymentCreateOrConnectWithoutDiscountInput[]
-    upsert?: PaymentUpsertWithWhereUniqueWithoutDiscountInput | PaymentUpsertWithWhereUniqueWithoutDiscountInput[]
-    createMany?: PaymentCreateManyDiscountInputEnvelope
-    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    update?: PaymentUpdateWithWhereUniqueWithoutDiscountInput | PaymentUpdateWithWhereUniqueWithoutDiscountInput[]
-    updateMany?: PaymentUpdateManyWithWhereWithoutDiscountInput | PaymentUpdateManyWithWhereWithoutDiscountInput[]
-    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-  }
-
   export type DiscountUsageUncheckedUpdateManyWithoutDiscountNestedInput = {
     create?: XOR<DiscountUsageCreateWithoutDiscountInput, DiscountUsageUncheckedCreateWithoutDiscountInput> | DiscountUsageCreateWithoutDiscountInput[] | DiscountUsageUncheckedCreateWithoutDiscountInput[]
     connectOrCreate?: DiscountUsageCreateOrConnectWithoutDiscountInput | DiscountUsageCreateOrConnectWithoutDiscountInput[]
@@ -33438,20 +33674,6 @@ export namespace Prisma {
     update?: DiscountUsageUpdateWithWhereUniqueWithoutDiscountInput | DiscountUsageUpdateWithWhereUniqueWithoutDiscountInput[]
     updateMany?: DiscountUsageUpdateManyWithWhereWithoutDiscountInput | DiscountUsageUpdateManyWithWhereWithoutDiscountInput[]
     deleteMany?: DiscountUsageScalarWhereInput | DiscountUsageScalarWhereInput[]
-  }
-
-  export type PaymentUncheckedUpdateManyWithoutDiscountNestedInput = {
-    create?: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput> | PaymentCreateWithoutDiscountInput[] | PaymentUncheckedCreateWithoutDiscountInput[]
-    connectOrCreate?: PaymentCreateOrConnectWithoutDiscountInput | PaymentCreateOrConnectWithoutDiscountInput[]
-    upsert?: PaymentUpsertWithWhereUniqueWithoutDiscountInput | PaymentUpsertWithWhereUniqueWithoutDiscountInput[]
-    createMany?: PaymentCreateManyDiscountInputEnvelope
-    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-    update?: PaymentUpdateWithWhereUniqueWithoutDiscountInput | PaymentUpdateWithWhereUniqueWithoutDiscountInput[]
-    updateMany?: PaymentUpdateManyWithWhereWithoutDiscountInput | PaymentUpdateManyWithWhereWithoutDiscountInput[]
-    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
   export type DiscountCreateNestedOneWithoutUsagesInput = {
@@ -33476,6 +33698,10 @@ export namespace Prisma {
     create?: XOR<PaymentCreateWithoutDiscountUsagesInput, PaymentUncheckedCreateWithoutDiscountUsagesInput>
     connectOrCreate?: PaymentCreateOrConnectWithoutDiscountUsagesInput
     connect?: PaymentWhereUniqueInput
+  }
+
+  export type EnumDiscountUsageStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUpdateOneRequiredWithoutUsagesNestedInput = {
@@ -33804,6 +34030,13 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type NestedEnumFinancialStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialStatus | EnumFinancialStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialStatusFilter<$PrismaModel> | $Enums.FinancialStatus
+  }
+
   export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
@@ -33812,6 +34045,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFinancialStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FinancialStatus | EnumFinancialStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FinancialStatus[] | ListEnumFinancialStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFinancialStatusWithAggregatesFilter<$PrismaModel> | $Enums.FinancialStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFinancialStatusFilter<$PrismaModel>
+    _max?: NestedEnumFinancialStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentMethodFilter<$PrismaModel = never> = {
@@ -33980,6 +34223,23 @@ export namespace Prisma {
     _max?: NestedEnumDiscountStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumDiscountUsageStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountUsageStatus | EnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountUsageStatusFilter<$PrismaModel> | $Enums.DiscountUsageStatus
+  }
+
+  export type NestedEnumDiscountUsageStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountUsageStatus | EnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountUsageStatus[] | ListEnumDiscountUsageStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountUsageStatusWithAggregatesFilter<$PrismaModel> | $Enums.DiscountUsageStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountUsageStatusFilter<$PrismaModel>
+    _max?: NestedEnumDiscountUsageStatusFilter<$PrismaModel>
+  }
+
   export type UserRoleCreateWithoutUserInput = {
     id?: string
     role: $Enums.Role
@@ -34078,6 +34338,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutOwnerInput = {
@@ -34114,6 +34375,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutOwnerInput = {
@@ -34132,6 +34394,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34143,6 +34408,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutCustomerInput = {
@@ -34154,6 +34420,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34162,6 +34431,7 @@ export namespace Prisma {
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutCustomerInput = {
@@ -34180,6 +34450,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34191,6 +34464,7 @@ export namespace Prisma {
     staff: StaffMemberCreateNestedOneWithoutBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutCreatedByInput = {
@@ -34203,6 +34477,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34210,6 +34487,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutCreatedByInput = {
@@ -34235,10 +34513,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     business: BusinessCreateNestedOneWithoutPaymentsInput
     booking: BookingCreateNestedOneWithoutPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateWithoutVerifiedByInput = {
@@ -34254,10 +34530,8 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentCreateOrConnectWithoutVerifiedByInput = {
@@ -34318,6 +34592,7 @@ export namespace Prisma {
     id?: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
     discount: DiscountCreateNestedOneWithoutUsagesInput
     booking: BookingCreateNestedOneWithoutDiscountUsagesInput
     payment?: PaymentCreateNestedOneWithoutDiscountUsagesInput
@@ -34330,6 +34605,7 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateOrConnectWithoutUserInput = {
@@ -34495,6 +34771,9 @@ export namespace Prisma {
     endTime?: DateTimeFilter<"Booking"> | Date | string
     status?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     totalPrice?: IntFilter<"Booking"> | number
+    finalPrice?: IntFilter<"Booking"> | number
+    penaltyAmount?: IntFilter<"Booking"> | number
+    financialStatus?: EnumFinancialStatusFilter<"Booking"> | $Enums.FinancialStatus
     customerNotes?: StringNullableFilter<"Booking"> | string | null
     internalNotes?: StringNullableFilter<"Booking"> | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
@@ -34552,7 +34831,6 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    discountId?: StringNullableFilter<"Payment"> | string | null
   }
 
   export type StaffMemberUpsertWithWhereUniqueWithoutUserInput = {
@@ -34614,6 +34892,7 @@ export namespace Prisma {
     paymentId?: StringNullableFilter<"DiscountUsage"> | string | null
     discountAmount?: IntFilter<"DiscountUsage"> | number
     usedAt?: DateTimeFilter<"DiscountUsage"> | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFilter<"DiscountUsage"> | $Enums.DiscountUsageStatus
   }
 
   export type UserCreateWithoutRolesInput = {
@@ -34903,6 +35182,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34914,6 +35196,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutBusinessInput = {
@@ -34925,6 +35208,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -34933,6 +35219,7 @@ export namespace Prisma {
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutBusinessInput = {
@@ -34958,10 +35245,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     booking: BookingCreateNestedOneWithoutPaymentsInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateWithoutBusinessInput = {
@@ -34977,10 +35262,8 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentCreateOrConnectWithoutBusinessInput = {
@@ -35072,7 +35355,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     usages?: DiscountUsageCreateNestedManyWithoutDiscountInput
-    payments?: PaymentCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountUncheckedCreateWithoutBusinessInput = {
@@ -35092,7 +35374,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     usages?: DiscountUsageUncheckedCreateNestedManyWithoutDiscountInput
-    payments?: PaymentUncheckedCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountCreateOrConnectWithoutBusinessInput = {
@@ -35102,6 +35383,38 @@ export namespace Prisma {
 
   export type DiscountCreateManyBusinessInputEnvelope = {
     data: DiscountCreateManyBusinessInput | DiscountCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommissionCreateWithoutBusinessInput = {
+    id?: string
+    grossAmount: number
+    platformFee: number
+    businessShare: number
+    isSettled?: boolean
+    settledAt?: Date | string | null
+    createdAt?: Date | string
+    booking: BookingCreateNestedOneWithoutCommissionInput
+  }
+
+  export type CommissionUncheckedCreateWithoutBusinessInput = {
+    id?: string
+    bookingId: string
+    grossAmount: number
+    platformFee: number
+    businessShare: number
+    isSettled?: boolean
+    settledAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommissionCreateOrConnectWithoutBusinessInput = {
+    where: CommissionWhereUniqueInput
+    create: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type CommissionCreateManyBusinessInputEnvelope = {
+    data: CommissionCreateManyBusinessInput | CommissionCreateManyBusinessInput[]
     skipDuplicates?: boolean
   }
 
@@ -35370,6 +35683,37 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Discount"> | Date | string
   }
 
+  export type CommissionUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: CommissionWhereUniqueInput
+    update: XOR<CommissionUpdateWithoutBusinessInput, CommissionUncheckedUpdateWithoutBusinessInput>
+    create: XOR<CommissionCreateWithoutBusinessInput, CommissionUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type CommissionUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: CommissionWhereUniqueInput
+    data: XOR<CommissionUpdateWithoutBusinessInput, CommissionUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type CommissionUpdateManyWithWhereWithoutBusinessInput = {
+    where: CommissionScalarWhereInput
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type CommissionScalarWhereInput = {
+    AND?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+    OR?: CommissionScalarWhereInput[]
+    NOT?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+    id?: StringFilter<"Commission"> | string
+    bookingId?: StringFilter<"Commission"> | string
+    businessId?: StringFilter<"Commission"> | string
+    grossAmount?: IntFilter<"Commission"> | number
+    platformFee?: IntFilter<"Commission"> | number
+    businessShare?: IntFilter<"Commission"> | number
+    isSettled?: BoolFilter<"Commission"> | boolean
+    settledAt?: DateTimeNullableFilter<"Commission"> | Date | string | null
+    createdAt?: DateTimeFilter<"Commission"> | Date | string
+  }
+
   export type UserCreateWithoutBusinessMembersInput = {
     id?: string
     phone: string
@@ -35453,6 +35797,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutBusinessMembersInput = {
@@ -35489,6 +35834,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutBusinessMembersInput = {
@@ -35596,6 +35942,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutBusinessMembersInput = {
@@ -35632,6 +35979,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateWithoutStaffMembersInput = {
@@ -35668,6 +36016,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutStaffMembersInput = {
@@ -35704,6 +36053,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutStaffMembersInput = {
@@ -35842,6 +36192,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -35853,6 +36206,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutStaffInput = {
@@ -35864,6 +36218,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -35872,6 +36229,7 @@ export namespace Prisma {
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutStaffInput = {
@@ -35967,6 +36325,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutStaffMembersInput = {
@@ -36003,6 +36362,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserUpsertWithoutStaffMembersInput = {
@@ -36395,6 +36755,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutServicesInput = {
@@ -36431,6 +36792,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutServicesInput = {
@@ -36466,6 +36828,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -36477,6 +36842,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutServiceInput = {
@@ -36488,6 +36854,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -36496,6 +36865,7 @@ export namespace Prisma {
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutServiceInput = {
@@ -36591,6 +36961,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutServicesInput = {
@@ -36627,6 +36998,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type ServiceStaffUpsertWithWhereUniqueWithoutServiceInput = {
@@ -36871,6 +37243,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutBookingsInput = {
@@ -36907,6 +37280,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutBookingsInput = {
@@ -37099,10 +37473,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     business: BusinessCreateNestedOneWithoutPaymentsInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateWithoutBookingInput = {
@@ -37118,10 +37490,8 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentCreateOrConnectWithoutBookingInput = {
@@ -37138,6 +37508,7 @@ export namespace Prisma {
     id?: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
     discount: DiscountCreateNestedOneWithoutUsagesInput
     user: UserCreateNestedOneWithoutDiscountUsagesInput
     payment?: PaymentCreateNestedOneWithoutDiscountUsagesInput
@@ -37150,6 +37521,7 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateOrConnectWithoutBookingInput = {
@@ -37160,6 +37532,33 @@ export namespace Prisma {
   export type DiscountUsageCreateManyBookingInputEnvelope = {
     data: DiscountUsageCreateManyBookingInput | DiscountUsageCreateManyBookingInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CommissionCreateWithoutBookingInput = {
+    id?: string
+    grossAmount: number
+    platformFee: number
+    businessShare: number
+    isSettled?: boolean
+    settledAt?: Date | string | null
+    createdAt?: Date | string
+    business: BusinessCreateNestedOneWithoutCommissionsInput
+  }
+
+  export type CommissionUncheckedCreateWithoutBookingInput = {
+    id?: string
+    businessId: string
+    grossAmount: number
+    platformFee: number
+    businessShare: number
+    isSettled?: boolean
+    settledAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommissionCreateOrConnectWithoutBookingInput = {
+    where: CommissionWhereUniqueInput
+    create: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
   }
 
   export type BusinessUpsertWithoutBookingsInput = {
@@ -37207,6 +37606,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutBookingsInput = {
@@ -37243,6 +37643,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserUpsertWithoutBookingsInput = {
@@ -37473,6 +37874,39 @@ export namespace Prisma {
     data: XOR<DiscountUsageUpdateManyMutationInput, DiscountUsageUncheckedUpdateManyWithoutBookingInput>
   }
 
+  export type CommissionUpsertWithoutBookingInput = {
+    update: XOR<CommissionUpdateWithoutBookingInput, CommissionUncheckedUpdateWithoutBookingInput>
+    create: XOR<CommissionCreateWithoutBookingInput, CommissionUncheckedCreateWithoutBookingInput>
+    where?: CommissionWhereInput
+  }
+
+  export type CommissionUpdateToOneWithWhereWithoutBookingInput = {
+    where?: CommissionWhereInput
+    data: XOR<CommissionUpdateWithoutBookingInput, CommissionUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type CommissionUpdateWithoutBookingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grossAmount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    businessShare?: IntFieldUpdateOperationsInput | number
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: BusinessUpdateOneRequiredWithoutCommissionsNestedInput
+  }
+
+  export type CommissionUncheckedUpdateWithoutBookingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    grossAmount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    businessShare?: IntFieldUpdateOperationsInput | number
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BusinessCreateWithoutPaymentsInput = {
     id?: string
     slug: string
@@ -37507,6 +37941,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutPaymentsInput = {
@@ -37543,6 +37978,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutPaymentsInput = {
@@ -37556,6 +37992,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -37567,6 +38006,7 @@ export namespace Prisma {
     staff: StaffMemberCreateNestedOneWithoutBookingsInput
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutPaymentsInput = {
@@ -37579,6 +38019,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -37586,6 +38029,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdById?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutPaymentsInput = {
@@ -37642,55 +38086,11 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutVerifiedPaymentsInput, UserUncheckedCreateWithoutVerifiedPaymentsInput>
   }
 
-  export type DiscountCreateWithoutPaymentsInput = {
-    id?: string
-    code: string
-    type: $Enums.DiscountType
-    value: number
-    scope?: $Enums.DiscountScope
-    maxDiscount?: number | null
-    minOrderAmount?: number | null
-    usageLimit?: number | null
-    usedCount?: number
-    perUserLimit?: number | null
-    startsAt: Date | string
-    expiresAt: Date | string
-    status?: $Enums.DiscountStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business?: BusinessCreateNestedOneWithoutDiscountsInput
-    usages?: DiscountUsageCreateNestedManyWithoutDiscountInput
-  }
-
-  export type DiscountUncheckedCreateWithoutPaymentsInput = {
-    id?: string
-    code: string
-    type: $Enums.DiscountType
-    value: number
-    scope?: $Enums.DiscountScope
-    businessId?: string | null
-    maxDiscount?: number | null
-    minOrderAmount?: number | null
-    usageLimit?: number | null
-    usedCount?: number
-    perUserLimit?: number | null
-    startsAt: Date | string
-    expiresAt: Date | string
-    status?: $Enums.DiscountStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    usages?: DiscountUsageUncheckedCreateNestedManyWithoutDiscountInput
-  }
-
-  export type DiscountCreateOrConnectWithoutPaymentsInput = {
-    where: DiscountWhereUniqueInput
-    create: XOR<DiscountCreateWithoutPaymentsInput, DiscountUncheckedCreateWithoutPaymentsInput>
-  }
-
   export type DiscountUsageCreateWithoutPaymentInput = {
     id?: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
     discount: DiscountCreateNestedOneWithoutUsagesInput
     user: UserCreateNestedOneWithoutDiscountUsagesInput
     booking: BookingCreateNestedOneWithoutDiscountUsagesInput
@@ -37703,6 +38103,7 @@ export namespace Prisma {
     bookingId: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateOrConnectWithoutPaymentInput = {
@@ -37743,29 +38144,6 @@ export namespace Prisma {
   export type LedgerEntryCreateManyPaymentInputEnvelope = {
     data: LedgerEntryCreateManyPaymentInput | LedgerEntryCreateManyPaymentInput[]
     skipDuplicates?: boolean
-  }
-
-  export type CommissionCreateWithoutPaymentInput = {
-    id?: string
-    grossAmount: number
-    platformFee: number
-    businessShare: number
-    taxAmount?: number | null
-    createdAt?: Date | string
-  }
-
-  export type CommissionUncheckedCreateWithoutPaymentInput = {
-    id?: string
-    grossAmount: number
-    platformFee: number
-    businessShare: number
-    taxAmount?: number | null
-    createdAt?: Date | string
-  }
-
-  export type CommissionCreateOrConnectWithoutPaymentInput = {
-    where: CommissionWhereUniqueInput
-    create: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
   }
 
   export type BusinessUpsertWithoutPaymentsInput = {
@@ -37813,6 +38191,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutPaymentsInput = {
@@ -37849,6 +38228,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BookingUpsertWithoutPaymentsInput = {
@@ -37868,6 +38248,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37879,6 +38262,7 @@ export namespace Prisma {
     staff?: StaffMemberUpdateOneRequiredWithoutBookingsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutPaymentsInput = {
@@ -37891,6 +38275,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37898,6 +38285,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type UserUpsertWithoutVerifiedPaymentsInput = {
@@ -37955,57 +38343,6 @@ export namespace Prisma {
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type DiscountUpsertWithoutPaymentsInput = {
-    update: XOR<DiscountUpdateWithoutPaymentsInput, DiscountUncheckedUpdateWithoutPaymentsInput>
-    create: XOR<DiscountCreateWithoutPaymentsInput, DiscountUncheckedCreateWithoutPaymentsInput>
-    where?: DiscountWhereInput
-  }
-
-  export type DiscountUpdateToOneWithWhereWithoutPaymentsInput = {
-    where?: DiscountWhereInput
-    data: XOR<DiscountUpdateWithoutPaymentsInput, DiscountUncheckedUpdateWithoutPaymentsInput>
-  }
-
-  export type DiscountUpdateWithoutPaymentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-    value?: IntFieldUpdateOperationsInput | number
-    scope?: EnumDiscountScopeFieldUpdateOperationsInput | $Enums.DiscountScope
-    maxDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    minOrderAmount?: NullableIntFieldUpdateOperationsInput | number | null
-    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
-    usedCount?: IntFieldUpdateOperationsInput | number
-    perUserLimit?: NullableIntFieldUpdateOperationsInput | number | null
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDiscountStatusFieldUpdateOperationsInput | $Enums.DiscountStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: BusinessUpdateOneWithoutDiscountsNestedInput
-    usages?: DiscountUsageUpdateManyWithoutDiscountNestedInput
-  }
-
-  export type DiscountUncheckedUpdateWithoutPaymentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    type?: EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-    value?: IntFieldUpdateOperationsInput | number
-    scope?: EnumDiscountScopeFieldUpdateOperationsInput | $Enums.DiscountScope
-    businessId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    minOrderAmount?: NullableIntFieldUpdateOperationsInput | number | null
-    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
-    usedCount?: IntFieldUpdateOperationsInput | number
-    perUserLimit?: NullableIntFieldUpdateOperationsInput | number | null
-    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDiscountStatusFieldUpdateOperationsInput | $Enums.DiscountStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usages?: DiscountUsageUncheckedUpdateManyWithoutDiscountNestedInput
-  }
-
   export type DiscountUsageUpsertWithWhereUniqueWithoutPaymentInput = {
     where: DiscountUsageWhereUniqueInput
     update: XOR<DiscountUsageUpdateWithoutPaymentInput, DiscountUsageUncheckedUpdateWithoutPaymentInput>
@@ -38038,125 +38375,276 @@ export namespace Prisma {
     data: XOR<LedgerEntryUpdateManyMutationInput, LedgerEntryUncheckedUpdateManyWithoutPaymentInput>
   }
 
-  export type CommissionUpsertWithoutPaymentInput = {
-    update: XOR<CommissionUpdateWithoutPaymentInput, CommissionUncheckedUpdateWithoutPaymentInput>
-    create: XOR<CommissionCreateWithoutPaymentInput, CommissionUncheckedCreateWithoutPaymentInput>
-    where?: CommissionWhereInput
-  }
-
-  export type CommissionUpdateToOneWithWhereWithoutPaymentInput = {
-    where?: CommissionWhereInput
-    data: XOR<CommissionUpdateWithoutPaymentInput, CommissionUncheckedUpdateWithoutPaymentInput>
-  }
-
-  export type CommissionUpdateWithoutPaymentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    grossAmount?: IntFieldUpdateOperationsInput | number
-    platformFee?: IntFieldUpdateOperationsInput | number
-    businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommissionUncheckedUpdateWithoutPaymentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    grossAmount?: IntFieldUpdateOperationsInput | number
-    platformFee?: IntFieldUpdateOperationsInput | number
-    businessShare?: IntFieldUpdateOperationsInput | number
-    taxAmount?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PaymentCreateWithoutCommissionInput = {
+  export type BookingCreateWithoutCommissionInput = {
     id?: string
-    method?: $Enums.PaymentMethod
-    amount: number
-    status?: $Enums.PaymentStatus
-    authority?: string | null
-    refId?: string | null
-    gatewayName?: string | null
-    verifiedAt?: Date | string | null
+    startTime: Date | string
+    endTime: Date | string
+    status?: $Enums.BookingStatus
+    totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
+    customerNotes?: string | null
+    internalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    business: BusinessCreateNestedOneWithoutPaymentsInput
-    booking: BookingCreateNestedOneWithoutPaymentsInput
-    verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
-    discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
-    ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
+    deletedAt?: Date | string | null
+    business: BusinessCreateNestedOneWithoutBookingsInput
+    customer: UserCreateNestedOneWithoutBookingsInput
+    service: ServiceCreateNestedOneWithoutBookingsInput
+    staff: StaffMemberCreateNestedOneWithoutBookingsInput
+    createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
+    payments?: PaymentCreateNestedManyWithoutBookingInput
+    discountUsages?: DiscountUsageCreateNestedManyWithoutBookingInput
   }
 
-  export type PaymentUncheckedCreateWithoutCommissionInput = {
+  export type BookingUncheckedCreateWithoutCommissionInput = {
     id?: string
     businessId: string
-    bookingId: string
-    method?: $Enums.PaymentMethod
-    amount: number
-    status?: $Enums.PaymentStatus
-    authority?: string | null
-    refId?: string | null
-    gatewayName?: string | null
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
+    customerId: string
+    serviceId: string
+    staffId: string
+    startTime: Date | string
+    endTime: Date | string
+    status?: $Enums.BookingStatus
+    totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
+    customerNotes?: string | null
+    internalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
-    discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
-    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
+    deletedAt?: Date | string | null
+    createdById?: string | null
+    payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+    discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutBookingInput
   }
 
-  export type PaymentCreateOrConnectWithoutCommissionInput = {
-    where: PaymentWhereUniqueInput
-    create: XOR<PaymentCreateWithoutCommissionInput, PaymentUncheckedCreateWithoutCommissionInput>
+  export type BookingCreateOrConnectWithoutCommissionInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutCommissionInput, BookingUncheckedCreateWithoutCommissionInput>
   }
 
-  export type PaymentUpsertWithoutCommissionInput = {
-    update: XOR<PaymentUpdateWithoutCommissionInput, PaymentUncheckedUpdateWithoutCommissionInput>
-    create: XOR<PaymentCreateWithoutCommissionInput, PaymentUncheckedCreateWithoutCommissionInput>
-    where?: PaymentWhereInput
+  export type BusinessCreateWithoutCommissionsInput = {
+    id?: string
+    slug: string
+    businessName: string
+    ownerName: string
+    description?: string | null
+    logo?: string | null
+    banner?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    timezone?: string
+    allowOnlinePayment?: boolean
+    allowOfflinePayment?: boolean
+    commissionRate?: number
+    identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
+    isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    businessType?: $Enums.BusinessType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutOwnedBusinessesInput
+    favorites?: FavoriteCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberCreateNestedManyWithoutBusinessInput
+    staffMembers?: StaffMemberCreateNestedManyWithoutBusinessInput
+    services?: ServiceCreateNestedManyWithoutBusinessInput
+    bookings?: BookingCreateNestedManyWithoutBusinessInput
+    payments?: PaymentCreateNestedManyWithoutBusinessInput
+    settlements?: SettlementCreateNestedManyWithoutBusinessInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
+    discounts?: DiscountCreateNestedManyWithoutBusinessInput
   }
 
-  export type PaymentUpdateToOneWithWhereWithoutCommissionInput = {
-    where?: PaymentWhereInput
-    data: XOR<PaymentUpdateWithoutCommissionInput, PaymentUncheckedUpdateWithoutCommissionInput>
+  export type BusinessUncheckedCreateWithoutCommissionsInput = {
+    id?: string
+    slug: string
+    businessName: string
+    ownerName: string
+    description?: string | null
+    logo?: string | null
+    banner?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    timezone?: string
+    allowOnlinePayment?: boolean
+    allowOfflinePayment?: boolean
+    commissionRate?: number
+    ownerId: string
+    identifier: string
+    registrationStatus?: $Enums.BusinessRegistrationStatus
+    rejectionReason?: string | null
+    isActive?: boolean
+    activatedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    businessType?: $Enums.BusinessType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    favorites?: FavoriteUncheckedCreateNestedManyWithoutBusinessInput
+    businessMembers?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
+    staffMembers?: StaffMemberUncheckedCreateNestedManyWithoutBusinessInput
+    services?: ServiceUncheckedCreateNestedManyWithoutBusinessInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutBusinessInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutBusinessInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
+    discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
   }
 
-  export type PaymentUpdateWithoutCommissionInput = {
+  export type BusinessCreateOrConnectWithoutCommissionsInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutCommissionsInput, BusinessUncheckedCreateWithoutCommissionsInput>
+  }
+
+  export type BookingUpsertWithoutCommissionInput = {
+    update: XOR<BookingUpdateWithoutCommissionInput, BookingUncheckedUpdateWithoutCommissionInput>
+    create: XOR<BookingCreateWithoutCommissionInput, BookingUncheckedCreateWithoutCommissionInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutCommissionInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutCommissionInput, BookingUncheckedUpdateWithoutCommissionInput>
+  }
+
+  export type BookingUpdateWithoutCommissionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
-    amount?: IntFieldUpdateOperationsInput | number
-    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-    authority?: NullableStringFieldUpdateOperationsInput | string | null
-    refId?: NullableStringFieldUpdateOperationsInput | string | null
-    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
-    booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
-    verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
-    discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
-    ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business?: BusinessUpdateOneRequiredWithoutBookingsNestedInput
+    customer?: UserUpdateOneRequiredWithoutBookingsNestedInput
+    service?: ServiceUpdateOneRequiredWithoutBookingsNestedInput
+    staff?: StaffMemberUpdateOneRequiredWithoutBookingsNestedInput
+    createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
+    payments?: PaymentUpdateManyWithoutBookingNestedInput
+    discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
   }
 
-  export type PaymentUncheckedUpdateWithoutCommissionInput = {
+  export type BookingUncheckedUpdateWithoutCommissionInput = {
     id?: StringFieldUpdateOperationsInput | string
     businessId?: StringFieldUpdateOperationsInput | string
-    bookingId?: StringFieldUpdateOperationsInput | string
-    method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
-    amount?: IntFieldUpdateOperationsInput | number
-    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-    authority?: NullableStringFieldUpdateOperationsInput | string | null
-    refId?: NullableStringFieldUpdateOperationsInput | string | null
-    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    serviceId?: StringFieldUpdateOperationsInput | string
+    staffId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
-    discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
-    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
+    discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BusinessUpsertWithoutCommissionsInput = {
+    update: XOR<BusinessUpdateWithoutCommissionsInput, BusinessUncheckedUpdateWithoutCommissionsInput>
+    create: XOR<BusinessCreateWithoutCommissionsInput, BusinessUncheckedCreateWithoutCommissionsInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutCommissionsInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutCommissionsInput, BusinessUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type BusinessUpdateWithoutCommissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    ownerName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    banner?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    allowOnlinePayment?: BoolFieldUpdateOperationsInput | boolean
+    allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
+    commissionRate?: IntFieldUpdateOperationsInput | number
+    identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
+    favorites?: FavoriteUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUpdateManyWithoutBusinessNestedInput
+    staffMembers?: StaffMemberUpdateManyWithoutBusinessNestedInput
+    services?: ServiceUpdateManyWithoutBusinessNestedInput
+    bookings?: BookingUpdateManyWithoutBusinessNestedInput
+    payments?: PaymentUpdateManyWithoutBusinessNestedInput
+    settlements?: SettlementUpdateManyWithoutBusinessNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
+    discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutCommissionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    ownerName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    banner?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    allowOnlinePayment?: BoolFieldUpdateOperationsInput | boolean
+    allowOfflinePayment?: BoolFieldUpdateOperationsInput | boolean
+    commissionRate?: IntFieldUpdateOperationsInput | number
+    ownerId?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    registrationStatus?: EnumBusinessRegistrationStatusFieldUpdateOperationsInput | $Enums.BusinessRegistrationStatus
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessType?: EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    favorites?: FavoriteUncheckedUpdateManyWithoutBusinessNestedInput
+    businessMembers?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    staffMembers?: StaffMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutBusinessNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutBusinessNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
+    discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type PaymentCreateWithoutLedgerEntriesInput = {
@@ -38173,9 +38661,7 @@ export namespace Prisma {
     business: BusinessCreateNestedOneWithoutPaymentsInput
     booking: BookingCreateNestedOneWithoutPaymentsInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateWithoutLedgerEntriesInput = {
@@ -38192,9 +38678,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentCreateOrConnectWithoutLedgerEntriesInput = {
@@ -38263,6 +38747,7 @@ export namespace Prisma {
     payments?: PaymentCreateNestedManyWithoutBusinessInput
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutLedgerEntriesInput = {
@@ -38299,6 +38784,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedCreateNestedManyWithoutBusinessInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutLedgerEntriesInput = {
@@ -38331,9 +38817,7 @@ export namespace Prisma {
     business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
     booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutLedgerEntriesInput = {
@@ -38350,9 +38834,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type SettlementUpsertWithoutLedgerEntriesInput = {
@@ -38433,6 +38915,7 @@ export namespace Prisma {
     payments?: PaymentUpdateManyWithoutBusinessNestedInput
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutLedgerEntriesInput = {
@@ -38469,6 +38952,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutBusinessNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateWithoutSettlementsInput = {
@@ -38505,6 +38989,7 @@ export namespace Prisma {
     payments?: PaymentCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutSettlementsInput = {
@@ -38541,6 +39026,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutSettlementsInput = {
@@ -38623,6 +39109,7 @@ export namespace Prisma {
     payments?: PaymentUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutSettlementsInput = {
@@ -38659,6 +39146,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type LedgerEntryUpsertWithWhereUniqueWithoutSettlementInput = {
@@ -38760,6 +39248,7 @@ export namespace Prisma {
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
     discounts?: DiscountCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutFavoritesInput = {
@@ -38796,6 +39285,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
     discounts?: DiscountUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutFavoritesInput = {
@@ -38903,6 +39393,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutFavoritesInput = {
@@ -38939,6 +39430,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type StaffMemberCreateWithoutServiceChangeRequestsInput = {
@@ -39135,6 +39627,7 @@ export namespace Prisma {
     payments?: PaymentCreateNestedManyWithoutBusinessInput
     settlements?: SettlementCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutDiscountsInput = {
@@ -39171,6 +39664,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedCreateNestedManyWithoutBusinessInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutBusinessInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutBusinessInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutDiscountsInput = {
@@ -39182,6 +39676,7 @@ export namespace Prisma {
     id?: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
     user: UserCreateNestedOneWithoutDiscountUsagesInput
     booking: BookingCreateNestedOneWithoutDiscountUsagesInput
     payment?: PaymentCreateNestedOneWithoutDiscountUsagesInput
@@ -39194,6 +39689,7 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateOrConnectWithoutDiscountInput = {
@@ -39203,54 +39699,6 @@ export namespace Prisma {
 
   export type DiscountUsageCreateManyDiscountInputEnvelope = {
     data: DiscountUsageCreateManyDiscountInput | DiscountUsageCreateManyDiscountInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PaymentCreateWithoutDiscountInput = {
-    id?: string
-    method?: $Enums.PaymentMethod
-    amount: number
-    status?: $Enums.PaymentStatus
-    authority?: string | null
-    refId?: string | null
-    gatewayName?: string | null
-    verifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business: BusinessCreateNestedOneWithoutPaymentsInput
-    booking: BookingCreateNestedOneWithoutPaymentsInput
-    verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discountUsages?: DiscountUsageCreateNestedManyWithoutPaymentInput
-    ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
-  }
-
-  export type PaymentUncheckedCreateWithoutDiscountInput = {
-    id?: string
-    businessId: string
-    bookingId: string
-    method?: $Enums.PaymentMethod
-    amount: number
-    status?: $Enums.PaymentStatus
-    authority?: string | null
-    refId?: string | null
-    gatewayName?: string | null
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    discountUsages?: DiscountUsageUncheckedCreateNestedManyWithoutPaymentInput
-    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
-  }
-
-  export type PaymentCreateOrConnectWithoutDiscountInput = {
-    where: PaymentWhereUniqueInput
-    create: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput>
-  }
-
-  export type PaymentCreateManyDiscountInputEnvelope = {
-    data: PaymentCreateManyDiscountInput | PaymentCreateManyDiscountInput[]
     skipDuplicates?: boolean
   }
 
@@ -39299,6 +39747,7 @@ export namespace Prisma {
     payments?: PaymentUpdateManyWithoutBusinessNestedInput
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutDiscountsInput = {
@@ -39335,6 +39784,7 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutBusinessNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type DiscountUsageUpsertWithWhereUniqueWithoutDiscountInput = {
@@ -39351,22 +39801,6 @@ export namespace Prisma {
   export type DiscountUsageUpdateManyWithWhereWithoutDiscountInput = {
     where: DiscountUsageScalarWhereInput
     data: XOR<DiscountUsageUpdateManyMutationInput, DiscountUsageUncheckedUpdateManyWithoutDiscountInput>
-  }
-
-  export type PaymentUpsertWithWhereUniqueWithoutDiscountInput = {
-    where: PaymentWhereUniqueInput
-    update: XOR<PaymentUpdateWithoutDiscountInput, PaymentUncheckedUpdateWithoutDiscountInput>
-    create: XOR<PaymentCreateWithoutDiscountInput, PaymentUncheckedCreateWithoutDiscountInput>
-  }
-
-  export type PaymentUpdateWithWhereUniqueWithoutDiscountInput = {
-    where: PaymentWhereUniqueInput
-    data: XOR<PaymentUpdateWithoutDiscountInput, PaymentUncheckedUpdateWithoutDiscountInput>
-  }
-
-  export type PaymentUpdateManyWithWhereWithoutDiscountInput = {
-    where: PaymentScalarWhereInput
-    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutDiscountInput>
   }
 
   export type DiscountCreateWithoutUsagesInput = {
@@ -39386,7 +39820,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     business?: BusinessCreateNestedOneWithoutDiscountsInput
-    payments?: PaymentCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountUncheckedCreateWithoutUsagesInput = {
@@ -39406,7 +39839,6 @@ export namespace Prisma {
     status?: $Enums.DiscountStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    payments?: PaymentUncheckedCreateNestedManyWithoutDiscountInput
   }
 
   export type DiscountCreateOrConnectWithoutUsagesInput = {
@@ -39469,6 +39901,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -39480,6 +39915,7 @@ export namespace Prisma {
     staff: StaffMemberCreateNestedOneWithoutBookingsInput
     createdBy?: UserCreateNestedOneWithoutCreatedBookingsInput
     payments?: PaymentCreateNestedManyWithoutBookingInput
+    commission?: CommissionCreateNestedOneWithoutBookingInput
   }
 
   export type BookingUncheckedCreateWithoutDiscountUsagesInput = {
@@ -39492,6 +39928,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -39499,6 +39938,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdById?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+    commission?: CommissionUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type BookingCreateOrConnectWithoutDiscountUsagesInput = {
@@ -39520,9 +39960,7 @@ export namespace Prisma {
     business: BusinessCreateNestedOneWithoutPaymentsInput
     booking: BookingCreateNestedOneWithoutPaymentsInput
     verifiedBy?: UserCreateNestedOneWithoutVerifiedPaymentsInput
-    discount?: DiscountCreateNestedOneWithoutPaymentsInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutPaymentInput
-    commission?: CommissionCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentUncheckedCreateWithoutDiscountUsagesInput = {
@@ -39539,9 +39977,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutPaymentInput
-    commission?: CommissionUncheckedCreateNestedOneWithoutPaymentInput
   }
 
   export type PaymentCreateOrConnectWithoutDiscountUsagesInput = {
@@ -39577,7 +40013,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     business?: BusinessUpdateOneWithoutDiscountsNestedInput
-    payments?: PaymentUpdateManyWithoutDiscountNestedInput
   }
 
   export type DiscountUncheckedUpdateWithoutUsagesInput = {
@@ -39597,7 +40032,6 @@ export namespace Prisma {
     status?: EnumDiscountStatusFieldUpdateOperationsInput | $Enums.DiscountStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    payments?: PaymentUncheckedUpdateManyWithoutDiscountNestedInput
   }
 
   export type UserUpsertWithoutDiscountUsagesInput = {
@@ -39672,6 +40106,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39683,6 +40120,7 @@ export namespace Prisma {
     staff?: StaffMemberUpdateOneRequiredWithoutBookingsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutDiscountUsagesInput = {
@@ -39695,6 +40133,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39702,6 +40143,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type PaymentUpsertWithoutDiscountUsagesInput = {
@@ -39729,9 +40171,7 @@ export namespace Prisma {
     business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
     booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutDiscountUsagesInput = {
@@ -39748,9 +40188,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type UserRoleCreateManyUserInput = {
@@ -39806,6 +40244,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -39824,6 +40265,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -39844,7 +40288,6 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
   }
 
   export type StaffMemberCreateManyUserInput = {
@@ -39866,6 +40309,7 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type UserRoleUpdateWithoutUserInput = {
@@ -39953,6 +40397,7 @@ export namespace Prisma {
     settlements?: SettlementUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutOwnerInput = {
@@ -39989,6 +40434,7 @@ export namespace Prisma {
     settlements?: SettlementUncheckedUpdateManyWithoutBusinessNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutBusinessNestedInput
     discounts?: DiscountUncheckedUpdateManyWithoutBusinessNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateManyWithoutOwnerInput = {
@@ -40024,6 +40470,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40035,6 +40484,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutCustomerInput = {
@@ -40046,6 +40496,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40054,6 +40507,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateManyWithoutCustomerInput = {
@@ -40065,6 +40519,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40079,6 +40536,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40090,6 +40550,7 @@ export namespace Prisma {
     staff?: StaffMemberUpdateOneRequiredWithoutBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutCreatedByInput = {
@@ -40102,6 +40563,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40109,6 +40573,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateManyWithoutCreatedByInput = {
@@ -40121,6 +40586,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40141,10 +40609,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
     booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutVerifiedByInput = {
@@ -40160,10 +40626,8 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateManyWithoutVerifiedByInput = {
@@ -40179,7 +40643,6 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StaffMemberUpdateWithoutUserInput = {
@@ -40232,6 +40695,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
     discount?: DiscountUpdateOneRequiredWithoutUsagesNestedInput
     booking?: BookingUpdateOneRequiredWithoutDiscountUsagesNestedInput
     payment?: PaymentUpdateOneWithoutDiscountUsagesNestedInput
@@ -40244,6 +40708,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUncheckedUpdateManyWithoutUserInput = {
@@ -40253,6 +40718,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type FavoriteCreateManyBusinessInput = {
@@ -40300,6 +40766,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -40321,7 +40790,6 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
   }
 
   export type SettlementCreateManyBusinessInput = {
@@ -40360,6 +40828,17 @@ export namespace Prisma {
     status?: $Enums.DiscountStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type CommissionCreateManyBusinessInput = {
+    id?: string
+    bookingId: string
+    grossAmount: number
+    platformFee: number
+    businessShare: number
+    isSettled?: boolean
+    settledAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type FavoriteUpdateWithoutBusinessInput = {
@@ -40492,6 +40971,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40503,6 +40985,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutBusinessInput = {
@@ -40514,6 +40997,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40522,6 +41008,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateManyWithoutBusinessInput = {
@@ -40533,6 +41020,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40554,10 +41044,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutBusinessInput = {
@@ -40573,10 +41061,8 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateManyWithoutBusinessInput = {
@@ -40592,7 +41078,6 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SettlementUpdateWithoutBusinessInput = {
@@ -40674,7 +41159,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usages?: DiscountUsageUpdateManyWithoutDiscountNestedInput
-    payments?: PaymentUpdateManyWithoutDiscountNestedInput
   }
 
   export type DiscountUncheckedUpdateWithoutBusinessInput = {
@@ -40694,7 +41178,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usages?: DiscountUsageUncheckedUpdateManyWithoutDiscountNestedInput
-    payments?: PaymentUncheckedUpdateManyWithoutDiscountNestedInput
   }
 
   export type DiscountUncheckedUpdateManyWithoutBusinessInput = {
@@ -40713,6 +41196,39 @@ export namespace Prisma {
     status?: EnumDiscountStatusFieldUpdateOperationsInput | $Enums.DiscountStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grossAmount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    businessShare?: IntFieldUpdateOperationsInput | number
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutCommissionNestedInput
+  }
+
+  export type CommissionUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    grossAmount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    businessShare?: IntFieldUpdateOperationsInput | number
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    grossAmount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    businessShare?: IntFieldUpdateOperationsInput | number
+    isSettled?: BoolFieldUpdateOperationsInput | boolean
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StaffAvailabilityCreateManyStaffInput = {
@@ -40747,6 +41263,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -40844,6 +41363,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40855,6 +41377,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutStaffInput = {
@@ -40866,6 +41389,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40874,6 +41400,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateManyWithoutStaffInput = {
@@ -40885,6 +41412,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40950,6 +41480,9 @@ export namespace Prisma {
     endTime: Date | string
     status?: $Enums.BookingStatus
     totalPrice: number
+    finalPrice: number
+    penaltyAmount?: number
+    financialStatus?: $Enums.FinancialStatus
     customerNotes?: string | null
     internalNotes?: string | null
     createdAt?: Date | string
@@ -40996,6 +41529,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41007,6 +41543,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCreatedBookingsNestedInput
     payments?: PaymentUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutServiceInput = {
@@ -41018,6 +41555,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41026,6 +41566,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutBookingNestedInput
+    commission?: CommissionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type BookingUncheckedUpdateManyWithoutServiceInput = {
@@ -41037,6 +41578,9 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     totalPrice?: IntFieldUpdateOperationsInput | number
+    finalPrice?: IntFieldUpdateOperationsInput | number
+    penaltyAmount?: IntFieldUpdateOperationsInput | number
+    financialStatus?: EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
     customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41100,7 +41644,6 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    discountId?: string | null
   }
 
   export type DiscountUsageCreateManyBookingInput = {
@@ -41110,6 +41653,7 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type PaymentUpdateWithoutBookingInput = {
@@ -41125,10 +41669,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
     verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discount?: DiscountUpdateOneWithoutPaymentsNestedInput
     discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutBookingInput = {
@@ -41144,10 +41686,8 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
     discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
   }
 
   export type PaymentUncheckedUpdateManyWithoutBookingInput = {
@@ -41163,13 +41703,13 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DiscountUsageUpdateWithoutBookingInput = {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
     discount?: DiscountUpdateOneRequiredWithoutUsagesNestedInput
     user?: UserUpdateOneRequiredWithoutDiscountUsagesNestedInput
     payment?: PaymentUpdateOneWithoutDiscountUsagesNestedInput
@@ -41182,6 +41722,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUncheckedUpdateManyWithoutBookingInput = {
@@ -41191,6 +41732,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageCreateManyPaymentInput = {
@@ -41200,6 +41742,7 @@ export namespace Prisma {
     bookingId: string
     discountAmount: number
     usedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type LedgerEntryCreateManyPaymentInput = {
@@ -41216,6 +41759,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
     discount?: DiscountUpdateOneRequiredWithoutUsagesNestedInput
     user?: UserUpdateOneRequiredWithoutDiscountUsagesNestedInput
     booking?: BookingUpdateOneRequiredWithoutDiscountUsagesNestedInput
@@ -41228,6 +41772,7 @@ export namespace Prisma {
     bookingId?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUncheckedUpdateManyWithoutPaymentInput = {
@@ -41237,6 +41782,7 @@ export namespace Prisma {
     bookingId?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type LedgerEntryUpdateWithoutPaymentInput = {
@@ -41316,28 +41862,14 @@ export namespace Prisma {
     paymentId?: string | null
     discountAmount: number
     usedAt?: Date | string
-  }
-
-  export type PaymentCreateManyDiscountInput = {
-    id?: string
-    businessId: string
-    bookingId: string
-    method?: $Enums.PaymentMethod
-    amount: number
-    status?: $Enums.PaymentStatus
-    authority?: string | null
-    refId?: string | null
-    gatewayName?: string | null
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    disCountUsageStatus?: $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUpdateWithoutDiscountInput = {
     id?: StringFieldUpdateOperationsInput | string
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
     user?: UserUpdateOneRequiredWithoutDiscountUsagesNestedInput
     booking?: BookingUpdateOneRequiredWithoutDiscountUsagesNestedInput
     payment?: PaymentUpdateOneWithoutDiscountUsagesNestedInput
@@ -41350,6 +41882,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
   export type DiscountUsageUncheckedUpdateManyWithoutDiscountInput = {
@@ -41359,60 +41892,7 @@ export namespace Prisma {
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     discountAmount?: IntFieldUpdateOperationsInput | number
     usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PaymentUpdateWithoutDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
-    amount?: IntFieldUpdateOperationsInput | number
-    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-    authority?: NullableStringFieldUpdateOperationsInput | string | null
-    refId?: NullableStringFieldUpdateOperationsInput | string | null
-    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: BusinessUpdateOneRequiredWithoutPaymentsNestedInput
-    booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
-    verifiedBy?: UserUpdateOneWithoutVerifiedPaymentsNestedInput
-    discountUsages?: DiscountUsageUpdateManyWithoutPaymentNestedInput
-    ledgerEntries?: LedgerEntryUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUpdateOneWithoutPaymentNestedInput
-  }
-
-  export type PaymentUncheckedUpdateWithoutDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    bookingId?: StringFieldUpdateOperationsInput | string
-    method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
-    amount?: IntFieldUpdateOperationsInput | number
-    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-    authority?: NullableStringFieldUpdateOperationsInput | string | null
-    refId?: NullableStringFieldUpdateOperationsInput | string | null
-    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    discountUsages?: DiscountUsageUncheckedUpdateManyWithoutPaymentNestedInput
-    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutPaymentNestedInput
-    commission?: CommissionUncheckedUpdateOneWithoutPaymentNestedInput
-  }
-
-  export type PaymentUncheckedUpdateManyWithoutDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    bookingId?: StringFieldUpdateOperationsInput | string
-    method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
-    amount?: IntFieldUpdateOperationsInput | number
-    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-    authority?: NullableStringFieldUpdateOperationsInput | string | null
-    refId?: NullableStringFieldUpdateOperationsInput | string | null
-    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disCountUsageStatus?: EnumDiscountUsageStatusFieldUpdateOperationsInput | $Enums.DiscountUsageStatus
   }
 
 

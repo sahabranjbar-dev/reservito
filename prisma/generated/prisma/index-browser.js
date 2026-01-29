@@ -237,6 +237,9 @@ exports.Prisma.BookingScalarFieldEnum = {
   endTime: 'endTime',
   status: 'status',
   totalPrice: 'totalPrice',
+  finalPrice: 'finalPrice',
+  penaltyAmount: 'penaltyAmount',
+  financialStatus: 'financialStatus',
   customerNotes: 'customerNotes',
   internalNotes: 'internalNotes',
   createdAt: 'createdAt',
@@ -258,17 +261,18 @@ exports.Prisma.PaymentScalarFieldEnum = {
   verifiedById: 'verifiedById',
   verifiedAt: 'verifiedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  discountId: 'discountId'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.CommissionScalarFieldEnum = {
   id: 'id',
-  paymentId: 'paymentId',
+  bookingId: 'bookingId',
+  businessId: 'businessId',
   grossAmount: 'grossAmount',
   platformFee: 'platformFee',
   businessShare: 'businessShare',
-  taxAmount: 'taxAmount',
+  isSettled: 'isSettled',
+  settledAt: 'settledAt',
   createdAt: 'createdAt'
 };
 
@@ -350,7 +354,8 @@ exports.Prisma.DiscountUsageScalarFieldEnum = {
   bookingId: 'bookingId',
   paymentId: 'paymentId',
   discountAmount: 'discountAmount',
-  usedAt: 'usedAt'
+  usedAt: 'usedAt',
+  disCountUsageStatus: 'disCountUsageStatus'
 };
 
 exports.Prisma.SortOrder = {
@@ -410,6 +415,12 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
   NO_SHOW_STAFF: 'NO_SHOW_STAFF'
 };
 
+exports.FinancialStatus = exports.$Enums.FinancialStatus = {
+  UNPAID: 'UNPAID',
+  PAID: 'PAID',
+  FINALIZED: 'FINALIZED'
+};
+
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
   ONLINE: 'ONLINE',
   OFFLINE: 'OFFLINE'
@@ -446,8 +457,8 @@ exports.StaffServiceChangeStatus = exports.$Enums.StaffServiceChangeStatus = {
 };
 
 exports.DiscountType = exports.$Enums.DiscountType = {
-  PERCENTAGE: 'PERCENTAGE',
-  FIXED_AMOUNT: 'FIXED_AMOUNT'
+  PERCENT: 'PERCENT',
+  FIXED: 'FIXED'
 };
 
 exports.DiscountScope = exports.$Enums.DiscountScope = {
@@ -459,6 +470,12 @@ exports.DiscountStatus = exports.$Enums.DiscountStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
   EXPIRED: 'EXPIRED'
+};
+
+exports.DiscountUsageStatus = exports.$Enums.DiscountUsageStatus = {
+  RESERVED: 'RESERVED',
+  CONFIRMED: 'CONFIRMED',
+  CANCELED: 'CANCELED'
 };
 
 exports.Prisma.ModelName = {

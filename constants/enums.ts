@@ -78,8 +78,8 @@ export enum BusinessRegistrationStatus {
 }
 
 export enum DiscountType {
-  PERCENTAGE = "PERCENTAGE",
-  FIXED_AMOUNT = "FIXED_AMOUNT",
+  PERCENT = "PERCENT",
+  FIXED = "FIXED",
 }
 
 export enum DiscountScope {

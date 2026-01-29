@@ -40,6 +40,10 @@ type EnrichedPayment = {
   booking: {
     id: string;
     totalPrice: number;
+    commission: {
+      businessShare: number;
+      platformFee: number;
+    };
     customer: {
       fullName: string | null;
       phone: string | null;
@@ -96,9 +100,15 @@ const PaymentsClient = ({ payments }: PaymentsClientProps) => {
 
   // محاسبه آمار
   const stats = useMemo(() => {
-    const totalRevenue = payments.reduce((sum, p) => sum + p.amount, 0);
-    const totalIncome = payments.reduce((sum, p) => sum + p.businessShare, 0);
-    const totalFees = payments.reduce((sum, p) => sum + p.platformFee, 0);
+    const totalRevenue = payments?.reduce((sum, p) => sum + p.amount, 0);
+    const totalIncome = payments?.reduce(
+      (sum, p) => sum + p?.booking?.commission?.businessShare,
+      0,
+    );
+    const totalFees = payments?.reduce(
+      (sum, p) => sum + p?.booking.commission.platformFee,
+      0,
+    );
 
     return {
       totalRevenue,
@@ -251,7 +261,7 @@ const PaymentsClient = ({ payments }: PaymentsClientProps) => {
                     <TableCell className="text-right">
                       <div className="font-medium text-slate-900">
                         {new Date(payment.createdAt).toLocaleDateString(
-                          "fa-IR"
+                          "fa-IR",
                         )}
                       </div>
                       <div className="text-xs text-slate-500 font-mono">

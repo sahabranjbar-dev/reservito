@@ -37,6 +37,7 @@ const BusinessPaymentsInvoicesPage = async () => {
     include: {
       booking: {
         include: {
+          commission: true,
           customer: {
             select: {
               fullName: true,
@@ -55,7 +56,6 @@ const BusinessPaymentsInvoicesPage = async () => {
           },
         },
       },
-      commission: true, // برای محاسبه سهم بیزنس و کمیسیون
     },
     orderBy: {
       createdAt: "desc",

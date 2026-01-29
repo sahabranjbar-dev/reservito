@@ -65,6 +65,7 @@ export async function processPaymentAction(params: {
             userId,
             bookingId,
             discountAmount: discountResult.discountAmount,
+            paymentId: payment.id,
           },
         });
       }
@@ -87,7 +88,10 @@ export async function processPaymentAction(params: {
     };
   } catch (error) {
     console.error("Payment Process Error:", error);
-    return { success: false, error: "خطا در پردازش پرداخت" };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "خطا در پردازش پرداخت",
+    };
   }
 }
 

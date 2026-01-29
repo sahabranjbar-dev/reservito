@@ -5,7 +5,7 @@ CREATE TYPE "Role" AS ENUM ('SUPER_ADMIN', 'CUSTOMER');
 CREATE TYPE "BusinessRole" AS ENUM ('OWNER', 'STAFF');
 
 -- CreateEnum
-CREATE TYPE "BookingStatus" AS ENUM ('PENDING_CONFIRMATION', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'NO_SHOW');
+CREATE TYPE "BookingStatus" AS ENUM ('AWAITING_PAYMENT', 'AWAITING_CONFIRMATION', 'CONFIRMED', 'REJECTED', 'CANCELED', 'COMPLETED', 'NO_SHOW_CUSTOMER', 'NO_SHOW_STAFF');
 
 -- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('ONLINE', 'OFFLINE');
@@ -27,6 +27,21 @@ CREATE TYPE "SettlementStatus" AS ENUM ('PENDING', 'PAID', 'FAILED');
 
 -- CreateEnum
 CREATE TYPE "BusinessRegistrationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "StaffServiceChangeStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "FinancialStatus" AS ENUM ('UNPAID', 'PAID', 'FINALIZED');
+
+-- CreateEnum
+CREATE TYPE "DiscountType" AS ENUM ('PERCENT', 'FIXED');
+
+-- CreateEnum
+CREATE TYPE "DiscountScope" AS ENUM ('PLATFORM', 'BUSINESS');
+
+-- CreateEnum
+CREATE TYPE "DiscountStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'EXPIRED');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -74,7 +89,7 @@ CREATE TABLE "Business" (
     "identifier" TEXT NOT NULL,
     "registrationStatus" "BusinessRegistrationStatus" NOT NULL DEFAULT 'PENDING',
     "rejectionReason" TEXT,
-    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "activatedAt" TIMESTAMP(3),
     "rejectedAt" TIMESTAMP(3),
     "businessType" "BusinessType" NOT NULL DEFAULT 'OTHER',
@@ -171,8 +186,11 @@ CREATE TABLE "Booking" (
     "staffId" TEXT NOT NULL,
     "startTime" TIMESTAMP(3) NOT NULL,
     "endTime" TIMESTAMP(3) NOT NULL,
-    "status" "BookingStatus" NOT NULL DEFAULT 'PENDING_CONFIRMATION',
+    "status" "BookingStatus" NOT NULL DEFAULT 'AWAITING_PAYMENT',
     "totalPrice" INTEGER NOT NULL,
+    "finalPrice" INTEGER NOT NULL,
+    "penaltyAmount" INTEGER NOT NULL DEFAULT 0,
+    "financialStatus" "FinancialStatus" NOT NULL DEFAULT 'UNPAID',
     "customerNotes" TEXT,
     "internalNotes" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -205,11 +223,13 @@ CREATE TABLE "Payment" (
 -- CreateTable
 CREATE TABLE "Commission" (
     "id" TEXT NOT NULL,
-    "paymentId" TEXT NOT NULL,
+    "bookingId" TEXT NOT NULL,
+    "businessId" TEXT NOT NULL,
     "grossAmount" INTEGER NOT NULL,
     "platformFee" INTEGER NOT NULL,
     "businessShare" INTEGER NOT NULL,
-    "taxAmount" INTEGER,
+    "isSettled" BOOLEAN NOT NULL DEFAULT false,
+    "settledAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Commission_pkey" PRIMARY KEY ("id")
@@ -264,6 +284,59 @@ CREATE TABLE "Favorite" (
     CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "StaffServiceChangeRequest" (
+    "id" TEXT NOT NULL,
+    "staffId" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
+    "requestedPrice" INTEGER,
+    "requestedActive" BOOLEAN,
+    "requestedName" TEXT,
+    "requestedDescription" TEXT,
+    "requestedDuration" INTEGER,
+    "status" "StaffServiceChangeStatus" NOT NULL DEFAULT 'PENDING',
+    "rejectionReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reviewedAt" TIMESTAMP(3),
+
+    CONSTRAINT "StaffServiceChangeRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Discount" (
+    "id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "type" "DiscountType" NOT NULL,
+    "value" INTEGER NOT NULL,
+    "scope" "DiscountScope" NOT NULL DEFAULT 'PLATFORM',
+    "businessId" TEXT,
+    "maxDiscount" INTEGER,
+    "minOrderAmount" INTEGER,
+    "usageLimit" INTEGER,
+    "usedCount" INTEGER NOT NULL DEFAULT 0,
+    "perUserLimit" INTEGER,
+    "startsAt" TIMESTAMP(3) NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "status" "DiscountStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Discount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "DiscountUsage" (
+    "id" TEXT NOT NULL,
+    "discountId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "bookingId" TEXT NOT NULL,
+    "paymentId" TEXT,
+    "discountAmount" INTEGER NOT NULL,
+    "usedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "DiscountUsage_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_phone_key" ON "User"("phone");
 
@@ -283,19 +356,7 @@ CREATE UNIQUE INDEX "Business_slug_key" ON "Business"("slug");
 CREATE UNIQUE INDEX "Business_identifier_key" ON "Business"("identifier");
 
 -- CreateIndex
-CREATE INDEX "BusinessMember_businessId_idx" ON "BusinessMember"("businessId");
-
--- CreateIndex
-CREATE INDEX "BusinessMember_userId_idx" ON "BusinessMember"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "BusinessMember_userId_businessId_key" ON "BusinessMember"("userId", "businessId");
-
--- CreateIndex
-CREATE INDEX "StaffMember_businessId_idx" ON "StaffMember"("businessId");
-
--- CreateIndex
-CREATE INDEX "StaffMember_userId_idx" ON "StaffMember"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "StaffMember_businessId_userId_key" ON "StaffMember"("businessId", "userId");
@@ -304,49 +365,22 @@ CREATE UNIQUE INDEX "StaffMember_businessId_userId_key" ON "StaffMember"("busine
 CREATE UNIQUE INDEX "StaffAvailability_staffId_dayOfWeek_key" ON "StaffAvailability"("staffId", "dayOfWeek");
 
 -- CreateIndex
-CREATE INDEX "StaffException_staffId_date_idx" ON "StaffException"("staffId", "date");
-
--- CreateIndex
 CREATE UNIQUE INDEX "StaffException_staffId_date_key" ON "StaffException"("staffId", "date");
-
--- CreateIndex
-CREATE INDEX "Service_businessId_idx" ON "Service"("businessId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ServiceStaff_serviceId_staffId_key" ON "ServiceStaff"("serviceId", "staffId");
 
 -- CreateIndex
-CREATE INDEX "Booking_businessId_startTime_idx" ON "Booking"("businessId", "startTime");
-
--- CreateIndex
-CREATE INDEX "Booking_staffId_idx" ON "Booking"("staffId");
-
--- CreateIndex
-CREATE INDEX "Booking_customerId_idx" ON "Booking"("customerId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Payment_bookingId_key" ON "Payment"("bookingId");
-
--- CreateIndex
-CREATE INDEX "Payment_businessId_idx" ON "Payment"("businessId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Commission_paymentId_key" ON "Commission"("paymentId");
-
--- CreateIndex
-CREATE INDEX "LedgerEntry_walletType_idx" ON "LedgerEntry"("walletType");
-
--- CreateIndex
-CREATE INDEX "LedgerEntry_businessId_idx" ON "LedgerEntry"("businessId");
-
--- CreateIndex
-CREATE INDEX "Settlement_businessId_status_idx" ON "Settlement"("businessId", "status");
-
--- CreateIndex
-CREATE INDEX "OtpCode_expiresAt_idx" ON "OtpCode"("expiresAt");
+CREATE UNIQUE INDEX "Commission_bookingId_key" ON "Commission"("bookingId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Favorite_userId_businessId_key" ON "Favorite"("userId", "businessId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Discount_code_key" ON "Discount"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "DiscountUsage_discountId_userId_bookingId_key" ON "DiscountUsage"("discountId", "userId", "bookingId");
 
 -- AddForeignKey
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -406,7 +440,10 @@ ALTER TABLE "Payment" ADD CONSTRAINT "Payment_bookingId_fkey" FOREIGN KEY ("book
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_verifiedById_fkey" FOREIGN KEY ("verifiedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Commission" ADD CONSTRAINT "Commission_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "Payment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Commission" ADD CONSTRAINT "Commission_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Commission" ADD CONSTRAINT "Commission_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LedgerEntry" ADD CONSTRAINT "LedgerEntry_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "Payment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -425,3 +462,24 @@ ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StaffServiceChangeRequest" ADD CONSTRAINT "StaffServiceChangeRequest_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "StaffMember"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StaffServiceChangeRequest" ADD CONSTRAINT "StaffServiceChangeRequest_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Discount" ADD CONSTRAINT "Discount_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DiscountUsage" ADD CONSTRAINT "DiscountUsage_discountId_fkey" FOREIGN KEY ("discountId") REFERENCES "Discount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DiscountUsage" ADD CONSTRAINT "DiscountUsage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DiscountUsage" ADD CONSTRAINT "DiscountUsage_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DiscountUsage" ADD CONSTRAINT "DiscountUsage_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "Payment"("id") ON DELETE SET NULL ON UPDATE CASCADE;

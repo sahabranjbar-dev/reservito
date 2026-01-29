@@ -1,7 +1,6 @@
 "use client";
 
 import { StatusBadge } from "@/components";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import {
@@ -52,50 +51,6 @@ const UserReservations = ({ bookings }: Props) => {
     if (!confirm("آیا مطمئن هستید که می‌خواهید این رزرو را کنسل کنید؟")) {
       return;
     }
-  };
-
-  const getStatusBadge = (status: BookingStatus) => {
-    const config: Record<BookingStatus, { label: string; color: string }> = {
-      CONFIRMED: {
-        label: "تایید شده",
-        color: "bg-green-100 text-green-700 border-green-200",
-      },
-      AWAITING_CONFIRMATION: {
-        label: "در انتظار تائید",
-        color: "bg-amber-100 text-amber-700 border-amber-200",
-      },
-      AWAITING_PAYMENT: {
-        label: "در انتظار پرداخت",
-        color: "bg-amber-100 text-amber-700 border-amber-200",
-      },
-      COMPLETED: {
-        label: "تکمیل شده",
-        color: "bg-slate-100 text-slate-600 border-slate-200",
-      },
-      CANCELED: {
-        label: "لغو شده",
-        color: "bg-red-50 text-red-600 border-red-100",
-      },
-      REJECTED: {
-        label: "لغو شده",
-        color: "bg-red-50 text-red-600 border-red-100",
-      },
-      NO_SHOW_CUSTOMER: {
-        label: "لغو شده",
-        color: "bg-red-50 text-red-600 border-red-100",
-      },
-      NO_SHOW_STAFF: {
-        label: "لغو شده",
-        color: "bg-red-50 text-red-600 border-red-100",
-      },
-    };
-    const { label, color } =
-      config[status as keyof typeof config] || config["CANCELED"];
-    return (
-      <Badge variant="outline" className={cn("font-bold", color)}>
-        {label}
-      </Badge>
-    );
   };
 
   return (
@@ -158,7 +113,7 @@ const UserReservations = ({ bookings }: Props) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {bookings.map((booking) => {
+            {bookings.map((booking, index) => {
               const payedAmount = booking.payments.find(
                 (item) => item.bookingId === booking.id,
               )?.amount as number;
@@ -176,6 +131,7 @@ const UserReservations = ({ bookings }: Props) => {
                       {/* اطلاعات بیزنس و سرویس */}
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
+                          {index + 1}-
                           <h3 className="font-bold text-slate-900 text-lg">
                             {booking.business.businessName}
                           </h3>

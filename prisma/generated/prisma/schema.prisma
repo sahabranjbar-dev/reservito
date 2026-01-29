@@ -8,12 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/**
- * =======================
- * ENUMS
- * =======================
- */
-
 enum Role {
   SUPER_ADMIN
   CUSTOMER
@@ -99,27 +93,11 @@ enum StaffServiceChangeStatus {
   REJECTED
 }
 
-enum DiscountType {
-  PERCENTAGE
-  FIXED_AMOUNT
+enum FinancialStatus {
+  UNPAID
+  PAID
+  FINALIZED
 }
-
-enum DiscountScope {
-  PLATFORM // کد عمومی پلتفرم
-  BUSINESS // مخصوص یک بیزنس
-}
-
-enum DiscountStatus {
-  ACTIVE
-  INACTIVE
-  EXPIRED
-}
-
-/**
- * =======================
- * USER & AUTH
- * =======================
- */
 
 model User {
   id String @id @default(cuid())
@@ -162,12 +140,6 @@ model UserRole {
 
   @@unique([userId, role])
 }
-
-/**
- * =======================
- * BUSINESS
- * =======================
- */
 
 model Business {
   id   String @id @default(cuid())
@@ -220,6 +192,8 @@ model Business {
   settlements   Settlement[]
   ledgerEntries LedgerEntry[]
   discounts     Discount[]
+
+  commissions Commission[]
 }
 
 model BusinessMember {
@@ -233,12 +207,6 @@ model BusinessMember {
 
   @@unique([userId, businessId])
 }
-
-/**
- * =======================
- * STAFF
- * =======================
- */
 
 model StaffMember {
   id String @id @default(cuid())
@@ -299,12 +267,6 @@ model StaffException {
   @@unique([staffId, date])
 }
 
-/**
- * =======================
- * SERVICE
- * =======================
- */
-
 model Service {
   id          String  @id @default(cuid())
   name        String
@@ -342,12 +304,6 @@ model ServiceStaff {
   @@unique([serviceId, staffId])
 }
 
-/**
- * =======================
- * BOOKING & PAYMENT
- * =======================
- */
-
 model Booking {
   id String @id @default(cuid())
 
@@ -369,8 +325,11 @@ model Booking {
   status     BookingStatus @default(AWAITING_PAYMENT)
   totalPrice Int
 
-  customerNotes String?
-  internalNotes String?
+  finalPrice      Int
+  penaltyAmount   Int             @default(0)
+  financialStatus FinancialStatus @default(UNPAID)
+  customerNotes   String?
+  internalNotes   String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -379,9 +338,10 @@ model Booking {
   createdById String?
   createdBy   User?   @relation("BookingCreatedBy", fields: [createdById], references: [id])
 
-  payments Payment[]
-
+  payments       Payment[]
   discountUsages DiscountUsage[]
+
+  commission Commission?
 }
 
 model Payment {
@@ -408,77 +368,51 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  discountId String?
-  discount   Discount? @relation(fields: [discountId], references: [id])
-
   discountUsages DiscountUsage[]
-
-  ledgerEntries LedgerEntry[]
-  commission    Commission?
+  ledgerEntries  LedgerEntry[]
 }
 
 model Commission {
-  id String @id @default(cuid())
-
-  paymentId String  @unique
-  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-
+  id            String    @id @default(cuid())
+  bookingId     String    @unique
+  booking       Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  businessId    String
+  business      Business  @relation(fields: [businessId], references: [id])
   grossAmount   Int
   platformFee   Int
   businessShare Int
-  taxAmount     Int?
-
-  createdAt DateTime @default(now())
+  isSettled     Boolean   @default(false)
+  settledAt     DateTime?
+  createdAt     DateTime  @default(now())
 }
 
-/**
- * =======================
- * LEDGER & SETTLEMENT
- * =======================
- */
-
 model LedgerEntry {
-  id String @id @default(cuid())
-
-  walletType WalletType
-  entryType  LedgerEntryType
-  amount     Int
-
-  paymentId String?
-  payment   Payment? @relation(fields: [paymentId], references: [id])
-
+  id           String          @id @default(cuid())
+  walletType   WalletType
+  entryType    LedgerEntryType
+  amount       Int
+  paymentId    String?
+  payment      Payment?        @relation(fields: [paymentId], references: [id])
   settlementId String?
-  settlement   Settlement? @relation(fields: [settlementId], references: [id])
-
-  businessId String?
-  business   Business? @relation(fields: [businessId], references: [id])
-
-  createdAt DateTime @default(now())
+  settlement   Settlement?     @relation(fields: [settlementId], references: [id])
+  businessId   String?
+  business     Business?       @relation(fields: [businessId], references: [id])
+  createdAt    DateTime        @default(now())
 }
 
 model Settlement {
-  id String @id @default(cuid())
-
+  id         String           @id @default(cuid())
   businessId String
-  business   Business @relation(fields: [businessId], references: [id])
-
-  amount Int
-  status SettlementStatus @default(PENDING)
-
-  fromDate DateTime
-  toDate   DateTime
-
-  paidAt    DateTime?
-  createdAt DateTime  @default(now())
+  business   Business         @relation(fields: [businessId], references: [id])
+  amount     Int
+  status     SettlementStatus @default(PENDING)
+  fromDate   DateTime
+  toDate     DateTime
+  paidAt     DateTime?
+  createdAt  DateTime         @default(now())
 
   ledgerEntries LedgerEntry[]
 }
-
-/**
- * =======================
- * OTHERS
- * =======================
- */
 
 model OtpCode {
   phone     String   @id
@@ -504,14 +438,11 @@ model Favorite {
 }
 
 model StaffServiceChangeRequest {
-  id String @id @default(cuid())
-
-  staffId String
-  staff   StaffMember @relation(fields: [staffId], references: [id])
-
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
-
+  id                   String                   @id @default(cuid())
+  staffId              String
+  staff                StaffMember              @relation(fields: [staffId], references: [id])
+  serviceId            String
+  service              Service                  @relation(fields: [serviceId], references: [id])
   requestedPrice       Int?
   requestedActive      Boolean?
   requestedName        String?
@@ -519,42 +450,52 @@ model StaffServiceChangeRequest {
   requestedDuration    Int?
   status               StaffServiceChangeStatus @default(PENDING)
   rejectionReason      String?
+  createdAt            DateTime                 @default(now())
+  reviewedAt           DateTime?
+}
 
-  createdAt  DateTime  @default(now())
-  reviewedAt DateTime?
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum DiscountScope {
+  PLATFORM
+  BUSINESS
+}
+
+enum DiscountStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
+enum DiscountUsageStatus {
+  RESERVED
+  CONFIRMED
+  CANCELED
 }
 
 model Discount {
-  id String @id @default(cuid())
-
-  code  String       @unique
-  type  DiscountType
-  value Int // درصد یا مبلغ
-
-  scope DiscountScope @default(PLATFORM)
-
-  businessId String?
-  business   Business? @relation(fields: [businessId], references: [id])
-
-  maxDiscount    Int? // سقف تخفیف
-  minOrderAmount Int? // حداقل مبلغ سفارش
-
-  usageLimit Int? // کل دفعات مجاز
-  usedCount  Int  @default(0)
-
-  perUserLimit Int? // محدودیت برای هر کاربر
-
-  startsAt  DateTime
-  expiresAt DateTime
-
-  status DiscountStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String         @id @default(cuid())
+  code           String         @unique
+  type           DiscountType
+  value          Int
+  scope          DiscountScope  @default(PLATFORM)
+  businessId     String?
+  business       Business?      @relation(fields: [businessId], references: [id])
+  maxDiscount    Int?
+  minOrderAmount Int?
+  usageLimit     Int?
+  usedCount      Int            @default(0)
+  perUserLimit   Int?
+  startsAt       DateTime
+  expiresAt      DateTime
+  status         DiscountStatus @default(ACTIVE)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   usages DiscountUsage[]
-
-  payments Payment[]
 }
 
 model DiscountUsage {
@@ -575,6 +516,8 @@ model DiscountUsage {
   discountAmount Int
 
   usedAt DateTime @default(now())
+
+  disCountUsageStatus DiscountUsageStatus @default(RESERVED)
 
   @@unique([discountId, userId, bookingId])
 }

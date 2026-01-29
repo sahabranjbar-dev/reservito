@@ -259,11 +259,15 @@ const PaymentVerification = () => {
               result.message ||
                 "تراکنش توسط بانک رد شد. در صورت کسر وجه، مبلغ تا ۷۲ ساعت کاری به حساب شما بازگردانده می‌شود.",
             );
+            handleRedirect(`/payment/failure?paymentId=${result.paymentId}`, 3);
             break;
           default:
             setStatus("error");
             setMessage("وضعیت پرداخت نامشخص است");
-            handleRedirect("/", 15);
+            handleRedirect(
+              `/payment/failure?paymentId=${result.paymentId}&error=INVALID_CARD`,
+              7,
+            );
         }
       } catch (error: any) {
         console.error("Payment verification failed:", error);

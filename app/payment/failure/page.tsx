@@ -108,7 +108,7 @@ const PaymentFailure = () => {
       setAutoRedirectTimer((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // router.push("/dashboard");
+          router.push("/dashboard");
           return 0;
         }
         return prev - 1;
