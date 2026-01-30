@@ -1,9 +1,8 @@
 "use client";
-import { signOut } from "next-auth/react";
-import React, { useCallback } from "react";
-import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 const SignoutButton = () => {
   const pathname = usePathname();
@@ -19,7 +18,7 @@ const SignoutButton = () => {
   };
   return (
     <Button
-      leftIcon={<LogOut />}
+      leftIcon={<LogOut className="text-white" />}
       variant={"destructive"}
       className="w-full"
       onClick={signoutHandler}
