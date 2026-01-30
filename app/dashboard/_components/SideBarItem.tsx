@@ -89,14 +89,10 @@ const adminSideBarItems: SidebarItem[] = [
   { title: "کاربران", url: "/users", icon: Users },
   { title: "کسب‌وکارها", url: "/businesses", icon: Users },
   { title: "خدمات", url: "/services", icon: Workflow },
-  { title: "رزروهای کاربران", url: "/users-reservations", icon: Inbox },
+  { title: "رزروهای کاربران", url: "/reservations", icon: Inbox },
   { title: "پیام‌ها", url: "/messages", icon: Inbox },
   { title: "نقش‌ها و دسترسی‌ها", url: "/roles", icon: ShieldBan },
 ];
-
-// ==========================================
-// Hooks
-// ==========================================
 
 function useSidebarItems() {
   const { data: session, status } = useSession();
@@ -120,10 +116,6 @@ function useSidebarItems() {
   }, [session, status]);
 }
 
-// ==========================================
-// Components
-// ==========================================
-
 interface SidebarItemProps {
   item: SidebarItem;
   pathname: string;
@@ -133,9 +125,6 @@ function SidebarItemComponent({ item, pathname }: SidebarItemProps) {
   const Icon = item.icon;
   const hasChildren = !!item.children?.length;
   const session = useSession();
-
-  const isActive =
-    item.url === "/" ? pathname === "/" : pathname.startsWith(item.url ?? "");
 
   const isOpen =
     hasChildren &&
@@ -158,6 +147,10 @@ function SidebarItemComponent({ item, pathname }: SidebarItemProps) {
   };
 
   const role = getRole();
+  const isActive =
+    item.url === "/"
+      ? pathname === `/dashboard/${role}`
+      : pathname.includes(`/dashboard/${role}${item?.url}`);
 
   if (hasChildren) {
     return (

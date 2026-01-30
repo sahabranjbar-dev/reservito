@@ -1,7 +1,14 @@
 import prisma from "@/utils/prisma";
 import AdminBusinessesList from "./_components/AdminBusinessesList";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
 
 const AdminDashboardBusinessesPage = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return <div className="p-8 text-center">دسترسی غیرمجاز</div>;
+  }
   // دریافت لیست کسب و کارها به همراه مالکشان
   const businesses = await prisma.business.findMany({
     orderBy: {
@@ -26,7 +33,7 @@ const AdminDashboardBusinessesPage = async () => {
   return (
     <div className="container mx-auto py-8">
       {/* پاس دادن داده‌ها به کامپوننت کلاینت */}
-      <AdminBusinessesList initialBusinesses={serializedBusinesses} />
+      <AdminBusinessesList businesses={serializedBusinesses} />
     </div>
   );
 };

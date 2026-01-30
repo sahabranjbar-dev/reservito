@@ -205,3 +205,7 @@ export const getRole = (roles?: string[]) => {
 export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("fa-IR").format(amount);
 };
+
+export const copyTextToClipboard = (text: string): Promise<unknown> => {
+  return navigator.clipboard.writeText(text);
+};
