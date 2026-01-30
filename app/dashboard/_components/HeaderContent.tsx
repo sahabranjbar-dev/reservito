@@ -1,46 +1,18 @@
 "use client";
 
-import { SignoutButton } from "@/components"; // فرض بر اینکه این کامپوننت وجود دارد
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import {
-  Bell,
-  Building,
-  CreditCard,
-  HelpCircle,
-  Search,
-  Settings,
-  Shield,
-  User,
-} from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import Link from "next/link";
 import { CustomTrigger } from "./CustomTrigger";
 
 type UserRoleType = "admin" | "business" | "staff" | "customer";
 
 interface HeaderContentProps {
-  user: any;
   role: UserRoleType;
-  roleName: string;
-  initials: string;
 }
 
-export default function HeaderContent({
-  user,
-  role,
-  roleName,
-  initials,
-}: HeaderContentProps) {
+export default function HeaderContent({ role }: HeaderContentProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center px-4 md:px-6">
@@ -91,127 +63,6 @@ export default function HeaderContent({
             </span>
             <span className="sr-only">اعلان‌ها</span>
           </Button>
-
-          {/* منوی کاربر (Dropdown) */}
-          <DropdownMenu dir="rtl">
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-9 rounded-full gap-2 px-2"
-              >
-                <Avatar className="h-8 w-8 border">
-                  <AvatarImage
-                    src={user?.image || ""}
-                    alt={user?.name || "User"}
-                  />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-col items-start text-sm hidden md:flex">
-                  <span className="font-medium text-foreground">
-                    {user?.name?.split(" ")[0] || "کاربر"}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-normal">
-                    {roleName}
-                  </span>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-64 ml-10"
-              forceMount
-              sideOffset={7}
-            >
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {user?.name}
-                  </p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {user?.email}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/dashboard/${role}/profile`}
-                    className="cursor-pointer"
-                  >
-                    <span>پروفایل من</span>
-                    <User className="me-2 h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
-                {role === "business" && (
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href={`/dashboard/${role}/business`}
-                      className="cursor-pointer"
-                    >
-                      <span>کسب‌وکار من</span>
-                      <Building className="me-2 h-4 w-4" />
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/dashboard/${role}/billing`}
-                    className="cursor-pointer"
-                  >
-                    <span>صورتحساب</span>
-                    <CreditCard className="me-2 h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/dashboard/${role}/settings`}
-                    className="cursor-pointer"
-                  >
-                    <span>تنظیمات</span>
-                    <Settings className="me-2 h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/dashboard/${role}/help`}
-                    className="cursor-pointer"
-                  >
-                    <span>راهنما و پشتیبانی</span>
-                    <HelpCircle className="me-2 h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
-                {role === "admin" && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/admin" className="cursor-pointer">
-                      <Shield className="me-2 h-4 w-4" />
-                      <span>مدیریت سیستم</span>
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                asChild
-                className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:text-red-400 dark:focus:bg-red-900/20"
-              >
-                <div className="w-full">
-                  {/* فرض بر اینکه SignoutButton استایل خود را دارد، اما اینجا آن را در یک منوی استاندارد قرار می‌دهیم */}
-                  {/* اگر SignoutButton کاملاً استایل اختصاصی دارد، ممکن است نیاز به asChild داشته باشد */}
-                  <SignoutButton />
-                </div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </header>

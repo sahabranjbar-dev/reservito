@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { ConfirmProvider } from "@/container/ConfirmProvider/ConfirmProvider";
 
 interface Props {
   children: ReactNode;
@@ -24,9 +25,11 @@ export default async function LocaleLayout({ children }: Props) {
       <body>
         <SessionWrapper session={session}>
           <QueryClientWrapper>
-            <Header />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
+            <ConfirmProvider>
+              <Header />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+            </ConfirmProvider>
           </QueryClientWrapper>
         </SessionWrapper>
         <Toaster

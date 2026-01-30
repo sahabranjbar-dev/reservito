@@ -26,13 +26,13 @@ export async function cancelBookingAction(bookingId: string) {
     }
 
     // بررسی اینکه رزرو قابل کنسل باشد
-    if (booking.status === "CANCELLED" || booking.status === "COMPLETED") {
+    if (booking.status === "CANCELED" || booking.status === "COMPLETED") {
       return { success: false, error: "این رزرو قابل لغو نیست" };
     }
 
     await prisma.booking.update({
       where: { id: bookingId },
-      data: { status: "CANCELLED" },
+      data: { status: "CANCELED" },
     });
 
     revalidatePath("/dashboard/customer/reservations");

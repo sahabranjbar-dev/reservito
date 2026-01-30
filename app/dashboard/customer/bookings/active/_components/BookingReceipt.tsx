@@ -88,7 +88,7 @@ const IconWrapper = ({
   </div>
 );
 
-const ReservationReceipt = ({ booking }: Props) => {
+const BookingReceipt = ({ booking }: Props) => {
   // پیدا کردن پرداخت مربوطه
   const payment = booking.payments?.find(
     (item) => item.bookingId === booking.id,
@@ -731,4 +731,4 @@ END:VCALENDAR`;
   );
 };
 
-export default ReservationReceipt;
+export default BookingReceipt;

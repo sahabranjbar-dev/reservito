@@ -16,8 +16,7 @@ import { Calendar, Clock, MapPin, MoreVertical, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-// تایپ‌ها
-type Booking = {
+interface Booking {
   id: string;
   status: BookingStatus;
   totalPrice: number;
@@ -35,13 +34,13 @@ type Booking = {
     amount: number;
     bookingId: string;
   }[];
-};
+}
 
 interface Props {
   bookings: Booking[];
 }
 
-const UserReservations = ({ bookings }: Props) => {
+const UserBookings = ({ bookings }: Props) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"upcoming" | "history">(
     "upcoming",
@@ -52,7 +51,6 @@ const UserReservations = ({ bookings }: Props) => {
       return;
     }
   };
-
   return (
     <Card className="m-4">
       {/* هدر و تب‌ها */}
@@ -198,7 +196,7 @@ const UserReservations = ({ bookings }: Props) => {
                             <DropdownMenuItem
                               onClick={() =>
                                 router.push(
-                                  `/dashboard/customer/reservations/confirmation?bookingId=${booking.id}`,
+                                  `/dashboard/customer/bookings/active/${booking.id}`,
                                 )
                               }
                             >
@@ -230,4 +228,4 @@ const UserReservations = ({ bookings }: Props) => {
   );
 };
 
-export default UserReservations;
+export default UserBookings;

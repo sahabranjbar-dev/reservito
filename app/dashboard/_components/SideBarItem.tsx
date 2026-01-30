@@ -52,6 +52,20 @@ import {
   FileText,
   Percent,
   Image,
+  CalendarX,
+  Heart,
+  Sparkles,
+  UserCheck,
+  MessageSquareHeart,
+  Receipt,
+  Gift,
+  Award,
+  Headset,
+  Ticket,
+  UserCircle,
+  IdCard,
+  BellRing,
+  History,
 } from "lucide-react";
 import { Role } from "@/constants/enums";
 
@@ -133,22 +147,54 @@ const businessSideBarItems: SidebarItem[] = [
 ];
 
 // --- 2. Customer (مشتری) ---
+// --- Customer (مشتری) - نسخه حرفه‌ای و VIP ---
 const customerSideBarItems: SidebarItem[] = [
-  { title: "داشبورد", url: "/", icon: Home },
-  { title: "رزروهای فعال", url: "/bookings/active", icon: CalendarCheck },
-  { title: "تاریخچه رزروها", url: "/bookings/history", icon: CalendarClock },
-  { title: "علاقه‌مندی‌ها", url: "/favorites", icon: BookmarkCheck },
   {
-    title: "کیف پول و پرداخت",
-    icon: Wallet,
+    title: "داشبورد من",
+    url: "/",
+    icon: LayoutDashboard, // یا Gauge برای حس سرعت و کنترل
+  },
+  {
+    title: "نوبت‌دهی و خدمات",
+    icon: Calendar,
     children: [
-      { title: "تراکنش‌ها", url: "/wallet/transactions", icon: CreditCard },
-      { title: "کارت‌ها", url: "/wallet/cards", icon: CreditCard },
+      { title: "نوبت‌های فعال", url: "/bookings/active", icon: CalendarCheck },
+      { title: "تاریخچه نوبت‌ها", url: "/bookings/history", icon: History },
+      { title: "لغو یا تغییر", url: "/bookings/manage", icon: CalendarX }, // کنترل بیشتر به کاربر
     ],
   },
-  { title: "پیام‌ها", url: "/messages", icon: Inbox },
-  { title: "پشتیبانی", url: "/support", icon: HelpCircle },
-  { title: "تنظیمات پروفایل", url: "/settings", icon: Settings },
+  {
+    title: "علاقه‌مندی‌ها و خدمات",
+    icon: Heart,
+    children: [
+      { title: "خدمات محبوب", url: "/favorites/services", icon: Sparkles }, // حس ویژه بودن
+      { title: "پرسنل منتخب", url: "/favorites/staff", icon: UserCheck },
+      {
+        title: "نظرات من",
+        url: "/favorites/reviews",
+        icon: MessageSquareHeart,
+      },
+    ],
+  },
+  {
+    title: "کیف پول و امتیازات", // ترکیب مالی و وفاداری بسیار جذاب است
+    icon: Wallet,
+    children: [
+      { title: "تراکنش‌ها", url: "/wallet/transactions", icon: Receipt },
+      { title: "کارت‌های بانکی", url: "/wallet/cards", icon: CreditCard },
+      { title: "کارت‌های هدیه", url: "/wallet/gift", icon: Gift }, // آیتم جذاب برای مشتری
+      { title: "امتیازات وفاداری", url: "/wallet/points", icon: Award }, // بازی‌وارسازی (Gamification)
+    ],
+  },
+  {
+    title: "پیام‌ها و پشتیبانی",
+    icon: Headset, // یا MessageSquareMore
+    children: [
+      { title: "صندوق ورودی", url: "/messages/inbox", icon: Inbox },
+      { title: "تیکت‌های پشتیبانی", url: "/messages/tickets", icon: Ticket },
+      { title: "سوالات متداول", url: "/messages/faq", icon: HelpCircle },
+    ],
+  },
 ];
 
 // --- 3. Staff (پرسنل) ---
