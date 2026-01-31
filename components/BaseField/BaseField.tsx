@@ -35,7 +35,7 @@ const BaseField = ({
           <div
             className={clsx(
               "flex flex-col justify-between items-start gap-2 relative",
-              containerClassName
+              containerClassName,
             )}
           >
             {label && (
@@ -63,11 +63,11 @@ const BaseField = ({
               }}
               id={name}
               className={cn(
-                "disabled:cursor-not-allowed disabled:select-none",
+                "disabled:cursor-not-allowed disabled:select-none bg-white",
                 {
                   "border-red-500": formState.errors[name],
                 },
-                className
+                className,
               )}
               disabled={Boolean(disabled || loading)}
               loading={loading}
@@ -83,7 +83,7 @@ const BaseField = ({
                   {/* اگر چند خطا باشه (مثل superRefine یا refine چندتایی) */}
                   {formState.errors[name]?.type === "manual" &&
                     (formState.errors[name] as any)?.messages?.map(
-                      (msg: string, i: number) => <div key={i}>{msg}</div>
+                      (msg: string, i: number) => <div key={i}>{msg}</div>,
                     )}
                 </>
               )}

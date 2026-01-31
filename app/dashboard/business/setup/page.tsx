@@ -1,16 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 import { BaseField, Form, TextCore } from "@/components"; // مسیر کامپوننت‌های شما
-import { ArrowLeft, ArrowRight, Scissors, User, Calendar } from "lucide-react";
-import { setupBusinessAction } from "../actions";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, Calendar, Phone, User } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
+import { setupBusinessAction } from "../actions";
 
 const SetupWizard = () => {
+  const session = useSession();
   const router = useRouter();
   const [step, setStep] = useState(0);
+  const AllbusinessData = getBusinessTypeOptions();
+
+  const userBusiness = AllbusinessData.find(
+    (item) => item.id === session.data?.user.business?.businessType,
+  );
+
+  const BusinessIcon = userBusiness?.icon;
 
   const onSubmit = async (data: any) => {
     // اگر در مرحله آخر هستیم
@@ -60,7 +70,7 @@ const SetupWizard = () => {
             <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Scissors className="w-8 h-8" />
+                  {BusinessIcon && <BusinessIcon className="w-8 h-8" />}
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">
                   تعریف اولین خدمت
@@ -74,26 +84,27 @@ const SetupWizard = () => {
                 component={TextCore}
                 name="serviceName"
                 label="نام خدمت"
-                icon={<Scissors className="w-5 h-5" />}
+                icon={BusinessIcon && <BusinessIcon className="w-5 h-5" />}
                 required
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <BaseField
                   component={TextCore}
                   name="price"
-                  label="قیمت (تومان)"
+                  label="قیمت"
                   number
                   formatter
-                  required
+                  description="قیمت اختیاری است و به تومان وارد کنید"
                 />
                 <BaseField
                   component={TextCore}
                   name="duration"
-                  label="مدت زمان (دقیقه)"
+                  label="مدت زمان"
                   number
                   formatter
                   required
+                  description="مدت زمان بر حسب دقیقه وارد کنید"
                 />
               </div>
 
@@ -121,6 +132,14 @@ const SetupWizard = () => {
                 name="staffName"
                 label="نام پرسنل"
                 icon={<User className="w-5 h-5" />}
+                required
+              />
+
+              <BaseField
+                component={TextCore}
+                name="staffPhone"
+                label="شماره تماس پرسنل"
+                icon={<Phone className="w-5 h-5" />}
                 required
               />
 
@@ -153,6 +172,9 @@ const SetupWizard = () => {
                   زمان‌بندی هفتگی
                 </h2>
                 <p className="text-slate-500">در چه روزهایی باز هستید؟</p>
+                <span>
+                  این مرحله در قسمت زمان‌بندی داشبورد قابل تغییر می‌باشد
+                </span>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

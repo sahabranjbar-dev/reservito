@@ -79,7 +79,7 @@ export async function getBusinessMemberHandler(
       return { message: "آیدی کاربر الزامی است", success: false };
     }
 
-    const exist = await prisma.businessMember.findUnique({
+    const businessMember = await prisma.businessMember.findUnique({
       where: {
         userId_businessId: {
           userId,
@@ -91,7 +91,7 @@ export async function getBusinessMemberHandler(
       },
     });
 
-    return { ...exist };
+    return { businessMember };
   } catch (error) {
     console.error("Error getting staffMember data:", error);
     return {

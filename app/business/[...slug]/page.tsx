@@ -15,7 +15,7 @@ const BusinessPage = async ({ params }: Props) => {
     notFound();
   }
 
-  return <ClientBusinessDetail business={{ ...response.data }} />;
+  return <ClientBusinessDetail business={response.data as any} />;
 };
 
 export default BusinessPage;

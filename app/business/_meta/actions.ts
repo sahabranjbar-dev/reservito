@@ -78,6 +78,7 @@ export async function getBusinessBySlugAction(id: string) {
         services: {
           where: {
             isActive: true,
+            deletedAt: null,
             businessId: {
               equals: id,
             },
@@ -146,7 +147,7 @@ export async function getAvailableSlotsAction(params: {
               gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
               lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
             },
-            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["PENDING", "CONFIRMED"] },
           },
           select: { startTime: true, endTime: true },
         },
@@ -166,6 +167,10 @@ export async function getAvailableSlotsAction(params: {
 
     // تبدیل تاریخ ورودی به شمسی برای نمایش یا منطق داخلی اگر نیاز بود (اینجا از گریگوری استفاده می‌کنیم برای محاسبه)
     const dateObj = new Date(date);
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+    const isToday = date === todayStr;
 
     // --- FIX: تبدیل روز هفته جاوااسکریپت به دیتابیس ---
     // JS: Sun=0, Mon=1, ..., Sat=6
@@ -214,6 +219,11 @@ export async function getAvailableSlotsAction(params: {
         const potentialEnd = new Date(
           potentialStart.getTime() + serviceDuration * 60000,
         );
+
+        // ❌ حذف زمان‌های گذشته (فقط اگر تاریخ امروز است)
+        if (isToday && potentialStart <= now) {
+          continue;
+        }
 
         const isBooked = staff.bookings.some((booking) => {
           const existingStart = new Date(booking.startTime);

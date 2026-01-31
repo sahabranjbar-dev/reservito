@@ -144,11 +144,13 @@ function TextCore({
         placeholder={
           disabled
             ? ""
-            : placeholder
+            : typeof placeholder === "string"
               ? placeholder
-              : props?.label
-                ? `${props?.label} را وارد کنید...`
-                : ""
+              : typeof placeholder === "boolean"
+                ? undefined
+                : props?.label
+                  ? `${props?.label} را وارد کنید...`
+                  : ""
         }
         value={displayValue}
         onChange={handleChange}

@@ -1,21 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Lock,
-  Mail,
-  Eye,
-  EyeOff,
-  ChevronLeft,
-  Building2,
-  ChevronRight,
-} from "lucide-react";
 import { BaseField, CheckboxContainer, Form, TextCore } from "@/components";
 import { Button } from "@/components/ui/button";
+import {
+  ArrowLeft,
+  Building2,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+} from "lucide-react";
 import { signIn } from "next-auth/react";
-import { toast } from "sonner";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface IForm {
   identifier: string;

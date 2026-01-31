@@ -4,129 +4,136 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import prisma from "@/utils/prisma";
 import { authOptions } from "@/utils/authOptions";
+import { convertToEnglishDigits } from "@/utils/common";
+import { BusinessRole } from "@/constants/enums";
 
-export async function setupBusinessAction(formData: any) {
+interface Params {
+  staffPhone: string;
+  serviceName: string;
+  price: number;
+  duration: number;
+  staffName: string;
+}
+
+export async function setupBusinessAction({
+  duration,
+  price,
+  serviceName,
+  staffName,
+  staffPhone,
+}: Params) {
   const session = await getServerSession(authOptions);
+
   if (!session?.user?.id) {
-    return { success: false, error: "Unauthorized" };
+    return { success: false, error: "دسترسی غیرمجاز" };
   }
 
   const businessId = session.user.business?.id;
 
-  const business = await prisma.business.findUnique({
-    where: { id: businessId },
-  });
-
-  if (!business) {
-    return { success: false, error: "Business not found" };
+  if (!businessId) {
+    return { success: false, error: "کسب‌وکار یافت نشد" };
   }
 
   try {
-    // 1. ایجاد سرویس اول
-    const service = await prisma.service.create({
-      data: {
-        name: formData.serviceName,
-        price: formData.price,
-        duration: formData.duration,
-        businessId: business.id,
-      },
-    });
+    await prisma.$transaction(async (tx) => {
+      // 1. بررسی وجود بیزنس
+      const business = await tx.business.findUnique({
+        where: { id: businessId },
+      });
 
-    // 2. ایجاد پرسنل اول (که همان کاربر است یا جدید)
-    const staff = await prisma.staffMember.create({
-      data: {
-        name: formData.staffName,
-        businessId: business.id,
-      },
-    });
+      if (!business) {
+        throw new Error("BUSINESS_NOT_FOUND");
+      }
 
-    // 3. ارتباط سرویس با پرسنل
-    await prisma.serviceStaff.create({
-      data: {
-        serviceId: service.id,
-        staffId: staff.id,
-      },
-    });
+      // 2. ایجاد یا دریافت یوزر با نقش CUSTOMER
+      const user = await tx.user.upsert({
+        where: { phone: convertToEnglishDigits(staffPhone) },
+        update: {},
+        create: {
+          phone: convertToEnglishDigits(staffPhone),
+          roles: {
+            create: { role: "CUSTOMER" },
+          },
+        },
+        include: { roles: true },
+      });
 
-    // 4. ایجاد برنامه زمان‌بندی ساده (مثلاً شنبه تا جمعه ۹ تا ۱۷)
-    // در فرم شما چک‌باکس بود، اینجا ساده شده برای مثال
-    for (let i = 0; i < 6; i++) {
-      await prisma.staffAvailability.create({
+      const hasCustomerRole = user.roles.some((r) => r.role === "CUSTOMER");
+
+      if (!hasCustomerRole) {
+        await tx.userRole.create({
+          data: {
+            userId: user.id,
+            role: "CUSTOMER",
+          },
+        });
+      }
+
+      // 3. ایجاد پرسنل و اتصال به یوزر
+      const staff = await tx.staffMember.create({
         data: {
-          staffId: staff.id,
-          dayOfWeek: i, // 0: Sunday, ...
-          startTime: "09:00",
-          endTime: "17:00",
-          isClosed: false,
+          name: staffName,
+          phone: convertToEnglishDigits(staffPhone),
+          businessId: business.id,
+          userId: user.id,
         },
       });
-    }
+
+      await tx.businessMember.create({
+        data: {
+          userId: user.id,
+          businessId: businessId,
+          role: BusinessRole.STAFF,
+        },
+      });
+
+      // 4. ایجاد سرویس
+      const service = await tx.service.create({
+        data: {
+          name: serviceName,
+          price,
+          duration,
+          businessId: business.id,
+        },
+      });
+
+      // 5. اتصال سرویس به پرسنل
+      await tx.serviceStaff.create({
+        data: {
+          serviceId: service.id,
+          staffId: staff.id,
+        },
+      });
+
+      // 6. ایجاد برنامه کاری پیش‌فرض (۷ روز، ۹ تا ۱۷)
+      const availabilities = Array.from({ length: 7 }).map((_, dayOfWeek) => ({
+        staffId: staff.id,
+        dayOfWeek,
+        startTime: "09:00",
+        endTime: "17:00",
+        isClosed: false,
+      }));
+
+      await tx.staffAvailability.createMany({
+        data: availabilities,
+      });
+    });
 
     revalidatePath("/dashboard/business");
     return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false, error: "Failed to save setup" };
-  }
-}
+  } catch (error: any) {
+    console.error("SETUP_BUSINESS_ERROR:", error);
 
-interface IupsertService {
-  name: string;
-  price: number;
-  duration: number;
-  businessId: string;
-  id?: string;
-  staffIds: string[];
-}
-export async function upsertService(data: IupsertService) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return { success: false, error: "Unauthorized" };
-  }
-  const businessId = session.user?.business?.id ?? "";
-  try {
-    const { name, price, duration, id, staffIds } = data;
-
-    const service = await prisma.service.upsert({
-      where: { id: id ?? "" },
-      update: { name, price, duration },
-      create: { name, price, duration, businessId },
-    });
-
-    await prisma.serviceStaff.deleteMany({
-      where: { serviceId: service.id },
-    });
-
-    if (staffIds.length > 0) {
-      const validStaffs = await prisma.staffMember.findMany({
-        where: {
-          id: { in: staffIds },
-          businessId,
-          isActive: true,
-          deletedAt: null,
-        },
-        select: { id: true },
-      });
-
-      if (validStaffs.length !== staffIds.length) {
-        return {
-          success: false,
-          error: "پرسنل نامعتبر یا خارج از این کسب‌وکار انتخاب شده است",
-        };
-      }
-
-      await prisma.serviceStaff.createMany({
-        data: validStaffs.map((staff) => ({
-          serviceId: service.id,
-          staffId: staff.id,
-        })),
-      });
+    if (error.message === "BUSINESS_NOT_FOUND") {
+      return {
+        success: false,
+        error: "کسب‌وکار معتبر نیست",
+      };
     }
 
-    revalidatePath("/dashboard/business/services");
-    return { success: true, message: "عملیات با موفقیت انجام شد" };
-  } catch (error) {
-    console.error(error);
-    return { success: false, error: "خطای سرور" };
+    return {
+      success: false,
+      error: "خطا در راه‌اندازی اولیه کسب‌وکار",
+    };
   }
 }

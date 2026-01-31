@@ -6,7 +6,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
 import { BookingStatus } from "@/constants/enums";
+import { Metadata } from "next";
 // ایمپورت کردن Enumها از پرایسما
+
+export const metadata: Metadata = {
+  title: "رزرو‌های فعال |‌ رزرویتو",
+};
 
 export default async function ActiveBookingsPage() {
   const session = await getServerSession(authOptions);
@@ -24,11 +29,7 @@ export default async function ActiveBookingsPage() {
       customerId,
       // فقط نوبت‌هایی که یا نیاز به پرداخت دارند، یا منتظر تایید هستند، یا تایید شده‌اند
       status: {
-        in: [
-          BookingStatus.AWAITING_PAYMENT,
-          BookingStatus.AWAITING_CONFIRMATION,
-          BookingStatus.CONFIRMED,
-        ],
+        in: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
       },
     },
     include: {
@@ -51,12 +52,7 @@ export default async function ActiveBookingsPage() {
         select: {
           name: true,
           avatar: true,
-        },
-      },
-      // شامل کردن تخفیف‌ها برای نمایش در کارت
-      discountUsages: {
-        select: {
-          discountAmount: true,
+          phone: true,
         },
       },
     },
@@ -111,7 +107,7 @@ export default async function ActiveBookingsPage() {
         ) : (
           <div className="space-y-6">
             {bookings.map((booking) => (
-              <ActiveBookingCard key={booking.id} {...booking} />
+              <ActiveBookingCard key={booking.id} {...(booking as any)} />
             ))}
           </div>
         )}

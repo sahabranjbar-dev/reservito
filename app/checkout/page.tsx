@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AlertCircle,
+  ArrowRight,
   Calendar,
   CheckCircle2,
   Clock,
@@ -107,9 +108,6 @@ const CheckoutPage = () => {
 
       return response.bookingId;
     },
-    onSuccess: (bookingId) => {
-      router.push(`/payment?bookingId=${bookingId}`);
-    },
   });
 
   const handleConfirm = async () => {
@@ -168,13 +166,23 @@ const CheckoutPage = () => {
   return (
     <div className="container mx-auto px-4 py-8 min-h-[60vh]">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">تکمیل رزرو</h1>
+
           <p className="text-slate-500">
             اطلاعات نهایی و پرسنل مورد نظر خود را انتخاب کنید
           </p>
-        </div>
 
+          <Button
+            onClick={goToPreviousPage}
+            rightIcon={<ArrowRight />}
+            variant="ghost"
+            className="absolute top-0 right-0 font-semibold"
+          >
+            بازگشت
+          </Button>
+        </div>
+        <div></div>
         <Card className="shadow-xl border-slate-200 overflow-hidden">
           {/* 1. بخش خلاصه سرویس و زمان */}
           <CardHeader className="bg-slate-50/50 border-b">
@@ -334,32 +342,21 @@ const CheckoutPage = () => {
               </p>
             </div>
 
-            {!session?.user.id && (
+            {/* {!session?.user.id && (
               <div className="flex items-start gap-2 bg-amber-50 p-3 rounded-lg text-amber-700 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <p>برای ثبت نهایی باید وارد حساب کاربری خود شوید.</p>
               </div>
-            )}
+            )} */}
           </CardContent>
           <CardFooter className="flex flex-col gap-3 bg-slate-50/50 border-t pt-6">
-            <div className="flex justify-between items-center w-full text-lg mb-2">
-              <span className="font-bold text-slate-900">مبلغ کل:</span>
-              <span className="font-extrabold text-indigo-600">
-                {isServiceLoading
-                  ? "..."
-                  : new Intl.NumberFormat("fa-IR").format(
-                      serviceData?.price || 0,
-                    )}{" "}
-                تومان
-              </span>
-            </div>
             <Button
               onClick={handleConfirm}
               disabled={!selectedStaffId}
               loading={isStaffLoading || isStaffFetching || isPending}
               className="w-full h-12 text-base font-bold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all"
             >
-              پرداخت و ثبت نهایی
+              ثبت نهایی
             </Button>
             <Button
               variant="outline"

@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -33,15 +34,7 @@ const StatusBadge = ({ status }: Props) => {
       priority: number;
     }
   > = {
-    AWAITING_PAYMENT: {
-      label: "در انتظار پرداخت",
-      className:
-        "bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-700 border-amber-300/70 shadow-[0_2px_8px_-2px_rgba(251,191,36,0.2)]",
-      icon: Clock,
-      description: "در انتظار تکمیل فرآیند پرداخت",
-      priority: 1,
-    },
-    AWAITING_CONFIRMATION: {
+    PENDING: {
       label: "در انتظار تأیید",
       className:
         "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border-blue-300/70 shadow-[0_2px_8px_-2px_rgba(59,130,246,0.2)]",
@@ -121,8 +114,7 @@ const StatusBadge = ({ status }: Props) => {
             <Icon
               className={cn(
                 "w-3.5 h-3.5 relative z-10",
-                status === "AWAITING_PAYMENT" && "animate-pulse",
-                status === "AWAITING_CONFIRMATION" && "animate-pulse",
+                status === "PENDING" && "animate-pulse",
               )}
             />
 
@@ -133,9 +125,7 @@ const StatusBadge = ({ status }: Props) => {
             <div
               className={cn(
                 "absolute -top-1 -right-1 w-2 h-2 rounded-full",
-                status === "AWAITING_PAYMENT" && "bg-amber-500 animate-ping",
-                status === "AWAITING_CONFIRMATION" &&
-                  "bg-blue-500 animate-ping",
+                status === "PENDING" && "bg-blue-500 animate-ping",
                 status === "CONFIRMED" && "bg-emerald-500",
                 status === "COMPLETED" && "bg-slate-500",
                 status === "CANCELED" && "bg-rose-500",

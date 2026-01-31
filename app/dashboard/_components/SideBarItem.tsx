@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -12,66 +13,53 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Role } from "@/constants/enums";
 import { cn } from "@/lib/utils";
 import {
+  Award,
   Banknote,
   BarChart3,
-  Bell,
-  BookmarkCheck,
   Calendar,
   CalendarCheck,
   CalendarClock,
+  CalendarX,
   ChevronRight,
   ClipboardList,
   CreditCard,
+  FileText,
+  Gift,
   Globe,
+  Headset,
+  Heart,
   HelpCircle,
+  History,
   Home,
+  Image,
   Inbox,
   LayoutDashboard,
   ListChecks,
-  MapPin,
   MessageSquare,
+  MessageSquareHeart,
   Package,
-  Phone,
+  Percent,
+  Receipt,
   Settings,
   Shield,
   ShieldCheck,
-  Star,
-  Trophy,
-  Users,
-  UserRound,
-  Wallet,
-  Wrench,
-  type LucideIcon,
-  FileText,
-  Percent,
-  Image,
-  CalendarX,
-  Heart,
   Sparkles,
-  UserCheck,
-  MessageSquareHeart,
-  Receipt,
-  Gift,
-  Award,
-  Headset,
+  Star,
   Ticket,
-  UserCircle,
-  IdCard,
-  BellRing,
-  History,
+  Trophy,
+  UserCheck,
+  UserRound,
+  Users,
+  Wallet,
+  type LucideIcon,
 } from "lucide-react";
-import { Role } from "@/constants/enums";
-
-// ==========================================
-// Types
-// ==========================================
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
 type SidebarItem = {
   title: string;
@@ -83,10 +71,6 @@ type SidebarItem = {
 
 type UserRoleType = "admin" | "business" | "staff" | "customer";
 
-// ==========================================
-// Sidebar Configuration (Refined & Professional)
-// ==========================================
-
 // --- 1. Business Owner (مدیر کسب‌وکار) ---
 const businessSideBarItems: SidebarItem[] = [
   { title: "داشبورد مدیریتی", url: "/", icon: LayoutDashboard },
@@ -95,8 +79,8 @@ const businessSideBarItems: SidebarItem[] = [
     title: "نوبت‌دهی و تقویم",
     icon: Calendar,
     children: [
+      { title: "لیست رزروها", url: "/bookings", icon: ClipboardList },
       { title: "تقویم رزروها", url: "/bookings/calendar", icon: Calendar },
-      { title: "لیست رزروها", url: "/bookings/list", icon: ClipboardList },
       { title: "لیست انتظار", url: "/bookings/waiting", icon: CalendarClock },
     ],
   },
@@ -118,7 +102,7 @@ const businessSideBarItems: SidebarItem[] = [
     icon: Package,
     children: [
       {
-        title: "خدمات و قیمت‌ها",
+        title: "خدمات",
         url: "/resources/services",
         icon: ListChecks,
       },
@@ -127,20 +111,9 @@ const businessSideBarItems: SidebarItem[] = [
     ],
   },
   {
-    title: "مالی و حسابداری",
-    icon: Wallet,
-    children: [
-      { title: "تراکنش‌ها", url: "/finance/transactions", icon: CreditCard },
-      { title: "صورتحساب‌ها", url: "/finance/invoices", icon: FileText }, // Assuming FileText is imported or use ClipboardList
-      { title: "کدهای تخفیف", url: "/finance/discounts", icon: Banknote },
-      { title: "تسویه حساب‌ها", url: "/finance/settlements", icon: Wallet },
-    ],
-  },
-  {
     title: "گزارشات",
     icon: BarChart3,
     children: [
-      { title: "گزارش فروش", url: "/reports/sales", icon: BarChart3 },
       { title: "گزارش عملکرد", url: "/reports/performance", icon: Trophy },
     ],
   },
@@ -160,41 +133,31 @@ const customerSideBarItems: SidebarItem[] = [
     children: [
       { title: "نوبت‌های فعال", url: "/bookings/active", icon: CalendarCheck },
       { title: "تاریخچه نوبت‌ها", url: "/bookings/history", icon: History },
-      { title: "لغو یا تغییر", url: "/bookings/manage", icon: CalendarX }, // کنترل بیشتر به کاربر
     ],
   },
-  {
-    title: "علاقه‌مندی‌ها و خدمات",
-    icon: Heart,
-    children: [
-      { title: "خدمات محبوب", url: "/favorites/services", icon: Sparkles }, // حس ویژه بودن
-      { title: "پرسنل منتخب", url: "/favorites/staff", icon: UserCheck },
-      {
-        title: "نظرات من",
-        url: "/favorites/reviews",
-        icon: MessageSquareHeart,
-      },
-    ],
-  },
-  {
-    title: "کیف پول و امتیازات", // ترکیب مالی و وفاداری بسیار جذاب است
-    icon: Wallet,
-    children: [
-      { title: "تراکنش‌ها", url: "/wallet/transactions", icon: Receipt },
-      { title: "کارت‌های بانکی", url: "/wallet/cards", icon: CreditCard },
-      { title: "کارت‌های هدیه", url: "/wallet/gift", icon: Gift }, // آیتم جذاب برای مشتری
-      { title: "امتیازات وفاداری", url: "/wallet/points", icon: Award }, // بازی‌وارسازی (Gamification)
-    ],
-  },
-  {
-    title: "پیام‌ها و پشتیبانی",
-    icon: Headset, // یا MessageSquareMore
-    children: [
-      { title: "صندوق ورودی", url: "/messages/inbox", icon: Inbox },
-      { title: "تیکت‌های پشتیبانی", url: "/messages/tickets", icon: Ticket },
-      { title: "سوالات متداول", url: "/messages/faq", icon: HelpCircle },
-    ],
-  },
+  // {
+  //   title: "علاقه‌مندی‌ها و خدمات",
+  //   icon: Heart,
+  //   children: [
+  //     { title: "علاقه‌مندی‌ها", url: "/favorites", icon: Sparkles }, // حس ویژه بودن
+  //     { title: "خدمات محبوب", url: "/favorites/services", icon: Sparkles }, // حس ویژه بودن
+  //     { title: "پرسنل منتخب", url: "/favorites/staff", icon: UserCheck },
+  //     {
+  //       title: "نظرات من",
+  //       url: "/favorites/reviews",
+  //       icon: MessageSquareHeart,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "پیام‌ها و پشتیبانی",
+  //   icon: Headset, // یا MessageSquareMore
+  //   children: [
+  //     { title: "صندوق ورودی", url: "/messages/inbox", icon: Inbox },
+  //     { title: "تیکت‌های پشتیبانی", url: "/messages/tickets", icon: Ticket },
+  //     { title: "سوالات متداول", url: "/messages/faq", icon: HelpCircle },
+  //   ],
+  // },
 ];
 
 // --- 3. Staff (پرسنل) ---

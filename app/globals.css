@@ -2,12 +2,12 @@
 
 @font-face {
   font-family: "IranSans";
-  src: url("/fonts/IranSans-Regular.woff") format(".woff");
+  src: url("/public/fonts/IRANSansXFaNum-Bold.woff2") format(".woff2");
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("/fonts/IranSans-Bold.woff") format(".woff");
+  src: url("/public/fonts/IRANSansXFaNum-Bold.woff2") format(".woff2");
 }
 
 @import "tailwindcss";
@@ -198,7 +198,7 @@
   }
 
   body {
-    @apply bg-background text-foreground text-right font-sans antialiased;
+    @apply bg-background text-foreground text-right antialiased;
   }
 
   h1 {
@@ -240,5 +240,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "IranSans", sans-serif;
+  font-family: "IranSans" !important;
 }

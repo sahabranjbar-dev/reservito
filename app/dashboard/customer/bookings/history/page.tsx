@@ -6,6 +6,11 @@ import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
 import { History } from "lucide-react";
 import { BookingStatus } from "@/constants/enums";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "تاریخچه‌ی رزرو‌ها | رزرویتو",
+};
 
 export default async function BookingHistoryPage() {
   const session = await getServerSession(authOptions);
@@ -21,13 +26,7 @@ export default async function BookingHistoryPage() {
     where: {
       customerId,
       status: {
-        in: [
-          BookingStatus.COMPLETED,
-          BookingStatus.CANCELED,
-          BookingStatus.REJECTED,
-          BookingStatus.NO_SHOW_CUSTOMER,
-          BookingStatus.NO_SHOW_STAFF,
-        ],
+        notIn: [BookingStatus.PENDING],
       },
     },
     include: {
@@ -92,7 +91,7 @@ export default async function BookingHistoryPage() {
             </p>
           </div>
         ) : (
-          <HistoryListWrapper bookings={bookings} />
+          <HistoryListWrapper bookings={bookings as any} />
         )}
       </main>
     </div>

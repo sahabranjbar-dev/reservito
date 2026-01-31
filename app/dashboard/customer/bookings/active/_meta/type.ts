@@ -1,13 +1,10 @@
 // types/booking.ts
 
+import { BusinessType } from "@/constants/enums";
+
 // نقشه برداری رنگ‌ها برای وضعیت‌ها
 export const statusConfig = {
-  AWAITING_PAYMENT: {
-    label: "منتظر پرداخت",
-    color: "bg-amber-100 text-amber-700 border-amber-200",
-    icon: "CreditCard",
-  },
-  AWAITING_CONFIRMATION: {
+  PENDING: {
     label: "در انتظار تایید",
     color: "bg-blue-100 text-blue-700 border-blue-200",
     icon: "Clock",
@@ -57,7 +54,7 @@ export interface BookingCardProps {
   business: {
     id: string;
     businessName: string;
-    businessType: string;
+    businessType: BusinessType;
     logo?: string | null;
     address?: string | null;
   };
@@ -68,6 +65,7 @@ export interface BookingCardProps {
   staff: {
     name: string;
     avatar?: string | null;
+    phone: string;
   };
   discountUsages?: Array<{
     discountAmount: number;

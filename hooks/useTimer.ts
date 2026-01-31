@@ -47,15 +47,13 @@ export function useTimer({
       setTimer(newTimer);
       setIsRunning(autoStart);
     },
-    [initialSeconds, autoStart]
+    [initialSeconds, autoStart],
   );
 
   const restart = useCallback(() => {
     reset();
-    if (autoStart) {
-      setIsRunning(true);
-    }
-  }, [reset, autoStart]);
+    setIsRunning(true);
+  }, [reset]);
 
   // مدیریت تایمر
   useEffect(() => {

@@ -203,8 +203,7 @@ const UserBookings = ({ bookings }: Props) => {
                               مشاهده رسید
                             </DropdownMenuItem>
                             {(booking.status === BookingStatus.CONFIRMED ||
-                              booking.status ===
-                                BookingStatus.AWAITING_CONFIRMATION) && (
+                              booking.status === BookingStatus.PENDING) && (
                               <DropdownMenuItem
                                 onClick={() => handleCancel(booking.id)}
                                 className="text-red-600 focus:text-red-700"

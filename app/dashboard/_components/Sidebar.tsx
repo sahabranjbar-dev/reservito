@@ -94,15 +94,7 @@ const SidebarDashboard = async () => {
 
       <SidebarFooter className="m-0 p-0">
         <SidebarMenu className="bg-primary-50 m-0 p-0">
-          <SidebarMenuItem className="flex items-center gap-2 p-1 hover:bg-primary mx-2 rounded-lg hover:text-white">
-            <Link
-              href={`/dashboard/${role}/support`}
-              className="cursor-pointer flex items-center w-full"
-            >
-              <HelpCircle className="me-2 h-4 w-4" />
-              <span>راهنما و پشتیبانی</span>
-            </Link>
-          </SidebarMenuItem>
+          <SidebarMenuItem className="flex items-center gap-2 p-1 hover:bg-primary mx-2 rounded-lg hover:text-white"></SidebarMenuItem>
           <SidebarMenuItem className="flex items-center gap-2 p-1 hover:bg-primary mx-2 rounded-lg hover:text-white">
             <Link
               href={`/dashboard/${role}/settings`}

@@ -18,7 +18,6 @@ import ActionsButtons from "./ActionsButtons/ActionsButtons";
 import MultiselectCombobox from "./MultiselectCombobox/MultiselectCombobox";
 import SwitchContainer from "./SwitchContainer/SwitchContainer";
 import SwitchComponent from "./SwitchComponent/SwitchComponent";
-import DiscountInput from "./DiscountInput/DiscountInput";
 import StatusBadge from "./StatusBadge/StatusBadge";
 
 export {
@@ -42,6 +41,5 @@ export {
   BaseField,
   SignoutButton,
   ListHeader,
-  DiscountInput,
   StatusBadge,
 };

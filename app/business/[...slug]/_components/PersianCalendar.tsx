@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { toJalaali, toGregorian } from "jalaali-js";
@@ -8,6 +8,7 @@ import { toJalaali, toGregorian } from "jalaali-js";
 interface PersianCalendarProps {
   selectedDate: string | null; // فرمت YYYY-MM-DD
   onDateSelect: (date: string) => void; // کالبک برای تغییر تاریخ
+  moreInfo?: ReactNode;
 }
 
 const MONTHS = [
@@ -30,6 +31,7 @@ const WEEK_DAYS = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
 const PersianCalendar = ({
   selectedDate,
   onDateSelect,
+  moreInfo,
 }: PersianCalendarProps) => {
   // استیت‌های نمایانگر ماه جاری در تقویم (نه لزوماً تاریخ انتخاب شده)
   const [viewYear, setViewYear] = useState(0);
@@ -65,13 +67,13 @@ const PersianCalendar = ({
       viewMonth <= 6
         ? 31
         : viewMonth <= 11
-        ? 30
-        : (viewYear % 4 === 3 &&
-            (viewYear % 33) % 4 === 1 &&
-            (viewYear % 33) % 132 !== 1) ||
-          ((viewYear % 33) % 4 === 1 && (viewYear % 33) % 132 !== 1) // سال کبیسه
-        ? 30
-        : 29;
+          ? 30
+          : (viewYear % 4 === 3 &&
+                (viewYear % 33) % 4 === 1 &&
+                (viewYear % 33) % 132 !== 1) ||
+              ((viewYear % 33) % 4 === 1 && (viewYear % 33) % 132 !== 1) // سال کبیسه
+            ? 30
+            : 29;
 
     // 2. پیدا کردن اینکه روز اول ماه شمسی، چه روزی از هفته در تقویم میلادی است
     const gDate = toGregorian(viewYear, viewMonth, 1);
@@ -101,7 +103,7 @@ const PersianCalendar = ({
       const gDateItem = toGregorian(viewYear, viewMonth, i);
       const isoDate = `${gDateItem.gy}-${String(gDateItem.gm).padStart(
         2,
-        "0"
+        "0",
       )}-${String(gDateItem.gd).padStart(2, "0")}`;
 
       // بررسی اینکه آیا این روز "امروز" است؟ (برای هایلایت کردن اختیاری)
@@ -192,18 +194,19 @@ const PersianCalendar = ({
               disabled={day.isPast} // روزهای گذشته غیرفعال
               onClick={() => !day.isPast && handleDateClick(day.isoDate as any)}
               className={cn(
-                "py-2 rounded-lg text-sm font-medium transition-all relative",
+                "py-4 rounded-lg text-sm font-medium transition-all relative",
                 day.isSelected
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
                   : day.isPast
-                  ? "text-slate-200 cursor-not-allowed"
-                  : "text-slate-700 hover:bg-indigo-50 hover:text-indigo-600",
+                    ? "text-slate-200 cursor-not-allowed"
+                    : "text-slate-700 hover:bg-indigo-50 hover:text-indigo-600",
                 day.isToday &&
                   !day.isSelected &&
-                  "border border-indigo-300 text-indigo-600"
+                  "border border-indigo-300 text-indigo-600",
               )}
             >
               {new Intl.NumberFormat("fa-IR").format(day.value as any)}
+              {moreInfo ? moreInfo : null}
             </button>
           );
         })}

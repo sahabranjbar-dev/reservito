@@ -1,5 +1,5 @@
 import { ROLE_LABELS_EN, ROLE_LABELS_FA } from "@/constants/common";
-import { TimeSlot, UserRole } from "@/types/common";
+import { UserRole } from "@/types/common";
 import * as zod from "zod";
 
 type RoleSummary = {
@@ -23,6 +23,14 @@ export const convertToEnglishDigits = (input: string): string => {
     if (aIndex !== -1) return String(aIndex);
 
     return char;
+  });
+};
+
+const FARSI_DIGITS_ARRAY = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+
+export const convertToFarsiDigits = (input: string): string => {
+  return input.replace(/\d/g, (digit) => {
+    return FARSI_DIGITS_ARRAY[Number(digit)];
   });
 };
 
@@ -131,42 +139,6 @@ export function combineDateAndTime(date: Date, time: string) {
   return d;
 }
 
-export function calculateAvailableSlots(params: {
-  date: Date;
-  workingHour: {
-    startTime: string;
-    endTime: string;
-  };
-  reservations: { startAt: Date; endAt: Date }[];
-  duration: number;
-}): TimeSlot[] {
-  const { date, workingHour, reservations, duration } = params;
-
-  const dayStart = combineDateAndTime(date, workingHour.startTime);
-  const dayEnd = combineDateAndTime(date, workingHour.endTime);
-
-  const slots: TimeSlot[] = [];
-
-  let cursor = new Date(dayStart);
-
-  while (cursor.getTime() + duration * 60000 <= dayEnd.getTime()) {
-    const slotStart = new Date(cursor);
-    const slotEnd = new Date(cursor.getTime() + duration * 60000);
-
-    const hasConflict = reservations.some((r) => {
-      return slotStart < r.endAt && slotEnd > r.startAt;
-    });
-
-    if (!hasConflict) {
-      slots.push({ startAt: slotStart, endAt: slotEnd });
-    }
-
-    cursor = new Date(cursor.getTime() + duration * 60000);
-  }
-
-  return slots;
-}
-
 export const getSlug = (slug: string) => {
   return slug
     .trim()
@@ -209,3 +181,37 @@ export const formatCurrency = (amount: number) => {
 export const copyTextToClipboard = (text: string): Promise<unknown> => {
   return navigator.clipboard.writeText(text);
 };
+
+export const getFullDateTime = (date?: Date) => {
+  return date
+    ? new Intl.DateTimeFormat("fa-IR", {}).format(date) +
+        " " +
+        new Intl.DateTimeFormat("fa-IR", {
+          weekday: "long",
+        }).format(date) +
+        " " +
+        new Intl.DateTimeFormat("fa-IR", {
+          timeStyle: "medium",
+        }).format(date)
+    : "---";
+};
+
+export function validateEmail(
+  email?: string,
+  isRequired = true,
+): {
+  valid: boolean;
+  message: string;
+} {
+  if (!email && isRequired) {
+    return { valid: false, message: "ایمیل الزامی است" };
+  }
+
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  if (email && !regex.test(email)) {
+    return { valid: false, message: "فرمت ایمیل صحیح نیست" };
+  }
+
+  return { valid: true, message: "فرمت ایمیل درست می‌باشد" };
+}

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { BUSINESS_TYPE } from "@/constants/common";
 import { BusinessType } from "@/constants/enums";
-import { copyTextToClipboard } from "@/utils/common";
+import { copyTextToClipboard, getFullDateTime } from "@/utils/common";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import {
@@ -164,20 +164,6 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
     ? getStatusConfig(businessDetail.registrationStatus as any)
     : null;
 
-  const getFullDateTime = useCallback((date?: Date) => {
-    return date
-      ? new Intl.DateTimeFormat("fa-IR", {}).format(date) +
-          " " +
-          new Intl.DateTimeFormat("fa-IR", {
-            weekday: "long",
-          }).format(date) +
-          " " +
-          new Intl.DateTimeFormat("fa-IR", {
-            timeStyle: "medium",
-          }).format(date)
-      : "---";
-  }, []);
-
   const onRejectHandler = async () => {
     if (!businessDetail?.id) return;
     const reason = prompt("دلیل رد کسب‌وکار");
@@ -259,7 +245,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">
                   نرخ کمیسیون
                 </label>
@@ -267,7 +253,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
                   <Percent size={16} className="text-blue-600" />
                   <span>{businessDetail?.commissionRate}%</span>
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">
@@ -302,7 +288,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
                     منطقه زمانی
                   </label>
@@ -310,7 +296,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
                     <Globe size={14} className="text-gray-500" />
                     {businessDetail?.timezone}
                   </div>
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
@@ -334,7 +320,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
               تنظیمات پرداخت
             </h3>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <div
                 className={`p-3 rounded-lg border ${businessDetail?.allowOnlinePayment ? "border-green-200 bg-green-50" : "border-gray-200 bg-white"}`}
               >
@@ -366,7 +352,7 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
                   {businessDetail?.allowOfflinePayment ? "فعال" : "غیرفعال"}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

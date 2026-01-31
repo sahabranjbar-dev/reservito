@@ -20,8 +20,8 @@ import { getAvailableSlotsAction } from "../../_meta/actions";
 import { getBusinessTypeOptions } from "../../_meta/utils";
 import PersianCalendar from "./PersianCalendar"; // ایمپورت کامپوننت جدید
 import { useRouter, useSearchParams } from "next/navigation";
-import FavoriteButton from "@/app/dashboard/customer/bookmarks/_components/FavoriteButton";
 import { useSession } from "next-auth/react";
+import { convertToFarsiDigits } from "@/utils/common";
 
 // تایپ‌ها (بدون تغییر)
 type Service = {
@@ -75,7 +75,7 @@ const BusinessDetail = ({ business }: Props) => {
   const time = searchParams.get("time") || "";
 
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
-    serviceId
+    serviceId,
   );
   const [selectedDate, setSelectedDate] = useState<string | null>(date); // حالت فرمت YYYY-MM-DD
   const [selectedSlot, setSelectedSlot] = useState<string | null>(time);
@@ -103,7 +103,7 @@ const BusinessDetail = ({ business }: Props) => {
   };
 
   const selectedService = business.services.find(
-    (s) => s.id === selectedServiceId
+    (s) => s.id === selectedServiceId,
   );
   const totalPrice = selectedService ? selectedService.price : 0;
 
@@ -155,23 +155,9 @@ const BusinessDetail = ({ business }: Props) => {
                       className="bg-white/90 text-slate-700 border-slate-200"
                     >
                       {getBusinessTypeOptions().find(
-                        (t) => t.id === business.businessType
+                        (t) => t.id === business.businessType,
                       )?.titleFa || business.businessType}
                     </Badge>
-                    <div className="flex justify-end items-center gap-2">
-                      {/* <div className="flex items-center text-yellow-500 text-sm font-bold">
-                        <Star className="w-4 h-4 fill-yellow-500 mr-1" />
-                        4.8
-                      </div> */}
-                      <div>
-                        <FavoriteButton
-                          businessId={business.id}
-                          initialIsFavorite={business?.favorites?.some(
-                            (item) => item.userId === userId
-                          )}
-                        />
-                      </div>
-                    </div>
                   </div>
                   <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
                     {business.businessName}
@@ -232,7 +218,7 @@ const BusinessDetail = ({ business }: Props) => {
                     className={cn(
                       "bg-white p-5 rounded-2xl border border-slate-100 shadow-sm cursor-pointer transition-all hover:border-indigo-100 hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4",
                       selectedServiceId === service.id &&
-                        "border-indigo-500 ring-1 ring-indigo-500 bg-indigo-50/30"
+                        "border-indigo-500 ring-1 ring-indigo-500 bg-indigo-50/30",
                     )}
                   >
                     <div className="flex-1">
@@ -265,12 +251,14 @@ const BusinessDetail = ({ business }: Props) => {
                         )}
                       </div>
                     </div>
-                    <div className="text-left font-bold text-slate-900 text-lg">
-                      {new Intl.NumberFormat("fa-IR").format(service.price)}{" "}
-                      <span className="text-xs font-normal text-slate-500">
-                        تومان
-                      </span>
-                    </div>
+                    {service.price && (
+                      <div className="text-left font-bold text-slate-900 text-lg">
+                        {new Intl.NumberFormat("fa-IR").format(service.price)}{" "}
+                        <span className="text-xs font-normal text-slate-500">
+                          تومان
+                        </span>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
@@ -336,7 +324,7 @@ const BusinessDetail = ({ business }: Props) => {
                               "h-10 rounded-lg text-sm font-medium transition-all border relative overflow-hidden group",
                               status === "available"
                                 ? "bg-white border-slate-200 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50"
-                                : "bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed line-through select-none"
+                                : "bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed line-through select-none",
                             )}
                           >
                             <span
@@ -346,7 +334,7 @@ const BusinessDetail = ({ business }: Props) => {
                                   selectedSlot === time,
                               })}
                             >
-                              {time}
+                              {convertToFarsiDigits(time)}
                             </span>
                             {status !== "available" && (
                               <XCircle className="absolute inset-0 m-auto w-4 h-4 text-slate-200 opacity-0 group-hover:opacity-100" />
@@ -354,7 +342,7 @@ const BusinessDetail = ({ business }: Props) => {
                             {status === "available" &&
                               selectedSlot === time && (
                                 <div className="absolute inset-0 bg-indigo-600 text-white flex items-center justify-center">
-                                  {time}
+                                  {convertToFarsiDigits(time)}
                                 </div>
                               )}
                           </button>
@@ -371,21 +359,50 @@ const BusinessDetail = ({ business }: Props) => {
                 <Separator />
 
                 {/* 3. خلاصه و دکمه (بدون تغییر) */}
-                <div className="space-y-4 sticky bottom-2 left-0">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-500">خدمت انتخابی:</span>
-                    <span className="font-bold text-slate-900">
-                      {selectedService ? selectedService.name : "-"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg">
+                <div className="space-y-8">
+                  {selectedService && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-500">خدمت انتخابی:</span>
+                      <span className="font-bold text-slate-900">
+                        {selectedService ? selectedService.name : "-"}
+                      </span>
+                    </div>
+                  )}
+                  {selectedDate && (
+                    <div className="flex justify-between items-center">
+                      <span>تاریخ: </span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span>
+                          {new Intl.DateTimeFormat("fa", {
+                            weekday: "long",
+                          }).format(new Date(selectedDate))}
+                        </span>
+
+                        <span>
+                          {new Intl.DateTimeFormat("fa", {
+                            dateStyle: "long",
+                          }).format(new Date(selectedDate))}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedSlot && (
+                    <div className="flex justify-between items-center">
+                      <span>ساعت: </span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span>{convertToFarsiDigits(selectedSlot)}</span>
+                      </div>
+                    </div>
+                  )}
+                  {/* <div className="flex justify-between items-center text-lg">
                     <span className="font-bold text-slate-900">
                       مبلغ قابل پرداخت:
                     </span>
                     <span className="font-extrabold text-indigo-600">
                       {new Intl.NumberFormat("fa-IR").format(totalPrice)}
                     </span>
-                  </div>
+                  </div> */}
 
                   <Button
                     className="w-full h-12 text-base rounded-xl font-bold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"

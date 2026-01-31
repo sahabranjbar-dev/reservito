@@ -19,9 +19,7 @@ enum BusinessRole {
 }
 
 enum BookingStatus {
-  AWAITING_PAYMENT //هنوز پرداخت نشده
-
-  AWAITING_CONFIRMATION // پرداخت انجام شده، نیاز به تایید
+  PENDING // در انتظار تائید
 
   CONFIRMED //تایید شد، خدمت اجرا می‌شود
 
@@ -34,19 +32,6 @@ enum BookingStatus {
   NO_SHOW_CUSTOMER // مشتری نیامد
 
   NO_SHOW_STAFF // کارمند نیامد
-}
-
-enum PaymentMethod {
-  ONLINE
-  OFFLINE
-}
-
-enum PaymentStatus {
-  UNPAID
-  PENDING
-  PAID
-  FAILED
-  REFUNDED
 }
 
 enum BusinessType {
@@ -65,22 +50,6 @@ enum BusinessType {
   OTHER
 }
 
-enum WalletType {
-  PLATFORM
-  BUSINESS
-}
-
-enum LedgerEntryType {
-  CREDIT
-  DEBIT
-}
-
-enum SettlementStatus {
-  PENDING
-  PAID
-  FAILED
-}
-
 enum BusinessRegistrationStatus {
   PENDING
   APPROVED
@@ -93,42 +62,33 @@ enum StaffServiceChangeStatus {
   REJECTED
 }
 
-enum FinancialStatus {
-  UNPAID
-  PAID
-  FINALIZED
-}
-
 model User {
-  id               String            @id @default(cuid())
+  id              String            @id @default(cuid())
 
-  phone            String            @unique
-  email            String?           @unique
-  username         String?           @unique
-  passwordHash     String?
+  phone           String            @unique
 
-  fullName         String?
-  avatar           String?
+  email           String?           @unique
+  username        String?           @unique
+  passwordHash    String?
 
-  isActive         Boolean           @default(true)
-  lastLoginAt      DateTime?
-  createdAt        DateTime          @default(now())
-  deletedAt        DateTime?
+  fullName        String?
+  avatar          String?
 
-  roles            UserRole[]
-  favorites        Favorite[]
+  isActive        Boolean           @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime          @default(now())
+  deletedAt       DateTime?
 
-  businessMembers  BusinessMember[]
-  ownedBusinesses  Business[]
+  roles           UserRole[]
+  favorites       Favorite[]
 
-  bookings         Booking[]
-  createdBookings  Booking[]        @relation("BookingCreatedBy")
+  businessMembers BusinessMember[]
+  ownedBusinesses Business[]
 
-  verifiedPayments Payment[]        @relation("PaymentVerifiedBy")
+  bookings        Booking[]
+  createdBookings Booking[]        @relation("BookingCreatedBy")
 
-  staffMembers     StaffMember[]
-
-  discountUsages   DiscountUsage[]
+  staffMembers    StaffMember[]
 }
 
 model UserRole {
@@ -142,58 +102,43 @@ model UserRole {
 }
 
 model Business {
-  id                  String                      @id @default(cuid())
-  slug                String                      @unique
+  id                 String                      @id @default(cuid())
+  slug               String                      @unique
 
-  businessName        String
-  ownerName           String
+  businessName       String
+  ownerName          String
 
-  description         String?                     @db.Text
-  logo                String?
-  banner              String?
+  description        String?                     @db.Text
+  logo               String?
+  banner             String?
 
-  address             String?                     @db.Text
-  latitude            Float?
-  longitude           Float?
+  address            String?                     @db.Text
 
-  timezone            String                      @default("Asia/Tehran")
+  ownerId            String
+  owner              User                       @relation(fields: [ownerId], references: [id])
 
-  allowOnlinePayment  Boolean                     @default(true)
-  allowOfflinePayment Boolean                     @default(false)
+  identifier         String                      @unique
 
-  commissionRate      Int                         @default(10)
+  registrationStatus BusinessRegistrationStatus  @default(PENDING)
+  rejectionReason    String?
+  isActive           Boolean                     @default(true)
 
-  ownerId             String
-  owner               User                       @relation(fields: [ownerId], references: [id])
+  activatedAt        DateTime?
+  rejectedAt         DateTime?
 
-  identifier          String                      @unique
+  businessType       BusinessType                @default(OTHER)
 
-  registrationStatus  BusinessRegistrationStatus  @default(PENDING)
-  rejectionReason     String?
-  isActive            Boolean                     @default(true)
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
+  deletedAt          DateTime?
 
-  activatedAt         DateTime?
-  rejectedAt          DateTime?
+  favorites          Favorite[]
+  businessMembers    BusinessMember[]
 
-  businessType        BusinessType                @default(OTHER)
+  staffMembers       StaffMember[]
+  services           Service[]
 
-  createdAt           DateTime                    @default(now())
-  updatedAt           DateTime                    @updatedAt
-  deletedAt           DateTime?
-
-  favorites           Favorite[]
-  businessMembers     BusinessMember[]
-
-  staffMembers        StaffMember[]
-  services            Service[]
-
-  bookings            Booking[]
-  payments            Payment[]
-  settlements         Settlement[]
-  ledgerEntries       LedgerEntry[]
-  discounts           Discount[]
-
-  commissions         Commission[]
+  bookings           Booking[]
 }
 
 model BusinessMember {
@@ -272,12 +217,9 @@ model Service {
   name                String
   description         String?                      @db.Text
 
-  price               Int
+  price               Int?
   duration            Int
   capacity            Int                          @default(1)
-
-  depositRequired     Boolean                      @default(false)
-  depositAmount       Int?
 
   isActive            Boolean                      @default(true)
 
@@ -288,6 +230,10 @@ model Service {
   bookings            Booking[]
 
   staffChangeRequests StaffServiceChangeRequest[]
+
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
+  deletedAt           DateTime?
 }
 
 model ServiceStaff {
@@ -305,123 +251,44 @@ model ServiceStaff {
 }
 
 model Booking {
-  id              String           @id @default(cuid())
+  id            String         @id @default(cuid())
 
-  businessId      String
-  business        Business        @relation(fields: [businessId], references: [id])
-
-  customerId      String
-  customer        User            @relation(fields: [customerId], references: [id])
-
-  serviceId       String
-  service         Service         @relation(fields: [serviceId], references: [id])
-
-  staffId         String
-  staff           StaffMember     @relation(fields: [staffId], references: [id])
-
-  startTime       DateTime
-  endTime         DateTime
-
-  status          BookingStatus    @default(AWAITING_PAYMENT)
-  totalPrice      Int
-
-  finalPrice      Int
-  penaltyAmount   Int              @default(0)
-  financialStatus FinancialStatus  @default(UNPAID)
-  customerNotes   String?
-  internalNotes   String?
-
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  deletedAt       DateTime?
-
-  createdById     String?
-  createdBy       User?           @relation("BookingCreatedBy", fields: [createdById], references: [id])
-
-  payments        Payment[]
-  discountUsages  DiscountUsage[]
-
-  commission      Commission?
-}
-
-model Payment {
-  id             String           @id @default(cuid())
-
-  businessId     String
-  business       Business        @relation(fields: [businessId], references: [id])
-
-  bookingId      String
-  booking        Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-
-  method         PaymentMethod    @default(ONLINE)
-  amount         Int
-  status         PaymentStatus    @default(PENDING)
-
-  authority      String?
-  refId          String?
-  gatewayName    String?
-
-  verifiedById   String?
-  verifiedBy     User?           @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id])
-  verifiedAt     DateTime?
-
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-
-  discountUsages DiscountUsage[]
-  ledgerEntries  LedgerEntry[]
-}
-
-model Commission {
-  id            String     @id @default(cuid())
-  bookingId     String     @unique
-  booking       Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   businessId    String
-  business      Business  @relation(fields: [businessId], references: [id])
-  grossAmount   Int
-  platformFee   Int
-  businessShare Int
-  isSettled     Boolean    @default(false)
-  settledAt     DateTime?
-  createdAt     DateTime   @default(now())
+  business      Business      @relation(fields: [businessId], references: [id])
+
+  customerId    String
+  customer      User          @relation(fields: [customerId], references: [id])
+
+  serviceId     String
+  service       Service       @relation(fields: [serviceId], references: [id])
+
+  staffId       String
+  staff         StaffMember   @relation(fields: [staffId], references: [id])
+
+  startTime     DateTime
+  endTime       DateTime
+
+  status        BookingStatus  @default(PENDING)
+
+  customerNotes String?
+  internalNotes String?
+
+  canceledAt    DateTime?
+  cancelReason  String?
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  createdById   String?
+  createdBy     User?         @relation("BookingCreatedBy", fields: [createdById], references: [id])
+
+  @@index([serviceId, startTime])
+  @@index([staffId, startTime])
+  @@index([businessId, startTime])
+  @@index([status])
 }
 
-model LedgerEntry {
-  id           String           @id @default(cuid())
-  walletType   WalletType
-  entryType    LedgerEntryType
-  amount       Int
-  paymentId    String?
-  payment      Payment?        @relation(fields: [paymentId], references: [id])
-  settlementId String?
-  settlement   Settlement?     @relation(fields: [settlementId], references: [id])
-  businessId   String?
-  business     Business?       @relation(fields: [businessId], references: [id])
-  createdAt    DateTime         @default(now())
-}
-
-model Settlement {
-  id            String            @id @default(cuid())
-  businessId    String
-  business      Business         @relation(fields: [businessId], references: [id])
-  amount        Int
-  status        SettlementStatus  @default(PENDING)
-  fromDate      DateTime
-  toDate        DateTime
-  paidAt        DateTime?
-  createdAt     DateTime          @default(now())
-
-  ledgerEntries LedgerEntry[]
-}
-
-model OtpCode {
-  phone     String    @id
-  codeHash  String
-  expiresAt DateTime
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
 
 model Favorite {
   id         String    @id @default(cuid())
@@ -454,71 +321,12 @@ model StaffServiceChangeRequest {
   reviewedAt           DateTime?
 }
 
-enum DiscountType {
-  PERCENT
-  FIXED
+model OtpCode {
+  phone     String    @id
+  codeHash  String
+  expiresAt DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-enum DiscountScope {
-  PLATFORM
-  BUSINESS
-}
-
-enum DiscountStatus {
-  ACTIVE
-  INACTIVE
-  EXPIRED
-}
-
-enum DiscountUsageStatus {
-  RESERVED
-  CONFIRMED
-  CANCELED
-
-}
-
-model Discount {
-  id             String           @id @default(cuid())
-  code           String           @unique
-  type           DiscountType
-  value          Int
-  scope          DiscountScope    @default(PLATFORM)
-  businessId     String?
-  business       Business?       @relation(fields: [businessId], references: [id])
-  maxDiscount    Int?
-  minOrderAmount Int?
-  usageLimit     Int?
-  usedCount      Int              @default(0)
-  perUserLimit   Int?
-  startsAt       DateTime
-  expiresAt      DateTime
-  status         DiscountStatus   @default(ACTIVE)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-
-  usages         DiscountUsage[]
-}
-
-model DiscountUsage {
-  id                  String               @id @default(cuid())
-
-  discountId          String
-  discount            Discount            @relation(fields: [discountId], references: [id])
-
-  userId              String
-  user                User                @relation(fields: [userId], references: [id])
-
-  bookingId           String
-  booking             Booking             @relation(fields: [bookingId], references: [id])
-
-  paymentId           String?
-  payment             Payment?            @relation(fields: [paymentId], references: [id])
-
-  discountAmount      Int
-
-  usedAt              DateTime             @default(now())
-
-  disCountUsageStatus DiscountUsageStatus  @default(RESERVED)
-
-  @@unique([discountId, userId, bookingId])
-}

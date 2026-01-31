@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Calendar,
@@ -10,6 +11,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 // مپینگ رنگ وضعیت‌ها (با تغییرات جزئی برای تاریخچه)
 const getStatusStyle = (status: string) => {
@@ -86,8 +88,10 @@ export const HistoryBookingCard: React.FC<HistoryCardProps> = ({
         <div className="flex items-start gap-3 w-full sm:w-1/3">
           <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
             {business.logo ? (
-              <img
-                src={business.logo}
+              <Image
+                width={100}
+                height={100}
+                src={business.logo || "/images/placeholder.png"}
                 alt={business.businessName}
                 className="w-full h-full object-cover"
               />
@@ -113,12 +117,14 @@ export const HistoryBookingCard: React.FC<HistoryCardProps> = ({
             <h4 className="font-semibold text-slate-800 text-sm">
               {service.name}
             </h4>
-            <span className="font-bold text-slate-700 text-sm whitespace-nowrap">
-              {finalPrice.toLocaleString()}{" "}
-              <span className="text-[10px] font-normal text-slate-400">
-                تومان
+            {finalPrice && (
+              <span className="font-bold text-slate-700 text-sm whitespace-nowrap">
+                {finalPrice.toLocaleString()}{" "}
+                <span className="text-[10px] font-normal text-slate-400">
+                  تومان
+                </span>
               </span>
-            </span>
+            )}
           </div>
 
           <div className="flex items-center gap-4 text-xs text-slate-500">

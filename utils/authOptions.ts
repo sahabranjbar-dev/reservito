@@ -209,7 +209,8 @@ export const authOptions: AuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // هنگام login
       if (user) {
         token.id = user.id;
         token.phone = user.phone ?? null;
@@ -217,9 +218,17 @@ export const authOptions: AuthOptions = {
         token.business = user.business ?? null;
         token.name = user.name;
       }
+
+      // هنگام update از کلاینت
+      if (trigger === "update" && session?.user) {
+        token.phone = session.user.phone ?? token.phone;
+        token.roles = session.user.roles ?? token.roles;
+        token.business = session.user.business ?? token.business;
+        token.name = session.user.name ?? token.name;
+      }
+
       return token;
     },
-
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.phone = token.phone;

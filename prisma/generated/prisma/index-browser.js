@@ -123,6 +123,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   phone: 'phone',
+  isValidPhone: 'isValidPhone',
   email: 'email',
   username: 'username',
   passwordHash: 'passwordHash',
@@ -149,12 +150,6 @@ exports.Prisma.BusinessScalarFieldEnum = {
   logo: 'logo',
   banner: 'banner',
   address: 'address',
-  latitude: 'latitude',
-  longitude: 'longitude',
-  timezone: 'timezone',
-  allowOnlinePayment: 'allowOnlinePayment',
-  allowOfflinePayment: 'allowOfflinePayment',
-  commissionRate: 'commissionRate',
   ownerId: 'ownerId',
   identifier: 'identifier',
   registrationStatus: 'registrationStatus',
@@ -214,10 +209,11 @@ exports.Prisma.ServiceScalarFieldEnum = {
   price: 'price',
   duration: 'duration',
   capacity: 'capacity',
-  depositRequired: 'depositRequired',
-  depositAmount: 'depositAmount',
   isActive: 'isActive',
-  businessId: 'businessId'
+  businessId: 'businessId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ServiceStaffScalarFieldEnum = {
@@ -236,74 +232,14 @@ exports.Prisma.BookingScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
-  totalPrice: 'totalPrice',
-  finalPrice: 'finalPrice',
-  penaltyAmount: 'penaltyAmount',
-  financialStatus: 'financialStatus',
   customerNotes: 'customerNotes',
   internalNotes: 'internalNotes',
+  canceledAt: 'canceledAt',
+  cancelReason: 'cancelReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   createdById: 'createdById'
-};
-
-exports.Prisma.PaymentScalarFieldEnum = {
-  id: 'id',
-  businessId: 'businessId',
-  bookingId: 'bookingId',
-  method: 'method',
-  amount: 'amount',
-  status: 'status',
-  authority: 'authority',
-  refId: 'refId',
-  gatewayName: 'gatewayName',
-  verifiedById: 'verifiedById',
-  verifiedAt: 'verifiedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CommissionScalarFieldEnum = {
-  id: 'id',
-  bookingId: 'bookingId',
-  businessId: 'businessId',
-  grossAmount: 'grossAmount',
-  platformFee: 'platformFee',
-  businessShare: 'businessShare',
-  isSettled: 'isSettled',
-  settledAt: 'settledAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.LedgerEntryScalarFieldEnum = {
-  id: 'id',
-  walletType: 'walletType',
-  entryType: 'entryType',
-  amount: 'amount',
-  paymentId: 'paymentId',
-  settlementId: 'settlementId',
-  businessId: 'businessId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.SettlementScalarFieldEnum = {
-  id: 'id',
-  businessId: 'businessId',
-  amount: 'amount',
-  status: 'status',
-  fromDate: 'fromDate',
-  toDate: 'toDate',
-  paidAt: 'paidAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.OtpCodeScalarFieldEnum = {
-  phone: 'phone',
-  codeHash: 'codeHash',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.FavoriteScalarFieldEnum = {
@@ -328,34 +264,12 @@ exports.Prisma.StaffServiceChangeRequestScalarFieldEnum = {
   reviewedAt: 'reviewedAt'
 };
 
-exports.Prisma.DiscountScalarFieldEnum = {
-  id: 'id',
-  code: 'code',
-  type: 'type',
-  value: 'value',
-  scope: 'scope',
-  businessId: 'businessId',
-  maxDiscount: 'maxDiscount',
-  minOrderAmount: 'minOrderAmount',
-  usageLimit: 'usageLimit',
-  usedCount: 'usedCount',
-  perUserLimit: 'perUserLimit',
-  startsAt: 'startsAt',
+exports.Prisma.OtpCodeScalarFieldEnum = {
+  phone: 'phone',
+  codeHash: 'codeHash',
   expiresAt: 'expiresAt',
-  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DiscountUsageScalarFieldEnum = {
-  id: 'id',
-  discountId: 'discountId',
-  userId: 'userId',
-  bookingId: 'bookingId',
-  paymentId: 'paymentId',
-  discountAmount: 'discountAmount',
-  usedAt: 'usedAt',
-  disCountUsageStatus: 'disCountUsageStatus'
 };
 
 exports.Prisma.SortOrder = {
@@ -405,8 +319,7 @@ exports.BusinessRole = exports.$Enums.BusinessRole = {
 };
 
 exports.BookingStatus = exports.$Enums.BookingStatus = {
-  AWAITING_PAYMENT: 'AWAITING_PAYMENT',
-  AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
+  PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
   REJECTED: 'REJECTED',
   CANCELED: 'CANCELED',
@@ -415,67 +328,10 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
   NO_SHOW_STAFF: 'NO_SHOW_STAFF'
 };
 
-exports.FinancialStatus = exports.$Enums.FinancialStatus = {
-  UNPAID: 'UNPAID',
-  PAID: 'PAID',
-  FINALIZED: 'FINALIZED'
-};
-
-exports.PaymentMethod = exports.$Enums.PaymentMethod = {
-  ONLINE: 'ONLINE',
-  OFFLINE: 'OFFLINE'
-};
-
-exports.PaymentStatus = exports.$Enums.PaymentStatus = {
-  UNPAID: 'UNPAID',
-  PENDING: 'PENDING',
-  PAID: 'PAID',
-  FAILED: 'FAILED',
-  REFUNDED: 'REFUNDED'
-};
-
-exports.WalletType = exports.$Enums.WalletType = {
-  PLATFORM: 'PLATFORM',
-  BUSINESS: 'BUSINESS'
-};
-
-exports.LedgerEntryType = exports.$Enums.LedgerEntryType = {
-  CREDIT: 'CREDIT',
-  DEBIT: 'DEBIT'
-};
-
-exports.SettlementStatus = exports.$Enums.SettlementStatus = {
-  PENDING: 'PENDING',
-  PAID: 'PAID',
-  FAILED: 'FAILED'
-};
-
 exports.StaffServiceChangeStatus = exports.$Enums.StaffServiceChangeStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED'
-};
-
-exports.DiscountType = exports.$Enums.DiscountType = {
-  PERCENT: 'PERCENT',
-  FIXED: 'FIXED'
-};
-
-exports.DiscountScope = exports.$Enums.DiscountScope = {
-  PLATFORM: 'PLATFORM',
-  BUSINESS: 'BUSINESS'
-};
-
-exports.DiscountStatus = exports.$Enums.DiscountStatus = {
-  ACTIVE: 'ACTIVE',
-  INACTIVE: 'INACTIVE',
-  EXPIRED: 'EXPIRED'
-};
-
-exports.DiscountUsageStatus = exports.$Enums.DiscountUsageStatus = {
-  RESERVED: 'RESERVED',
-  CONFIRMED: 'CONFIRMED',
-  CANCELED: 'CANCELED'
 };
 
 exports.Prisma.ModelName = {
@@ -489,15 +345,9 @@ exports.Prisma.ModelName = {
   Service: 'Service',
   ServiceStaff: 'ServiceStaff',
   Booking: 'Booking',
-  Payment: 'Payment',
-  Commission: 'Commission',
-  LedgerEntry: 'LedgerEntry',
-  Settlement: 'Settlement',
-  OtpCode: 'OtpCode',
   Favorite: 'Favorite',
   StaffServiceChangeRequest: 'StaffServiceChangeRequest',
-  Discount: 'Discount',
-  DiscountUsage: 'DiscountUsage'
+  OtpCode: 'OtpCode'
 };
 
 /**

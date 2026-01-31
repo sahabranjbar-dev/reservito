@@ -49,7 +49,7 @@ export async function createBookingAction(params: {
       include: {
         bookings: {
           where: {
-            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["PENDING", "CONFIRMED"] },
             startTime: { lt: endTime },
             endTime: { gt: startTime },
           },
@@ -79,10 +79,8 @@ export async function createBookingAction(params: {
         staffId, // استفاده از پرسنل ارسالی
         startTime,
         endTime,
-        totalPrice: service.price,
         customerNotes,
-        status: "AWAITING_PAYMENT",
-        finalPrice: service.price,
+        status: "PENDING",
       },
     });
 
@@ -161,7 +159,7 @@ export async function getAvailableStaffAction(params: {
         bookings: {
           where: {
             // رزروهای تداخل دار
-            status: { in: ["AWAITING_CONFIRMATION", "CONFIRMED"] },
+            status: { in: ["PENDING", "CONFIRMED"] },
             startTime: { lt: potentialEnd },
             endTime: { gt: potentialStart },
           },

@@ -3,8 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import { Briefcase, Loader2, Shield, User } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getBusinessMemberHandler, setCustomerRole } from "./_meta/actions";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function HubPage() {
   const { data: session, status } = useSession();
@@ -25,11 +27,11 @@ export default function HubPage() {
     mutateAsync: getBusinessMember,
     isPending: getBusinessMemberLoading,
     data: businessMemberData,
-  } = useMutation<any>({
+  } = useMutation({
     mutationFn: async () => {
       if (!userId || !businessId) return;
       const res = await getBusinessMemberHandler(userId, businessId);
-      return res;
+      return res.businessMember;
     },
   });
 
@@ -58,6 +60,13 @@ export default function HubPage() {
     }
   }, [session, status, router, getBusinessMember, setCustomer]);
 
+  const businessOwnerButtonDisable = useMemo(() => {
+    return (
+      businessMemberData?.business.registrationStatus === "PENDING" ||
+      !businessMemberData?.business.isActive
+    );
+  }, [businessMemberData]);
+
   if (status === "loading" || setCustomerLoading || getBusinessMemberLoading)
     return (
       <div className="flex justify-center items-center min-h-screen gap-2">
@@ -76,15 +85,27 @@ export default function HubPage() {
 
         <div className="space-y-4">
           {businessMemberData?.role === "OWNER" && (
-            <button
-              onClick={() => router.push("/dashboard/business")}
+            <Button
+              tooltip={
+                businessOwnerButtonDisable
+                  ? "کسب‌وکار هنوز تائید و فعال نشده است."
+                  : undefined
+              }
+              variant="ghost"
+              onClick={() => {
+                if (businessOwnerButtonDisable) {
+                  toast.error("کسب‌وکار هنوز تائید و فعال نشده است.");
+                  return;
+                }
+                router.push("/dashboard/business");
+              }}
               className="w-full flex items-center justify-center gap-3 p-4 border-2 border-indigo-100 rounded-xl hover:bg-indigo-50 transition group"
             >
               <Briefcase className="text-indigo-600 group-hover:scale-110 transition" />
               <span className="font-bold text-gray-700">
                 مدیریت کسب‌وکار {businessMemberData?.business?.businessName}
               </span>
-            </button>
+            </Button>
           )}
 
           {businessMemberData?.role === "STAFF" && (
@@ -110,13 +131,14 @@ export default function HubPage() {
           )}
 
           {session?.user?.roles.includes("CUSTOMER") && (
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/dashboard/customer")}
               className="w-full flex items-center justify-center gap-3 p-4 border-2 border-green-100 rounded-xl hover:bg-green-50 transition group"
             >
               <User className="text-green-600 group-hover:scale-110 transition" />
               <span className="font-bold text-gray-700">مشتری / نوبت‌دهی</span>
-            </button>
+            </Button>
           )}
         </div>
       </div>

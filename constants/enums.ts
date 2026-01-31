@@ -25,9 +25,7 @@ export enum BusinessRole {
 }
 
 export enum BookingStatus {
-  AWAITING_PAYMENT = "AWAITING_PAYMENT", //هنوز پرداخت نشده
-
-  AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION", // پرداخت انجام شده، نیاز به تایید
+  PENDING = "PENDING", // در انتظار تائید
 
   CONFIRMED = "CONFIRMED", //تایید شد، خدمت اجرا می‌شود
 
@@ -39,56 +37,11 @@ export enum BookingStatus {
 
   NO_SHOW_CUSTOMER = "NO_SHOW_CUSTOMER", // مشتری نیامد
 
-  NO_SHOW_STAFF = "NO_SHOW_STAFF",
-}
-
-export enum PaymentMethod {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
-}
-
-export enum PaymentStatus {
-  UNPAID = "UNPAID",
-  PENDING = "PENDING",
-  PAID = "PAID",
-  FAILED = "FAILED",
-  REFUNDED = "REFUNDED",
-}
-
-export enum WalletType {
-  PLATFORM = "PLATFORM",
-  BUSINESS = "BUSINESS",
-}
-
-export enum LedgerEntryType {
-  CREDIT = "CREDIT",
-  DEBIT = "DEBIT",
-}
-
-export enum SettlementStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
-  FAILED = "FAILED",
+  NO_SHOW_STAFF = "NO_SHOW_STAFF", // کارمند نیامد
 }
 
 export enum BusinessRegistrationStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
-}
-
-export enum DiscountType {
-  PERCENT = "PERCENT",
-  FIXED = "FIXED",
-}
-
-export enum DiscountScope {
-  PLATFORM = "PLATFORM", // کد عمومی پلتفرم
-  BUSINESS = "BUSINESS", // مخصوص یک بیزنس
-}
-
-export enum DiscountStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  EXPIRED = "EXPIRED",
 }

@@ -52,8 +52,22 @@ const businessRules: Rule[] = [
           userId,
         },
       },
+      select: {
+        business: {
+          select: {
+            isActive: true,
+            registrationStatus: true,
+          },
+        },
+        role: true,
+      },
     });
-    if (businessMember?.role !== "OWNER")
+
+    if (
+      businessMember?.role !== "OWNER" ||
+      businessMember.business.registrationStatus !== "APPROVED" ||
+      !businessMember.business.isActive
+    )
       return redirectToLogin(req, "/business/login");
   },
 ];
@@ -174,7 +188,7 @@ export async function proxy(req: NextRequest) {
   const rules = getRulesForPath(pathname);
 
   for (const rule of rules) {
-    const result = rule(req, session);
+    const result = await rule(req, session);
     if (result instanceof NextResponse) return result;
   }
 

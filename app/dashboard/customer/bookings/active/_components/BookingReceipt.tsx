@@ -29,13 +29,9 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { businessTypeLabelsFa } from "@/app/business/_meta/utils";
-import {
-  BookingStatus,
-  BusinessType,
-  PaymentMethod,
-  PaymentStatus,
-} from "@/constants/enums";
+import { BookingStatus, BusinessType } from "@/constants/enums";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 type Booking = {
   id: string;
@@ -63,13 +59,6 @@ type Booking = {
     fullName: string | null;
     phone: string | null;
   };
-  payments?: {
-    status: PaymentStatus;
-    method: PaymentMethod;
-    amount: number;
-    bookingId: string;
-    businessId: string;
-  }[];
 };
 
 interface Props {
@@ -89,11 +78,7 @@ const IconWrapper = ({
 );
 
 const BookingReceipt = ({ booking }: Props) => {
-  // پیدا کردن پرداخت مربوطه
-  const payment = booking.payments?.find(
-    (item) => item.bookingId === booking.id,
-  );
-
+  const { back } = useRouter();
   // فرمت تاریخ برای تقویم
   const formatDateForICS = (date: Date) => {
     return date.toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
@@ -173,7 +158,6 @@ END:VCALENDAR`;
   // --- 5. تنظیمات وضعیت با useMemo برای بهینه‌سازی ---
   const statusConfig = useMemo(() => {
     const status = booking.status;
-    const paymentStatus = payment?.status;
 
     // حالت‌های موفقیت
     if (status === BookingStatus.CONFIRMED) {
@@ -203,33 +187,7 @@ END:VCALENDAR`;
       };
     }
 
-    // حالت‌های در انتظار
-    if (status === BookingStatus.AWAITING_PAYMENT) {
-      return {
-        title: "در انتظار پرداخت",
-        description: "لطفاً برای نهایی‌سازی رزرو، مبلغ را پرداخت کنید.",
-        gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
-        icon: AlertCircle,
-        iconColor: "text-amber-300",
-        textClass: "text-amber-50",
-        actionAllowed: true,
-        statusColor: "warning",
-      };
-    }
-
-    if (status === BookingStatus.AWAITING_CONFIRMATION) {
-      if (paymentStatus === "UNPAID" || paymentStatus === "PENDING") {
-        return {
-          title: "در انتظار پرداخت",
-          description: "پرداخت شما در حال بررسی است. لطفاً منتظر بمانید.",
-          gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
-          icon: Hourglass,
-          iconColor: "text-amber-300",
-          textClass: "text-amber-50",
-          actionAllowed: false,
-          statusColor: "warning",
-        };
-      }
+    if (status === BookingStatus.PENDING) {
       return {
         title: "در انتظار تأیید",
         description: "پرداخت موفق. منتظر تأیید نهایی کسب‌وکار باشید.",
@@ -306,7 +264,7 @@ END:VCALENDAR`;
       actionAllowed: false,
       statusColor: "neutral",
     };
-  }, [booking.status, payment?.status]);
+  }, [booking.status]);
 
   // --- فرمت تاریخ فارسی ---
   const formatPersianDate = (date: Date) => {
@@ -331,11 +289,6 @@ END:VCALENDAR`;
     const end = new Date(start.getTime() + booking.service.duration * 60000);
     return formatPersianTime(end);
   }, [booking.startTime, booking.service.duration]);
-
-  // --- بازگشت به لیست رزروها ---
-  const handleBackToList = () => {
-    window.history.back();
-  };
 
   // --- اشتراک‌گذاری ---
   const handleShare = () => {
@@ -362,8 +315,14 @@ END:VCALENDAR`;
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={handleBackToList}>
-              بازگشت به لیست
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                back();
+              }}
+            >
+              بازگشت
             </Button>
             <Button variant="outline" size="sm" onClick={handleShare}>
               <Share2 className="w-4 h-4 ml-2" />
@@ -617,60 +576,6 @@ END:VCALENDAR`;
                         </Button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* بخش سوم: اطلاعات مالی */}
-              <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-2xl border border-slate-200">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Wallet className="w-5 h-5 text-slate-600" />
-                      <h4 className="font-bold text-slate-800">
-                        اطلاعات پرداخت
-                      </h4>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <Badge
-                        className={cn(
-                          payment?.status === "PAID"
-                            ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                            : payment?.status === "PENDING"
-                              ? "bg-amber-100 text-amber-800 border-amber-200"
-                              : "bg-slate-100 text-slate-800 border-slate-200",
-                        )}
-                      >
-                        {payment?.status === "PAID"
-                          ? "پرداخت شده"
-                          : payment?.status === "PENDING"
-                            ? "در حال پرداخت"
-                            : "پرداخت نشده"}
-                      </Badge>
-                      <Badge variant="outline">
-                        {payment?.method === "OFFLINE"
-                          ? "پرداخت حضوری"
-                          : "پرداخت آنلاین"}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="text-left lg:text-right">
-                    <p className="text-sm text-slate-600 mb-1">مبلغ کل</p>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-slate-900">
-                        {new Intl.NumberFormat("fa-IR").format(
-                          booking.totalPrice,
-                        )}
-                      </span>
-                      <span className="text-lg text-slate-600">تومان</span>
-                    </div>
-                    {payment?.status === "PAID" && (
-                      <p className="text-sm text-emerald-600 mt-2">
-                        ✅ پرداخت در تاریخ{" "}
-                        {new Intl.DateTimeFormat("fa-IR").format(new Date())}
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>

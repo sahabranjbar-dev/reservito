@@ -1,4 +1,5 @@
 "use client";
+import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 import {
   BaseField,
   Combobox,
@@ -7,14 +8,12 @@ import {
   SwitchContainer,
   TextCore,
 } from "@/components";
-import { toast } from "sonner";
-import { useEffect } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
-import { updateBusiness } from "../_meta/actions/businessActions";
+import { Textarea } from "@/components/ui/textarea";
 import { BusinessRegistrationStatus, BusinessType } from "@/constants/enums";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { updateBusiness } from "../_meta/actions/businessActions";
 
 interface Props {
   businessData?: any;

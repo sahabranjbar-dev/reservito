@@ -43,7 +43,6 @@ const BusinessOwnerDashboardPage = async () => {
       bookings: {
         select: {
           id: true,
-          totalPrice: true,
           status: true,
           startTime: true,
           customer: {
@@ -62,7 +61,7 @@ const BusinessOwnerDashboardPage = async () => {
   });
 
   // اگر بیزنی وجود نداشت یا سرویسی نداشت، بفرست تنظیمات
-  if (!business) {
+  if (!business?.services.length) {
     redirect("/dashboard/business/setup");
   }
 
@@ -71,11 +70,6 @@ const BusinessOwnerDashboardPage = async () => {
   const totalServices = business.services.length;
   const totalStaff = business.staffMembers.length;
   const allBookings = business.bookings;
-
-  // محاسبه درآمد (فقط رزروهای پولی یا تایید شده)
-  const totalRevenue = allBookings
-    .filter((b) => b.status === "CONFIRMED" || b.status === "COMPLETED")
-    .reduce((sum, b) => sum + b.totalPrice, 0);
 
   // محاسبه رزروهای امروز
   const today = new Date();
@@ -90,7 +84,7 @@ const BusinessOwnerDashboardPage = async () => {
   // رزروهای آینده برای نمایش در جدول
   const upcomingBookings = allBookings
     .filter(
-      (b) => new Date(b.startTime) > new Date() && b.status !== "CANCELLED"
+      (b) => new Date(b.startTime) > new Date() && b.status !== "CANCELED",
     )
     .slice(0, 5); // ۵ رزرو بعدی
 
@@ -122,7 +116,7 @@ const BusinessOwnerDashboardPage = async () => {
 
       {/* کارت‌های آمار اصلی (Stats) */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
+        {/* <StatCard
           title="کل درآمد"
           value={`${new Intl.NumberFormat("fa-IR").format(totalRevenue)} `}
           unit="تومان"
@@ -130,7 +124,7 @@ const BusinessOwnerDashboardPage = async () => {
           trend="+۲۰.۱٪ نسبت به ماه قبل"
           trendUp
           bg="bg-emerald-500/10"
-        />
+        /> */}
         <StatCard
           title="رزروهای امروز"
           value={todaysBookings.length}
@@ -202,7 +196,7 @@ const BusinessOwnerDashboardPage = async () => {
                           <span className="w-1 h-1 bg-slate-300 rounded-full" />
                           {new Date(booking.startTime).toLocaleTimeString(
                             "fa-IR",
-                            { hour: "2-digit", minute: "2-digit" }
+                            { hour: "2-digit", minute: "2-digit" },
                           )}
                         </p>
                       </div>
@@ -218,19 +212,13 @@ const BusinessOwnerDashboardPage = async () => {
                           "text-xs",
                           booking.status === "CONFIRMED"
                             ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
-                            : "bg-amber-100 text-amber-700 border-amber-200"
+                            : "bg-amber-100 text-amber-700 border-amber-200",
                         )}
                       >
                         {booking.status === "CONFIRMED"
                           ? "تایید شده"
                           : "در انتظار"}
                       </Badge>
-                      <p className="text-xs text-slate-500 mt-1 font-medium">
-                        {new Intl.NumberFormat("fa-IR").format(
-                          booking.totalPrice
-                        )}{" "}
-                        T
-                      </p>
                     </div>
                   </div>
                 ))}
@@ -326,7 +314,7 @@ function StatCard({
             <span
               className={cn(
                 "text-xs font-medium",
-                trendUp ? "text-green-600" : "text-red-600"
+                trendUp ? "text-green-600" : "text-red-600",
               )}
             >
               {trend}

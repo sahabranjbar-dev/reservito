@@ -3,7 +3,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { Menu, PanelRightClose } from "lucide-react";
 
 export function CustomTrigger() {
-  const { toggleSidebar, open } = useSidebar();
+  const { toggleSidebar, open, isMobile } = useSidebar();
 
   return (
     <button
@@ -11,7 +11,7 @@ export function CustomTrigger() {
       className="flex items-center justify-center h-10 w-10 rounded-lg hover:bg-gray-100 transition-colors"
       aria-label={open ? "بستن نوار کناری" : "باز کردن نوار کناری"}
     >
-      {open ? (
+      {open && !isMobile ? (
         <PanelRightClose className="h-5 w-5 text-gray-700" />
       ) : (
         <div className="flex items-center gap-1">
