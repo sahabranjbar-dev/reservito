@@ -81,14 +81,20 @@ const Footer = () => {
               <li className="flex items-center gap-2">
                 <Clock className="w-4 h-4" /> شنبه تا پنج‌شنبه ۹ تا ۱۸
               </li>
-              <li className="flex items-center gap-2">
-                <Store className="w-4 h-4" /> support@nobatyar.ir
+              <li>
+                <Link
+                  href={"mailto:info@reservito.com"}
+                  className="flex items-center gap-2"
+                >
+                  <Store className="w-4 h-4" /> info@reservito.com
+                </Link>
               </li>
             </ul>
           </div>
         </div>
         <div className="border-t border-slate-800 pt-8 text-center text-sm">
-          <p>&copy; رزرویتو. تمامی حقوق محفوظ است.</p>
+          © {new Date().getFullYear()} رزرویتو. تمامی حقوق محفوظ است.
+          <p className="text-xs">طراحی و توسعه تیم رزرویتو</p>
         </div>
       </div>
     </footer>

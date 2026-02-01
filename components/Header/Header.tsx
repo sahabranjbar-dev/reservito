@@ -28,7 +28,12 @@ const hiddenRoutes = [
 
 const menuItems = [
   { title: "خانه", href: "/", icon: <HomeIcon size={20} /> },
-  { title: "داشبورد", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
+  {
+    title: "داشبورد",
+    href: "/dashboard",
+    icon: <LayoutDashboard size={20} />,
+    target: "_blank",
+  },
   { title: "درباره ما", href: "/about-us", icon: <BookOpenCheck size={20} /> },
   {
     title: "تماس با ما",
@@ -64,6 +69,7 @@ const Header = () => {
                   <Link
                     className="relative md:px-4 md:py-2.5 rounded-xl md:min-w-28 flex justify-center items-center font-medium text-gray-700 bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 active:bg-blue-100 transition-all duration-300 ease-out overflow-hidden group"
                     href={item.href}
+                    target={item.target}
                   >
                     {/* افکت زمینه هنگام هاور */}
                     <span className=" absolute inset-0  bg-linear-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />

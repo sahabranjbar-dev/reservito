@@ -123,7 +123,6 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   phone: 'phone',
-  isValidPhone: 'isValidPhone',
   email: 'email',
   username: 'username',
   passwordHash: 'passwordHash',
@@ -272,6 +271,17 @@ exports.Prisma.OtpCodeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ContactMessageScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -334,6 +344,12 @@ exports.StaffServiceChangeStatus = exports.$Enums.StaffServiceChangeStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.ContactMessageStatus = exports.$Enums.ContactMessageStatus = {
+  NEW: 'NEW',
+  REPLIED: 'REPLIED',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserRole: 'UserRole',
@@ -347,7 +363,8 @@ exports.Prisma.ModelName = {
   Booking: 'Booking',
   Favorite: 'Favorite',
   StaffServiceChangeRequest: 'StaffServiceChangeRequest',
-  OtpCode: 'OtpCode'
+  OtpCode: 'OtpCode',
+  ContactMessage: 'ContactMessage'
 };
 
 /**

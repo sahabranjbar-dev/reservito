@@ -8,19 +8,26 @@ export const metadata: Metadata = {
   title: "تماس‌ با ما | رزرویتو",
 };
 
-const ContactUsPage = async () => {
+interface Props {
+  searchParams: Promise<{ success: boolean }>;
+}
+
+const ContactUsPage = async ({ searchParams }: Props) => {
+  const { success } = await searchParams;
   return (
-    <main dir="rtl" className="min-h-screen bg-white text-neutral-900">
+    <main className="min-h-screen bg-white text-neutral-900">
       {/* Hero */}
-      <header className="bg-linear-to-r from-indigo-100 to-white border-b">
-        <div className="container mx-auto px-6 py-12">
-          <h1 className="text-3xl md:text-4xl font-extrabold">تماس با ما</h1>
-          <p className="mt-4 text-neutral-600">
-            هر سوالی دارید یا می‌خواهید دموی رایگان رزرو کنید، از طریق فرم زیر
-            با ما در تماس باشید.
-          </p>
-        </div>
-      </header>
+      {!success && (
+        <header className="bg-linear-to-r from-indigo-100 to-white border-b">
+          <div className="container mx-auto px-6 py-12">
+            <h1 className="text-3xl md:text-4xl font-extrabold">تماس با ما</h1>
+            <p className="mt-4 text-neutral-600">
+              هر سوالی دارید یا می‌خواهید دموی رایگان رزرو کنید، از طریق فرم زیر
+              با ما در تماس باشید.
+            </p>
+          </div>
+        </header>
+      )}
 
       {/* Contact Form Section */}
       <section className="container mx-auto px-6 py-12">

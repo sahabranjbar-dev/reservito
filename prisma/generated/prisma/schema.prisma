@@ -67,8 +67,6 @@ model User {
 
   phone String @unique
 
-  isValidPhone Boolean @default(false)
-
   email        String? @unique
   username     String? @unique
   passwordHash String?
@@ -326,6 +324,26 @@ model OtpCode {
   phone     String   @id
   codeHash  String
   expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ContactMessageStatus {
+  NEW
+  REPLIED
+  CLOSED
+}
+
+model ContactMessage {
+  id String @id @default(cuid())
+
+  fullName String
+  email    String?
+  phone    String
+  message  String
+
+  status ContactMessageStatus
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
