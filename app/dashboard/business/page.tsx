@@ -1,21 +1,20 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { authOptions } from "@/utils/authOptions";
 import prisma from "@/utils/prisma";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Calendar,
+  Captions,
   TrendingUp,
   Users,
-  Calendar,
-  DollarSign,
-  ArrowUpRight,
-  ArrowDownRight,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns-jalali"; // فرض بر این است که تاریخ‌ها را به شمسی تبدیل می‌کنید
+import { redirect } from "next/navigation";
 
 const BusinessOwnerDashboardPage = async () => {
   const session = await getServerSession(authOptions);
@@ -24,7 +23,6 @@ const BusinessOwnerDashboardPage = async () => {
     redirect("/api/auth/signin");
   }
 
-  // دریافت اطلاعات بیزنس به همراه رزروها برای محاسبه آمار
   const business = await prisma.business.findFirst({
     where: {
       ownerId: session.user.id,
@@ -55,23 +53,19 @@ const BusinessOwnerDashboardPage = async () => {
         orderBy: {
           createdAt: "desc",
         },
-        take: 50, // گرفتن ۵۰ رزرو آخر برای محاسبات و نمایش
+        take: 50,
       },
     },
   });
 
-  // اگر بیزنی وجود نداشت یا سرویسی نداشت، بفرست تنظیمات
   if (!business?.services.length) {
     redirect("/dashboard/business/setup");
   }
-
-  // --- محاسبات آمار ---
 
   const totalServices = business.services.length;
   const totalStaff = business.staffMembers.length;
   const allBookings = business.bookings;
 
-  // محاسبه رزروهای امروز
   const today = new Date();
   const startOfDay = new Date(today.setHours(0, 0, 0, 0));
   const endOfDay = new Date(today.setHours(23, 59, 59, 999));
@@ -81,57 +75,23 @@ const BusinessOwnerDashboardPage = async () => {
     return bookingDate >= startOfDay && bookingDate <= endOfDay;
   });
 
-  // رزروهای آینده برای نمایش در جدول
   const upcomingBookings = allBookings
     .filter(
       (b) => new Date(b.startTime) > new Date() && b.status !== "CANCELED",
     )
-    .slice(0, 5); // ۵ رزرو بعدی
+    .slice(0, 5);
 
-  // نمونه دیتای نمودار (در آینده می‌توانید منطق واقعی دیتابیس برای ۷ روز اخیر پیاده کنید)
   const revenueData = [20, 45, 30, 60, 50, 75, 40];
   const maxRevenue = Math.max(...revenueData);
 
   return (
     <div className="space-y-8 p-6 pb-20">
-      {/* هدر خوش‌آمدگویی */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">داشبورد مدیریت</h2>
-          <p className="text-muted-foreground mt-1">
-            سلام {session.user.business?.ownerName || "عزیز"}، به پنل{" "}
-            {business.businessName} خوش آمدید.
-          </p>
-        </div>
-        <Button>
-          <Link
-            href="/dashboard/business/staff/new"
-            className="flex items-center gap-2"
-          >
-            <Users className="w-4 h-4" />
-            افزودن پرسنل
-          </Link>
-        </Button>
-      </div>
-
-      {/* کارت‌های آمار اصلی (Stats) */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* <StatCard
-          title="کل درآمد"
-          value={`${new Intl.NumberFormat("fa-IR").format(totalRevenue)} `}
-          unit="تومان"
-          icon={<DollarSign className="h-4 w-4 text-emerald-500" />}
-          trend="+۲۰.۱٪ نسبت به ماه قبل"
-          trendUp
-          bg="bg-emerald-500/10"
-        /> */}
         <StatCard
           title="رزروهای امروز"
           value={todaysBookings.length}
           unit="عدد"
           icon={<Calendar className="h-4 w-4 text-blue-500" />}
-          trend="+۵ عدد جدید"
-          trendUp
           bg="bg-blue-500/10"
         />
         <StatCard
@@ -139,16 +99,13 @@ const BusinessOwnerDashboardPage = async () => {
           value={totalStaff}
           unit="نفر"
           icon={<Users className="h-4 w-4 text-indigo-500" />}
-          trend="همه آنلاین"
           bg="bg-indigo-500/10"
         />
         <StatCard
           title="خدمات ثبت شده"
           value={totalServices}
           unit="سرویس"
-          icon={<TrendingUp className="h-4 w-4 text-orange-500" />}
-          trend="کامل نیست"
-          trendUp={false}
+          icon={<Captions className="h-4 w-4 text-orange-500" />}
           bg="bg-orange-500/10"
         />
       </div>
@@ -172,9 +129,7 @@ const BusinessOwnerDashboardPage = async () => {
                 <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
                   <Calendar className="w-6 h-6 text-slate-400" />
                 </div>
-                <p className="text-sm text-slate-500 font-medium">
-                  رزرو آینده‌ای ندارید
-                </p>
+                <p className="text-sm text-slate-500">رزرو آینده‌ای ندارید</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -188,7 +143,7 @@ const BusinessOwnerDashboardPage = async () => {
                         {booking.customer?.fullName?.charAt(0) || "?"}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-slate-900">
+                        <p className="text-sm text-slate-900">
                           {booking.customer?.fullName}
                         </p>
                         <p className="text-xs text-slate-500 flex items-center gap-1">
@@ -275,24 +230,18 @@ function StatCard({
   value,
   unit,
   icon,
-  trend,
-  trendUp,
   bg,
 }: {
   title: string;
   value: string | number;
   unit?: string;
   icon: React.ReactNode;
-  trend: string;
-  trendUp?: boolean;
   bg: string;
 }) {
   return (
     <Card className="border-slate-100 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-slate-600">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-sm text-slate-600">{title}</CardTitle>
         <div className={cn("p-2 rounded-lg", bg)}>{icon}</div>
       </CardHeader>
       <CardContent>
@@ -301,23 +250,8 @@ function StatCard({
             {typeof value === "number"
               ? new Intl.NumberFormat("fa-IR").format(value)
               : value}
-            <span className="text-sm font-normal text-slate-500 font-medium mr-1">
+            <span className="text-sm font-normal text-slate-500  mr-1">
               {unit}
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            {trendUp ? (
-              <ArrowUpRight className="h-4 w-4 text-green-500" />
-            ) : (
-              <ArrowDownRight className="h-4 w-4 text-red-500" />
-            )}
-            <span
-              className={cn(
-                "text-xs font-medium",
-                trendUp ? "text-green-600" : "text-red-600",
-              )}
-            >
-              {trend}
             </span>
           </div>
         </div>

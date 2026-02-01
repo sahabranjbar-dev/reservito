@@ -86,6 +86,7 @@ export async function createBookingAction(params: {
 
     revalidatePath(`/business/${businessId}`);
     revalidatePath("/checkout");
+    revalidatePath("/dashboard/business/bookings");
 
     return {
       success: true,

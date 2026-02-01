@@ -1,5 +1,5 @@
 import { UserRole } from "@/types/common";
-import { BusinessType } from "./enums";
+import { BookingStatus, BusinessType } from "./enums";
 
 export const ROLE_LABELS_FA: Record<UserRole, string> = {
   SUPER_ADMIN: "ادمین",
@@ -29,4 +29,14 @@ export const BUSINESS_TYPE: Record<BusinessType, string> = {
   [BusinessType.LAW]: "دفتر حقوقی",
   [BusinessType.CONSULTING]: "دفتر مشاوره",
   [BusinessType.OTHER]: "سایر",
+};
+
+export const BOOKING_STATUS = {
+  [BookingStatus.PENDING]: "در انتظار",
+  [BookingStatus.CONFIRMED]: "تأیید شده",
+  [BookingStatus.COMPLETED]: "انجام شده",
+  [BookingStatus.CANCELED]: "لغو شده",
+  [BookingStatus.REJECTED]: "رد شده توسط مجموعه",
+  [BookingStatus.NO_SHOW_CUSTOMER]: "عدم حضور شما",
+  [BookingStatus.NO_SHOW_STAFF]: "عدم حضور پرسنل",
 };

@@ -96,7 +96,7 @@ const ContactForm = () => {
 
         <DotLottieReact
           className="w-72 h-72 mx-auto"
-          src="/lottie/success-animation.lottie"
+          src="/lottie/success-contact-message.lottie"
           autoplay
         />
       </div>

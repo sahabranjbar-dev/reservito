@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { BookingCardProps, statusConfig } from "../_meta/type";
+import { toast } from "sonner";
 
 export const ActiveBookingCard: React.FC<BookingCardProps> = ({
   startTime,
@@ -57,7 +58,10 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
   const renderActionButtons = () => {
     if (status === "CONFIRMED") {
       return (
-        <button className="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+        <button
+          onClick={reciepteHandler}
+          className="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2"
+        >
           <Ticket size={20} />
           مشاهده بلیط و جزئیات
         </button>
@@ -82,7 +86,12 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
   };
 
   const bookingEditHandler = () => {
-    if (status !== "PENDING") return;
+    if (status !== "PENDING") {
+      toast.warning(
+        `برای ویرایش با مسئول  ${business.businessName} تماس بگیرید`,
+      );
+      return;
+    }
 
     push(`/dashboard/customer/bookings/active/${id}`);
   };
@@ -150,18 +159,8 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
                   onClick={bookingEditHandler}
                   variant="ghost"
                   rightIcon={<Edit size={14} className="text-blue-500" />}
-                  className="group"
                 >
                   ویرایش نوبت
-                </Button>
-
-                <Button
-                  type="button"
-                  onClick={reciepteHandler}
-                  variant="ghost"
-                  rightIcon={<Eye size={14} className="text-blue-500" />}
-                >
-                  مشاهده رسید
                 </Button>
               </div>
             </div>
@@ -221,31 +220,6 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
                 />
                 یادداشت مشتری:
                 <span>{customerNotes}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-4 border-t border-slate-200 pt-3">
-            {totalPrice && (
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-500">قیمت:</span>
-                <span
-                  className={`font-medium ${discountAmount > 0 ? "line-through text-slate-400" : "text-slate-800"}`}
-                >
-                  {totalPrice?.toLocaleString()} تومان
-                </span>
-              </div>
-            )}
-
-            {discountAmount > 0 && (
-              <div className="flex justify-between items-center text-sm mt-1">
-                <span className="text-emerald-600 flex items-center gap-1">
-                  <Ticket size={12} />
-                  تخفیف:
-                </span>
-                <span className="font-bold text-emerald-600">
-                  {discountAmount.toLocaleString()} تومان
-                </span>
               </div>
             )}
           </div>

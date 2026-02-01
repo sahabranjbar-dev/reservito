@@ -37,7 +37,7 @@ export async function updateBookingStatusAction(params: {
       data: { status },
     });
 
-    revalidatePath("/dashboard/business/reservations");
+    revalidatePath("/dashboard/business/bookings");
 
     return { success: true, message: "وضعیت رزرو تغییر کرد" };
   } catch (error) {
@@ -157,7 +157,7 @@ export async function getBookingsByRange(input: GetBookingRangeInput) {
     }
 
     // 2. فقط OWNER
-    if (!session.user.roles.includes("OWNER")) {
+    if (session?.user.business?.businessRole !== "OWNER") {
       return {
         success: false,
         error: "شما دسترسی مشاهده رزروها را ندارید",
@@ -270,4 +270,54 @@ export async function getBookingsByRange(input: GetBookingRangeInput) {
       error: "خطا در دریافت رزروها، لطفاً دوباره تلاش کنید",
     };
   }
+}
+
+export async function getBookingDetails(bookingId: string) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    return { success: false, error: "دسترسی ندارید" };
+  }
+
+  const booking = await prisma.booking.findFirst({
+    where: {
+      id: bookingId,
+      deletedAt: null,
+      business: {
+        ownerId: session.user.id, // امنیت
+      },
+    },
+    include: {
+      customer: {
+        select: {
+          id: true,
+          fullName: true,
+          phone: true,
+        },
+      },
+      service: {
+        select: {
+          id: true,
+          name: true,
+          duration: true,
+          price: true,
+        },
+      },
+      staff: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!booking) {
+    return { success: false, error: "رزرو پیدا نشد" };
+  }
+
+  return {
+    success: true,
+    data: booking,
+  };
 }

@@ -5,10 +5,11 @@ import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { Funnel, Plus, RefreshCcw } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Activity, useState } from "react";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { IListHeader } from "./meta/types";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ListHeader = ({
   hasRefresh = true,
@@ -17,7 +18,12 @@ const ListHeader = ({
   title,
   createButton,
 }: IListHeader) => {
-  const { fetch, loading } = useList();
+  const searchParams = useSearchParams();
+
+  const hasFilter = searchParams.keys().some(Boolean);
+
+  const { refresh } = useRouter();
+  const { fetch, loading, url } = useList();
   const [filterOpen, setFilterOpen] = useState<boolean>();
 
   return (
@@ -46,7 +52,11 @@ const ListHeader = ({
             disabled={loading}
             tooltip="بروزرسانی"
             onClick={() => {
-              fetch();
+              if (url) {
+                fetch();
+                return;
+              }
+              refresh();
             }}
           >
             <RefreshCcw className="h-4 w-4" />
@@ -54,20 +64,28 @@ const ListHeader = ({
         )}
         <Button
           variant="outline"
-          className={cn("flex items-center gap-1 hover:text-orange-500", {
-            "text-red-400 border-orange-400": filterOpen,
-          })}
+          className={cn(
+            "flex items-center gap-1 hover:text-orange-500 relative",
+            {
+              "text-red-400 border-orange-400": filterOpen,
+              "bg-orange-100 text-orange-400": hasFilter,
+            },
+          )}
           onClick={() => setFilterOpen((prev) => !prev)}
           tooltip="فیلتر"
         >
           <Funnel />
+
+          <Activity mode={hasFilter ? "visible" : "hidden"}>
+            <div className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-orange-500 "></div>
+          </Activity>
         </Button>
       </div>
 
       <div
         className={clsx(
           "overflow-hidden transition-all duration-300",
-          filterOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          filterOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         )}
       >
         <div className="p-2 bg-white rounded shadow m-2">{Filter}</div>

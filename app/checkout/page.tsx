@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   Clock,
   History,
+  LayoutDashboard,
   RefreshCcw,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -36,6 +37,8 @@ import {
   getServiceDetail,
 } from "./_meta/actions";
 import { LoginForm, Modal } from "@/components";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import Link from "next/link";
 
 interface IData {
   businessId: string;
@@ -51,7 +54,8 @@ const CheckoutPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  // پارامترهای URL
+  const success = searchParams.get("success") === "true";
+
   const serviceId = searchParams.get("serviceId") || "";
   const date = searchParams.get("date") || "";
   const time = searchParams.get("time") || "";
@@ -130,10 +134,13 @@ const CheckoutPage = () => {
       serviceId,
       time,
       staffId: selectedStaffId,
+    }).then((bookingId) => {
+      router.push(`/checkout?success=true&bookingId=${bookingId}`);
     });
   };
 
   useEffect(() => {
+    if (success) return;
     // اگر پارامترهای حیاتی وجود ندارند، کاربر را برگردان
     if (!serviceId || !date || !time || !businessId) {
       // اگر اسلاگ هست، برگرده به صفحه رزرو آن بیزنس
@@ -144,7 +151,7 @@ const CheckoutPage = () => {
         router.replace("/");
       }
     }
-  }, [serviceId, date, time, router, businessId]);
+  }, [serviceId, date, time, router, businessId, success]);
 
   const goToPreviousPage = () => {
     const params = new URLSearchParams({
@@ -155,6 +162,39 @@ const CheckoutPage = () => {
     });
     router.replace(`/business/${businessId}?${params.toString()}`);
   };
+
+  if (success) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center bg-linear-to-b from-blue-50 to-white">
+        <div className="rounded-2xl border border-blue-100 bg-white px-6 py-3 shadow-sm">
+          <span className="text-base font-semibold text-blue-700">
+            نوبت شما با موفقیت ثبت شد 🎉
+          </span>
+        </div>
+
+        <DotLottieReact
+          className="w-72 h-72"
+          src="/lottie/success-booking.lottie"
+          autoplay
+          speed={1.2}
+        />
+
+        <p className="max-w-md text-sm leading-7 text-gray-600">
+          اطلاعات نوبت ثبت شد و در زمان مقرر منتظر شما هستیم. در صورت نیاز
+          می‌توانید نوبت خود را از پنل کاربری مدیریت کنید.
+        </p>
+
+        <Link
+          target="_blank"
+          href="/dashboard/customer/bookings/active"
+          className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          رفتن به پنل کاربری
+          <LayoutDashboard />
+        </Link>
+      </div>
+    );
+  }
 
   if (!serviceId || !date || !time || !businessId) {
     return (

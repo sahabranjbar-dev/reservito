@@ -19,6 +19,7 @@ import MultiselectCombobox from "./MultiselectCombobox/MultiselectCombobox";
 import SwitchContainer from "./SwitchContainer/SwitchContainer";
 import SwitchComponent from "./SwitchComponent/SwitchComponent";
 import StatusBadge from "./StatusBadge/StatusBadge";
+import FilterButtons from "./FilterButtons/FilterButtons";
 
 export {
   Header,
@@ -42,4 +43,5 @@ export {
   SignoutButton,
   ListHeader,
   StatusBadge,
+  FilterButtons,
 };

@@ -16,21 +16,15 @@ import {
 import { Role } from "@/constants/enums";
 import { cn } from "@/lib/utils";
 import {
-  Award,
   Banknote,
-  BarChart3,
   Calendar,
   CalendarCheck,
   CalendarClock,
-  CalendarX,
   ChevronRight,
   ClipboardList,
   CreditCard,
   FileText,
-  Gift,
   Globe,
-  Headset,
-  Heart,
   HelpCircle,
   History,
   Home,
@@ -38,19 +32,12 @@ import {
   Inbox,
   LayoutDashboard,
   ListChecks,
-  MessageSquare,
-  MessageSquareHeart,
   Package,
   Percent,
-  Receipt,
   Settings,
   Shield,
   ShieldCheck,
-  Sparkles,
-  Star,
-  Ticket,
   Trophy,
-  UserCheck,
   UserRound,
   Users,
   Wallet,
@@ -79,23 +66,14 @@ const businessSideBarItems: SidebarItem[] = [
     title: "نوبت‌دهی و تقویم",
     icon: Calendar,
     children: [
-      { title: "لیست رزروها", url: "/bookings", icon: ClipboardList },
+      { title: "لیست رزروها", url: "/bookings/list", icon: ClipboardList },
       { title: "تقویم رزروها", url: "/bookings/calendar", icon: Calendar },
-      { title: "لیست انتظار", url: "/bookings/waiting", icon: CalendarClock },
     ],
   },
   {
     title: "مدیریت مشتریان",
     icon: Users,
-    children: [
-      { title: "لیست مشتریان", url: "/customers", icon: Users },
-      { title: "نظرات و امتیازات", url: "/customers/reviews", icon: Star },
-      {
-        title: "پیام‌های مشتریان",
-        url: "/customers/messages",
-        icon: MessageSquare,
-      },
-    ],
+    children: [{ title: "لیست مشتریان", url: "/customers", icon: Users }],
   },
   {
     title: "منابع و خدمات",
@@ -110,22 +88,13 @@ const businessSideBarItems: SidebarItem[] = [
       { title: "شیفت‌بندی", url: "/resources/shifts", icon: CalendarClock },
     ],
   },
-  {
-    title: "گزارشات",
-    icon: BarChart3,
-    children: [
-      { title: "گزارش عملکرد", url: "/reports/performance", icon: Trophy },
-    ],
-  },
 ];
 
-// --- 2. Customer (مشتری) ---
-// --- Customer (مشتری) - نسخه حرفه‌ای و VIP ---
 const customerSideBarItems: SidebarItem[] = [
   {
     title: "داشبورد من",
     url: "/",
-    icon: LayoutDashboard, // یا Gauge برای حس سرعت و کنترل
+    icon: LayoutDashboard,
   },
   {
     title: "نوبت‌دهی و خدمات",
@@ -135,29 +104,6 @@ const customerSideBarItems: SidebarItem[] = [
       { title: "تاریخچه نوبت‌ها", url: "/bookings/history", icon: History },
     ],
   },
-  // {
-  //   title: "علاقه‌مندی‌ها و خدمات",
-  //   icon: Heart,
-  //   children: [
-  //     { title: "علاقه‌مندی‌ها", url: "/favorites", icon: Sparkles }, // حس ویژه بودن
-  //     { title: "خدمات محبوب", url: "/favorites/services", icon: Sparkles }, // حس ویژه بودن
-  //     { title: "پرسنل منتخب", url: "/favorites/staff", icon: UserCheck },
-  //     {
-  //       title: "نظرات من",
-  //       url: "/favorites/reviews",
-  //       icon: MessageSquareHeart,
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: "پیام‌ها و پشتیبانی",
-  //   icon: Headset, // یا MessageSquareMore
-  //   children: [
-  //     { title: "صندوق ورودی", url: "/messages/inbox", icon: Inbox },
-  //     { title: "تیکت‌های پشتیبانی", url: "/messages/tickets", icon: Ticket },
-  //     { title: "سوالات متداول", url: "/messages/faq", icon: HelpCircle },
-  //   ],
-  // },
 ];
 
 // --- 3. Staff (پرسنل) ---

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  useCallback,
-} from "react";
+import { createContext, useRef, useState, useCallback } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -20,7 +14,7 @@ import {
 
 type ConfirmOptions = {
   title?: string;
-  description?: string;
+  description?: string | null;
 };
 
 type ConfirmContextType = {
@@ -70,7 +64,7 @@ export const ConfirmProvider = ({
               {options.title ?? "آیا مطمئن هستید؟"}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-right">
-              {options.description ?? "این عملیات قابل بازگشت نیست."}
+              {options.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

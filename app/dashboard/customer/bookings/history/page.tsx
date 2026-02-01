@@ -25,9 +25,6 @@ export default async function BookingHistoryPage() {
   const bookings = await prisma.booking.findMany({
     where: {
       customerId,
-      status: {
-        notIn: [BookingStatus.PENDING],
-      },
     },
     include: {
       business: {

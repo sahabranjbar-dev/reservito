@@ -1,0 +1,234 @@
+"use client";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { BookingStatus } from "@/constants/enums";
+import { useConfirm } from "@/hooks/useConfirm";
+import { cn } from "@/lib/utils";
+import { convertToFarsiDigits, getFullDateTime } from "@/utils/common";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Calendar, Clock, Coins, Phone, Scissors, User } from "lucide-react";
+import Link from "next/link";
+import { ReactNode, useState } from "react";
+import { toast } from "sonner";
+import { getBookingDetails, updateBookingStatusAction } from "../_meta/actions";
+
+interface Props {
+  bookingId: string;
+}
+
+const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  PENDING: "در انتظار",
+  CONFIRMED: "تأیید شده",
+  COMPLETED: "تکمیل شده",
+  CANCELED: "لغو شده",
+  REJECTED: "رد شده",
+  NO_SHOW_CUSTOMER: "عدم حضور مشتری",
+  NO_SHOW_STAFF: "عدم حضور همکار",
+};
+
+const BookingDetails = ({ bookingId }: Props) => {
+  const confirm = useConfirm();
+  const [selectedStatus, setSelectedStatus] = useState<BookingStatus>();
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["booking-details", bookingId],
+    queryFn: async () => {
+      const result = await getBookingDetails(bookingId);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    },
+  });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: updateBookingStatusAction,
+    onSuccess: (res) => {
+      if (res.success) {
+        toast.success(res.message);
+      } else {
+        toast.error(res.error);
+      }
+      refetch();
+    },
+  });
+
+  if (isLoading) return <BookingDetailsSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="p-6 text-center text-red-600">
+        {error?.message || "خطا در دریافت اطلاعات"}
+      </div>
+    );
+  }
+  console.log({ data });
+
+  if (!data) return null;
+
+  const submitStatusChange = async () => {
+    if (!selectedStatus || selectedStatus === data.status) return;
+
+    const confirmed = await confirm({
+      title: `آیا می‌خواهید وضعیت رزرو را به «${BOOKING_STATUS_LABELS[selectedStatus]}» تغییر دهید؟`,
+      description: null,
+    });
+
+    if (!confirmed) return;
+
+    await mutateAsync({
+      bookingId,
+      status: selectedStatus,
+    });
+  };
+
+  return (
+    <div className="bg-white border rounded-2xl">
+      {/* Header */}
+      <div className="p-5 border-b bg-slate-50 grid grid-cols-1 md:grid-cols-2">
+        <div>
+          <h3 className="font-bold text-lg">جزئیات رزرو</h3>
+          <p className="text-xs text-slate-500 mt-1">کد رزرو: {data.id}</p>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-slate-600">
+            تغییر وضعیت رزرو
+          </label>
+          <Select
+            value={selectedStatus ?? undefined}
+            onValueChange={(v) => setSelectedStatus(v as BookingStatus)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="انتخاب وضعیت" />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(BOOKING_STATUS_LABELS) as BookingStatus[]).map(
+                (status) => (
+                  <SelectItem key={status} value={status}>
+                    {BOOKING_STATUS_LABELS[status]}
+                  </SelectItem>
+                ),
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="space-y-6 grid grid-cols-1 md:grid-cols-2">
+        <DetailRow
+          icon={<User className="w-4 h-4" />}
+          label="مشتری"
+          value={data.customer?.fullName || "—"}
+        />
+        <DetailRow
+          icon={<Phone className="w-4 h-4" />}
+          label="شماره تماس"
+          value={
+            <Link href={`tel:${data.customer?.phone}`}>
+              {data.customer?.phone}
+            </Link>
+          }
+        />
+        <DetailRow
+          icon={<Scissors className="w-4 h-4" />}
+          label="سرویس"
+          value={data.service?.name}
+        />
+        <DetailRow
+          icon={<Clock className="w-4 h-4" />}
+          label="مدت زمان"
+          value={`${data.service?.duration} دقیقه`}
+        />
+        <DetailRow
+          icon={<Coins className="w-4 h-4" />}
+          label="قیمت"
+          value={`${convertToFarsiDigits(data.service?.price?.toLocaleString() ?? "")} تومان`}
+        />
+        <DetailRow
+          icon={<Calendar className="w-4 h-4" />}
+          label="تاریخ"
+          value={getFullDateTime(data.startTime)}
+        />
+
+        {/* تغییر وضعیت */}
+        <div className="space-y-2 col-span-2">
+          <button
+            disabled={
+              isPending || selectedStatus === data.status || !selectedStatus
+            }
+            onClick={submitStatusChange}
+            className={cn(
+              "w-full mt-2 py-2 rounded-xl text-sm font-medium transition",
+              isPending || selectedStatus === data.status
+                ? "bg-slate-100 text-slate-400"
+                : "bg-indigo-600 text-white hover:bg-indigo-700",
+            )}
+          >
+            ثبت تغییر وضعیت
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BookingDetails;
+
+/* ---------- Sub Components ---------- */
+
+const DetailRow = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: ReactNode;
+}) => (
+  <div>
+    <div>
+      <div>{icon}</div>
+      <div>{label}</div>
+    </div>
+    <div>{value}</div>
+  </div>
+);
+
+const BookingDetailsSkeleton = () => (
+  <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 space-y-5 animate-pulse">
+    <div className="flex justify-between items-center">
+      <div className="space-y-2">
+        <div className="h-5 bg-slate-100 rounded w-32" />
+        <div className="h-4 bg-slate-100 rounded w-20" />
+      </div>
+      <div className="h-6 bg-slate-100 rounded-full w-16" />
+    </div>
+
+    <div className="space-y-4">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-slate-100 rounded-lg" />
+            <div className="h-4 bg-slate-100 rounded w-20" />
+          </div>
+          <div className="h-4 bg-slate-100 rounded w-24" />
+        </div>
+      ))}
+    </div>
+
+    <div className="h-px bg-slate-100 w-full" />
+
+    <div className="flex gap-3 pt-2">
+      <div className="h-10 bg-slate-100 rounded-xl flex-1" />
+      <div className="h-10 bg-indigo-50 rounded-xl flex-1" />
+    </div>
+  </div>
+);

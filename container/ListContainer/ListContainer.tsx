@@ -11,8 +11,10 @@ const ListContainer = ({
   children,
   url,
   params = {},
-  queryKey,
-  enabled = true,
+  queryKey = [],
+  enabled,
+  queryFn,
+  data: inputData,
 }: PropsWithChildren<IListContainer>) => {
   const searchParamsFromURL = useSearchParams();
   const page = searchParamsFromURL.get("page") ?? "1";
@@ -26,18 +28,21 @@ const ListContainer = ({
   const resolvedParams = { ...params, ...searchParams };
 
   const { data, error, refetch, isFetching, isLoading } = useQuery({
-    queryKey: [...queryKey, resolvedParams],
-    queryFn: async () => {
-      const response = await api.get(url, { params: resolvedParams });
-      return response.data;
-    },
-    enabled,
+    queryKey: [resolvedParams, ...queryKey],
+    queryFn: queryFn
+      ? queryFn
+      : async () => {
+          if (!url) return;
+          const response = await api.get(url, { params: resolvedParams });
+          return response.data;
+        },
+    enabled: inputData ? false : enabled,
   });
 
   return (
     <ListContainerContext.Provider
       value={{
-        data,
+        data: inputData ? inputData : data,
         error,
         loading: isFetching || isLoading,
         fetch: refetch,
