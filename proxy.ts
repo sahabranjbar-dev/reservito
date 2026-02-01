@@ -29,6 +29,7 @@ const adminRules: Rule[] = [
 // =================================
 const customerRules: Rule[] = [
   (req, session) => {
+    if (!session) return redirectToLogin(req);
     const roles = session?.user?.roles || [];
     if (!roles.length) return;
     if (!roles.includes("CUSTOMER")) return redirectToLogin(req);
@@ -77,7 +78,7 @@ const staffRules: Rule[] = [
     const userId = session?.user.id;
     const businessId = session?.user.business?.id;
     if (!businessId || !userId) {
-      return redirectToLogin(req, "/business/login");
+      return redirectToLogin(req);
     }
     const businessMember = await prisma.businessMember.findUnique({
       where: {
@@ -87,8 +88,7 @@ const staffRules: Rule[] = [
         },
       },
     });
-    if (businessMember?.role !== "STAFF")
-      return redirectToLogin(req, "/business/login");
+    if (businessMember?.role !== "STAFF") return redirectToLogin(req);
   },
 ];
 
@@ -161,6 +161,13 @@ const apiRules: Rule[] = [
 // 5) انتخاب rule بر اساس مسیر
 // ================================
 function getRulesForPath(pathname: string): Rule[] {
+  if (pathname === "/dashboard") {
+    return [
+      (req, session) => {
+        if (!session) return redirectToLogin(req, "/auth");
+      },
+    ];
+  }
   if (pathname.startsWith("/dashboard/admin")) return adminRules;
   if (pathname.startsWith("/dashboard/business")) return businessRules;
   if (pathname.startsWith("/dashboard/customer")) return customerRules;
@@ -183,6 +190,7 @@ function getRulesForPath(pathname: string): Rule[] {
 // ================================
 export async function proxy(req: NextRequest) {
   const session = await getServerSession(authOptions);
+
   const pathname = req.nextUrl.pathname;
 
   const rules = getRulesForPath(pathname);

@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import ClientBusinessList from "./_components/ClientBusinessList";
 import { getPaginatedBusinessAction } from "./_meta/actions";
+
+export const metadata: Metadata = {
+  title: "مراکز خدمات و رزرو | رزرویتو",
+};
 
 export default async function BusinessPage({
   searchParams,

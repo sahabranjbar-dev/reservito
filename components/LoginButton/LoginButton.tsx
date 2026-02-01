@@ -41,7 +41,12 @@ const LoginButton = ({ className, isModal = true }: Props) => {
     <>
       {isAuthenticated ? (
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex justify-center items-center gap-2">
+          <DropdownMenuTrigger
+            className={clsx(
+              "flex justify-center items-center gap-2",
+              className,
+            )}
+          >
             <User className="text-primary" size={20} />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="z-200">
@@ -83,7 +88,7 @@ const LoginButton = ({ className, isModal = true }: Props) => {
                 variant={"ghost"}
                 className={clsx(
                   "border border-primary/50 text-primary",
-                  className
+                  className,
                 )}
                 rightIcon={<LogIn />}
               >
@@ -108,7 +113,7 @@ const LoginButton = ({ className, isModal = true }: Props) => {
             <Link
               className={clsx(
                 "border border-primary/50 text-primary text-center p-2 rounded-lg",
-                className
+                className,
               )}
               href={"/auth"}
             >
