@@ -125,10 +125,10 @@ export default function ServiceFormModal({
               label="ارائه‌دهندگان این خدمت"
               required
             />
-            <p className="text-xs text-slate-400 mt-2">
+            {/* <p className="text-xs text-slate-400 mt-2">
               اگر هیچ‌کس را انتخاب نکنید، سرویس در منوی عمومی غیرفعال نمایش داده
               می‌شود.
-            </p>
+            </p> */}
           </div>
 
           {/* Footer Buttons */}

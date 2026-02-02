@@ -16,4 +16,5 @@ export interface ICombobox<T = any, D = any> {
   selectValue?: any;
   options?: { farsiTitle: string; englishTitle: string; id: string }[];
   defaultValue?: string;
+  id?: string;
 }

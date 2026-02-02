@@ -230,7 +230,7 @@ const ShiftSettings = ({ businessId }: { businessId: string }) => {
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   {/* Day */}
-                  <div className="flex items-center gap-3 min-w-[140px]">
+                  <div className="flex items-center gap-3 min-w-35">
                     <div
                       className={cn(
                         "w-9 h-9 rounded-lg flex items-center justify-center font-bold",

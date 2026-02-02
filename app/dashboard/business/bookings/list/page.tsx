@@ -81,7 +81,7 @@ const BusinessUserBookingsPage = async ({ searchParams }: Props) => {
       staff: true,
     },
     orderBy: {
-      createdAt: "desc",
+      startTime: "asc",
     },
   });
 

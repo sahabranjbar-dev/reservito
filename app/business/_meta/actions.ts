@@ -187,6 +187,16 @@ export async function getAvailableSlotsAction(params: {
         const excDateStr = new Date(exc.date).toISOString().split("T")[0];
         return exc.isClosed && excDateStr === exceptionDateStr;
       });
+      // استثناهای ساعتی همان روز (تعطیلی کامل نیست)
+      const timeExceptions = staff.exceptions.filter((exc) => {
+        const excDateStr = new Date(exc.date).toISOString().split("T")[0];
+        return (
+          !exc.isClosed &&
+          excDateStr === exceptionDateStr &&
+          exc.startTime &&
+          exc.endTime
+        );
+      });
 
       if (isOffToday) continue;
 
@@ -220,8 +230,11 @@ export async function getAvailableSlotsAction(params: {
           potentialStart.getTime() + serviceDuration * 60000,
         );
 
-        // ❌ حذف زمان‌های گذشته (فقط اگر تاریخ امروز است)
         if (isToday && potentialStart <= now) {
+          continue;
+        }
+
+        if (isInTimeException(potentialStart, potentialEnd, timeExceptions)) {
           continue;
         }
 
@@ -251,3 +264,19 @@ export async function getAvailableSlotsAction(params: {
     return { success: false, error: "خطا در محاسبه زمان‌ها" };
   }
 }
+
+const isInTimeException = (start: Date, end: Date, exceptions: any) => {
+  return exceptions.some((exc: any) => {
+    const [sh, sm] = exc.startTime!.split(":").map(Number);
+    const [eh, em] = exc.endTime!.split(":").map(Number);
+
+    const excStart = new Date(start);
+    excStart.setHours(sh, sm, 0, 0);
+
+    const excEnd = new Date(start);
+    excEnd.setHours(eh, em, 0, 0);
+
+    // overlap check
+    return start < excEnd && end > excStart;
+  });
+};

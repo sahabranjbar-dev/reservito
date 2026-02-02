@@ -20,6 +20,8 @@ import SwitchContainer from "./SwitchContainer/SwitchContainer";
 import SwitchComponent from "./SwitchComponent/SwitchComponent";
 import StatusBadge from "./StatusBadge/StatusBadge";
 import FilterButtons from "./FilterButtons/FilterButtons";
+import LiveClock from "./LiveClock/LiveClock";
+import DynamicClockIcon from "./DynamicClockIcon/DynamicClockIcon";
 
 export {
   Header,
@@ -44,4 +46,6 @@ export {
   ListHeader,
   StatusBadge,
   FilterButtons,
+  LiveClock,
+  DynamicClockIcon,
 };

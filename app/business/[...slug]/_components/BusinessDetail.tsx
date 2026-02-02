@@ -105,7 +105,6 @@ const BusinessDetail = ({ business }: Props) => {
   const selectedService = business.services.find(
     (s) => s.id === selectedServiceId,
   );
-  const totalPrice = selectedService ? selectedService.price : 0;
 
   const handleBook = () => {
     if (!selectedServiceId || !selectedDate || !selectedSlot) return;

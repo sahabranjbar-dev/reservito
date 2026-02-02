@@ -196,6 +196,14 @@ export const getFullDateTime = (date?: Date) => {
     : "---";
 };
 
+export const getFullDate = (date?: Date) => {
+  return date
+    ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(date) +
+        "  |  " +
+        new Intl.DateTimeFormat("fa-IR").format(date)
+    : "---";
+};
+
 export function validateEmail(
   email?: string,
   isRequired = true,

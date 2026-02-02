@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Bell, Search } from "lucide-react";
 import Link from "next/link";
 import { CustomTrigger } from "./CustomTrigger";
+import { LiveClock } from "@/components";
 
 type UserRoleType = "admin" | "business" | "staff" | "customer";
 
@@ -33,27 +34,12 @@ export default function HeaderContent({ role }: HeaderContentProps) {
             orientation="vertical"
             className="mx-2 h-6 hidden md:block"
           />
-
-          <div className="w-full hidden md:block">
-            <div className="relative">
-              <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="جستجو..."
-                className="h-9 w-full rounded-md border border-input bg-transparent pe-10 ps-4 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              />
-            </div>
-          </div>
         </div>
 
         {/* سمت چپ (در RTL) */}
-        <div className="flex flex-1 items-center justify-end gap-2">
-          {/* دکمه جستجو موبایل */}
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Search className="h-5 w-5" />
-            <span className="sr-only">جستجو</span>
-          </Button>
-
+        <div className="flex flex-1 items-center justify-end gap-8">
+          <LiveClock />
+          <Separator orientation="vertical" className="h-full min-h-10" />
           {/* نوتیفیکیشن */}
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
