@@ -10,7 +10,11 @@ import {
 import { BookingStatus } from "@/constants/enums";
 import { useConfirm } from "@/hooks/useConfirm";
 import { cn } from "@/lib/utils";
-import { convertToFarsiDigits, getFullDateTime } from "@/utils/common";
+import {
+  convertToFarsiDigits,
+  copyTextToClipboard,
+  getFullDateTime,
+} from "@/utils/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Calendar,
@@ -230,7 +234,10 @@ const DetailRow = ({
         isCopyable && "cursor-pointer hover:text-indigo-600 transition-colors",
       )}
       title={value}
-      onClick={() => isCopyable && navigator.clipboard.writeText(value)}
+      onClick={() =>
+        isCopyable &&
+        copyTextToClipboard(value).then(() => toast.success("کپی شد."))
+      }
     >
       {value}
     </span>

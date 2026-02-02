@@ -42,7 +42,6 @@ interface BaseInputProps extends Omit<
   "onChange" | "value"
 > {
   value?: string | number | null | undefined;
-  icon?: any;
 }
 
 interface StandardInputProps extends BaseInputProps {
@@ -80,7 +79,6 @@ function TextCore({
   number = false,
   onChange,
   value,
-  icon: Icon,
   ...props
 }: InputProps) {
   const isNumberInput = number;
@@ -135,34 +133,26 @@ function TextCore({
   };
 
   return (
-    <div className="relative inline-block w-full">
-      <Input
-        {...props}
-        data-slot="input"
-        className={cn(className)}
-        disabled={disabled}
-        placeholder={
-          disabled
-            ? ""
-            : typeof placeholder === "string"
-              ? placeholder
-              : typeof placeholder === "boolean"
-                ? undefined
-                : props?.label
-                  ? `${props?.label} را وارد کنید...`
-                  : ""
-        }
-        value={displayValue}
-        onChange={handleChange}
-        type={isNumberInput || isFormatterInput ? "text" : type}
-      />
-
-      {Icon && (
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
-          {Icon}
-        </div>
-      )}
-    </div>
+    <Input
+      {...props}
+      data-slot="input"
+      className={cn(className)}
+      disabled={disabled}
+      placeholder={
+        disabled
+          ? ""
+          : typeof placeholder === "string"
+            ? placeholder
+            : typeof placeholder === "boolean"
+              ? undefined
+              : props?.label
+                ? `${props?.label} را وارد کنید...`
+                : ""
+      }
+      value={displayValue}
+      onChange={handleChange}
+      type={isNumberInput || isFormatterInput ? "text" : type}
+    />
   );
 }
 

@@ -90,3 +90,82 @@ export async function updateBusinessSettings(input: UpdateBusinessInput) {
     return { success: false, error: "خطای سرور" };
   }
 }
+
+import bcrypt from "bcryptjs";
+
+const changePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, "رمز عبور فعلی باید حداقل ۶ کاراکتر باشد"),
+    newPassword: z
+      .string()
+      .min(8, "رمز عبور جدید باید حداقل ۸ کاراکتر باشد")
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/,
+        "رمز عبور جدید باید شامل حداقل یک حرف، یک عدد و یک کاراکتر خاص باشد",
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "رمز عبور جدید و تکرار آن یکسان نیست",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export async function changeBusinessOwnerPassword(
+  input: ChangePasswordInput,
+): Promise<{ success: boolean; error?: any; message?: string }> {
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user?.id;
+  const businessRole = session?.user?.business?.businessRole;
+
+  if (!userId || businessRole !== BusinessRole.OWNER) {
+    return { success: false, error: "شما اجازه تغییر رمز عبور را ندارید" };
+  }
+
+  const parsed = changePasswordSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: JSON.parse(parsed.error.message) ?? "اطلاعات نامعتبر است",
+    };
+  }
+
+  const { currentPassword, newPassword } = parsed.data;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { passwordHash: true },
+    });
+
+    if (!user || !user.passwordHash) {
+      return {
+        success: false,
+        error: "حساب کاربری پیدا نشد یا رمز عبور ثبت نشده است",
+      };
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+
+    if (!isMatch) {
+      return { success: false, error: "رمز عبور فعلی صحیح نیست" };
+    }
+
+    const newHashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: newHashedPassword },
+    });
+
+    return { success: true, message: "رمز عبور با موفقیت تغییر کرد" };
+  } catch (error) {
+    console.error("changeBusinessOwnerPassword error:", error);
+    return { success: false, error: "خطای سرور، لطفاً دوباره تلاش کنید" };
+  }
+}

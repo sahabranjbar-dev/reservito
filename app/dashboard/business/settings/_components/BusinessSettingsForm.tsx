@@ -1,47 +1,39 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import {
-  Building2,
-  User,
-  Globe,
-  MapPin,
-  Hash,
-  Camera,
-  Lock,
   Bell,
-  CreditCard,
-  ShieldAlert,
-  Palette,
-  Save,
-  Key,
-  Settings,
-  CircleCheck,
   CalendarClock,
+  Camera,
   CircleAlert,
+  CircleCheck,
+  CreditCard,
+  Key,
+  Lock,
+  Palette,
+  Settings,
+  ShieldAlert,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch"; // برای اعلانات
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 
+import { BaseField, Form, SwitchComponent } from "@/components";
 import { BusinessRegistrationStatus, BusinessType } from "@/constants/enums";
-import { updateBusinessSettings } from "../_meta/actions";
-import { BaseField, Form, SwitchComponent, TextCore } from "@/components";
 import clsx from "clsx";
+import ChangePasswordForm from "./ChangePasswordForm";
 import GeneralForm from "./GeneralForm";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   business: {
@@ -59,11 +51,19 @@ interface Props {
 }
 
 export default function BusinessSettingsPage({ business }: Props) {
-  const onPasswordSubmit = () => {
-    // اینجا لاگیک تغییر رمز عبور را اضافه کنید
-    console.log("Password change requested");
-  };
+  const { replace } = useRouter();
+  const searchParams = useSearchParams();
 
+  const defaultTab = searchParams.get("tab") || "general";
+
+  const onValueChange = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("tab");
+    params.append("tab", value);
+
+    replace(`/dashboard/business/settings?${params}`);
+  };
   return (
     <div className="max-w-6xl mx-auto py-6 md:py-10">
       {/* هدر صفحه */}
@@ -74,56 +74,45 @@ export default function BusinessSettingsPage({ business }: Props) {
         </p>
       </div>
 
-      <Tabs defaultValue="general" className="w-full" dir="rtl">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* --- SIDEBAR (RIGHT SIDE IN RTL) --- */}
+      <Tabs
+        defaultValue={defaultTab}
+        className="w-full"
+        dir="rtl"
+        onValueChange={onValueChange}
+      >
+        <>
           <TabsList
-            dir="rtl"
-            className="h-full w-full md:w-64 flex flex-col justify-start items-start p-1 bg-transparent border-l gap-1 rounded-none border-r-0"
+            dir="ltr"
+            className="max-w-dvw md:max-w-fit w-dvw md:w-fit overflow-scroll pl-64 md:pl-0 h-12"
           >
-            <TabsTrigger
-              value="general"
-              className="w-full justify-start px-4 py-3 gap-3 text-right data-[state=active]:bg-muted data-[state=active]:shadow-sm rounded-lg transition-all"
-            >
-              <Settings className="w-4 h-4" />
-              تنظیمات عمومی
+            <TabsTrigger value="danger">
+              <ShieldAlert className="w-4 h-4" />
+              منطقه خطر
             </TabsTrigger>
-            <TabsTrigger
-              value="visual"
-              className="w-full justify-start px-4 py-3 gap-3 text-right data-[state=active]:bg-muted data-[state=active]:shadow-sm rounded-lg transition-all"
-            >
-              <Palette className="w-4 h-4" />
-              هویت بصری
-            </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              className="w-full justify-start px-4 py-3 gap-3 text-right data-[state=active]:bg-muted data-[state=active]:shadow-sm rounded-lg transition-all"
-            >
-              <Lock className="w-4 h-4" />
-              امنیت و رمز عبور
-            </TabsTrigger>
-            <TabsTrigger
-              value="notifications"
-              className="w-full justify-start px-4 py-3 gap-3 text-right data-[state=active]:bg-muted data-[state=active]:shadow-sm rounded-lg transition-all"
-            >
-              <Bell className="w-4 h-4" />
-              اعلانات
-            </TabsTrigger>
-            <TabsTrigger
-              value="billing"
-              className="w-full justify-start px-4 py-3 gap-3 text-right data-[state=active]:bg-muted data-[state=active]:shadow-sm rounded-lg transition-all"
-            >
+
+            <TabsTrigger value="billing">
               <CreditCard className="w-4 h-4" />
               صورتحساب و پلن
             </TabsTrigger>
-            <div className="flex-1"></div>{" "}
-            {/* Spacer to push Danger Zone down */}
-            <TabsTrigger
-              value="danger"
-              className="w-full justify-start px-4 py-3 gap-3 text-right text-red-600 hover:text-red-700 hover:bg-red-50 data-[state=active]:bg-red-50 data-[state=active]:text-red-700 rounded-lg transition-all mt-4"
-            >
-              <ShieldAlert className="w-4 h-4" />
-              منطقه خطر
+
+            <TabsTrigger value="notifications">
+              <Bell className="w-4 h-4" />
+              اعلانات
+            </TabsTrigger>
+
+            <TabsTrigger value="security">
+              <Lock className="w-4 h-4" />
+              امنیت و رمز عبور
+            </TabsTrigger>
+
+            <TabsTrigger value="visual">
+              <Palette className="w-4 h-4" />
+              هویت بصری
+            </TabsTrigger>
+
+            <TabsTrigger value="general">
+              <Settings className="w-4 h-4" />
+              تنظیمات عمومی
             </TabsTrigger>
           </TabsList>
 
@@ -197,7 +186,16 @@ export default function BusinessSettingsPage({ business }: Props) {
             </TabsContent>
 
             {/* 2. VISUAL IDENTITY TAB */}
-            <TabsContent value="visual" className="space-y-6">
+            <TabsContent
+              value="visual"
+              className="space-y-6  relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed"
+            >
+              <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
+                <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
+                  این قابلیت به‌زودی فعال می‌شود.
+                  <CircleAlert />
+                </div>
+              </div>
               <Card>
                 <CardHeader>
                   <CardTitle>لوگو و بنر</CardTitle>
@@ -205,14 +203,8 @@ export default function BusinessSettingsPage({ business }: Props) {
                     تصاویری که برند شما را معرفی می‌کنند.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-8 relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed">
+                <CardContent className="space-y-8">
                   {/* Logo Upload */}
-                  <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
-                    <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
-                      این قابلیت به‌زودی فعال می‌شود.
-                      <CircleAlert />
-                    </div>
-                  </div>
 
                   <div className="flex items-start gap-6">
                     <div className="w-24 h-24 rounded-full bg-muted border-2 border-dashed flex items-center justify-center relative overflow-hidden shrink-0">
@@ -259,40 +251,22 @@ export default function BusinessSettingsPage({ business }: Props) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Form onSubmit={onPasswordSubmit}>
-                    <div className="max-w-xl mx-auto p-4 space-y-3">
-                      <BaseField
-                        name="currentPassword"
-                        component={TextCore}
-                        label="رمز عبور فعلی"
-                        required
-                      />
-                      <BaseField
-                        name="newPassword"
-                        component={TextCore}
-                        label="رمز عبور جدید"
-                        required
-                      />
-                      <BaseField
-                        name="repeatNewPassword"
-                        component={TextCore}
-                        label="تکرار رمز عبور جدید"
-                        required
-                      />
-
-                      <div className="pt-4">
-                        <Button type="submit" className="w-full">
-                          بروزرسانی رمز عبور
-                        </Button>
-                      </div>
-                    </div>
-                  </Form>
+                  <ChangePasswordForm />
                 </CardContent>
               </Card>
             </TabsContent>
 
             {/* 4. NOTIFICATIONS TAB */}
-            <TabsContent value="notifications" className="space-y-6">
+            <TabsContent
+              value="notifications"
+              className="space-y-6 relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed"
+            >
+              <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
+                <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
+                  این قابلیت به‌زودی فعال می‌شود.
+                  <CircleAlert />
+                </div>
+              </div>
               <Card>
                 <CardHeader>
                   <CardTitle>تنظیمات اعلانات</CardTitle>
@@ -351,21 +325,29 @@ export default function BusinessSettingsPage({ business }: Props) {
             </TabsContent>
 
             {/* 5. BILLING TAB */}
-            <TabsContent value="billing" className="space-y-6">
-              <div className="flex items-center justify-between rounded-lg border p-4 bg-card">
-                <div>
-                  <h3 className="font-semibold">پلن فعلی: حرفه‌ای (Pro)</h3>
-                  <p className="text-sm text-muted-foreground">
-                    تمدید: ۱۴۰۳/۱۲/۲۹
-                  </p>
+            <TabsContent
+              value="billing"
+              className="space-y-6 relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed"
+            >
+              <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
+                <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
+                  این قابلیت به‌زودی فعال می‌شود.
+                  <CircleAlert />
                 </div>
-                <Badge className="bg-green-100 text-green-800 border-green-200">
-                  فعال
-                </Badge>
               </div>
-
               <Card>
                 <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold">پلن فعلی: حرفه‌ای (Pro)</h3>
+                      <p className="text-sm text-muted-foreground">
+                        تمدید: ۱۴۰۳/۱۲/۲۹
+                      </p>
+                    </div>
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                      فعال
+                    </Badge>
+                  </div>
                   <CardTitle>فاکتورهای اخیر</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -392,7 +374,16 @@ export default function BusinessSettingsPage({ business }: Props) {
             </TabsContent>
 
             {/* 6. DANGER ZONE TAB */}
-            <TabsContent value="danger" className="space-y-6">
+            <TabsContent
+              value="danger"
+              className="space-y-6 relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed"
+            >
+              <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
+                <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
+                  این قابلیت به‌زودی فعال می‌شود.
+                  <CircleAlert />
+                </div>
+              </div>
               <Card className="border-red-200 bg-red-50/50 dark:bg-red-900/10">
                 <CardHeader>
                   <CardTitle className="text-red-700 dark:text-red-400">
@@ -417,7 +408,7 @@ export default function BusinessSettingsPage({ business }: Props) {
               </Card>
             </TabsContent>
           </div>
-        </div>
+        </>
       </Tabs>
     </div>
   );

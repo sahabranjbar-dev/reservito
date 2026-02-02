@@ -46,6 +46,7 @@ const GeneralForm = ({ defaultValues }: Props) => {
           address,
           businessType,
           description,
+          updatedAt: new Date(),
         },
       },
     });
