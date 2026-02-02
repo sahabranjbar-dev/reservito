@@ -1,22 +1,19 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Phone, Search, User } from "lucide-react";
+import { Loader2, Phone, User } from "lucide-react";
 import { useMemo } from "react";
 
 import { CustomTable } from "@/components";
 import { ITableColumns } from "@/types/Table";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import CustomerMoreButton from "./_components/CustomerMoreButton";
-import { getCustomers } from "./_meta/actions";
-import { useSearchParams } from "next/navigation";
-import CustomerSearch from "./_components/CustomerSearch";
-import PaginationWrapper from "@/components/Pagination/Pagination";
 import CustomerPagination from "./_components/CustomerPagination";
+import CustomerSearch from "./_components/CustomerSearch";
+import { getCustomers } from "./_meta/actions";
 
 const BusinessDashboardCustomerPage = () => {
   const searchParams = useSearchParams();

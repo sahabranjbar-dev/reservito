@@ -38,7 +38,7 @@ const PaginationWrapper = ({
             "cursor-pointer rounded-lg px-3 py-1 min-w-9 text-center transition-all text-sm border",
             currentPage === page
               ? "bg-orange-500 text-white border-orange-500"
-              : "hover:bg-orange-100 hover:text-orange-500 border-gray-200"
+              : "hover:bg-orange-100 hover:text-orange-500 border-gray-200",
           )}
         >
           {page}
@@ -58,18 +58,18 @@ const PaginationWrapper = ({
           "cursor-pointer rounded-lg px-3 py-1 min-w-9 text-center transition-all text-sm border",
           currentPage === 1
             ? "bg-orange-500 text-white border-orange-500"
-            : "hover:bg-orange-100 hover:text-orange-500 border-gray-200"
+            : "hover:bg-orange-100 hover:text-orange-500 border-gray-200",
         )}
       >
         1
-      </button>
+      </button>,
     );
 
     if (leftBound > 2) {
       pages.push(
         <span key="left-ellipsis" className="px-2 text-gray-400">
           ...
-        </span>
+        </span>,
       );
     }
 
@@ -82,11 +82,11 @@ const PaginationWrapper = ({
             "rounded-lg px-3 py-1 min-w-9 text-center transition-all text-sm border",
             currentPage === page
               ? "bg-orange-500 text-white border-orange-500"
-              : "hover:bg-orange-100 hover:text-orange-500 border-gray-200"
+              : "hover:bg-orange-100 hover:text-orange-500 border-gray-200",
           )}
         >
           {page}
-        </button>
+        </button>,
       );
     }
 
@@ -94,7 +94,7 @@ const PaginationWrapper = ({
       pages.push(
         <span key="right-ellipsis" className="px-2 text-gray-400">
           ...
-        </span>
+        </span>,
       );
     }
 
@@ -106,11 +106,11 @@ const PaginationWrapper = ({
           "cursor-pointer rounded-lg px-3 py-1 min-w-9 text-center transition-all text-sm border",
           currentPage === totalPages
             ? "bg-orange-500 text-white border-orange-500"
-            : "hover:bg-orange-100 hover:text-orange-500 border-gray-200"
+            : "hover:bg-orange-100 hover:text-orange-500 border-gray-200",
         )}
       >
         {totalPages}
-      </button>
+      </button>,
     );
 
     return pages;
@@ -153,7 +153,7 @@ const PaginationWrapper = ({
                     "cursor-pointer rounded-lg p-2 border border-gray-200 transition-colors",
                     currentPage === 1
                       ? "text-gray-400 cursor-not-allowed"
-                      : "hover:bg-orange-100 hover:text-orange-500"
+                      : "hover:bg-orange-100 hover:text-orange-500",
                   )}
                 >
                   <ChevronsRight className="h-4 w-4" />
@@ -173,7 +173,7 @@ const PaginationWrapper = ({
                     "cursor-pointer rounded-lg p-2 border border-gray-200 transition-colors",
                     currentPage === 1
                       ? "text-gray-400 cursor-not-allowed"
-                      : "hover:bg-orange-100 hover:text-orange-500"
+                      : "hover:bg-orange-100 hover:text-orange-500",
                   )}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -195,7 +195,7 @@ const PaginationWrapper = ({
                     "cursor-pointer rounded-lg p-2 border border-gray-200 transition-colors",
                     currentPage === totalPages
                       ? "text-gray-400 cursor-not-allowed"
-                      : "hover:bg-orange-100 hover:text-orange-500"
+                      : "hover:bg-orange-100 hover:text-orange-500",
                   )}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -215,7 +215,7 @@ const PaginationWrapper = ({
                     "cursor-pointer rounded-lg p-2 border border-gray-200 transition-colors",
                     currentPage === totalPages
                       ? "text-gray-400 cursor-not-allowed"
-                      : "hover:bg-orange-100 hover:text-orange-500"
+                      : "hover:bg-orange-100 hover:text-orange-500",
                   )}
                 >
                   <ChevronsLeft className="h-4 w-4" />

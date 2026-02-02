@@ -40,7 +40,8 @@ export async function approveBusiness(
       where: { id: businessId },
       data: {
         registrationStatus: BusinessStatus.APPROVED,
-        rejectionReason: null, // پاک کردن علت رد در صورت تایید مجدد
+        rejectionReason: null,
+        activatedAt: new Date(),
       },
       include: { owner: true },
     });
@@ -88,6 +89,9 @@ export async function rejectBusiness(businessId: string, reason: string) {
       data: {
         registrationStatus: BusinessStatus.REJECTED,
         rejectionReason: reason,
+        activatedAt: null,
+        isActive: false,
+        rejectedAt: new Date(),
       },
       include: { owner: true },
     });
@@ -110,61 +114,6 @@ export async function rejectBusiness(businessId: string, reason: string) {
     return {
       success: false,
       message: "خطا در رد کردن کسب و کار",
-      error: String(error),
-    };
-  }
-}
-
-export async function updateBusinessCommission(
-  businessId: string,
-  commission: number,
-): Promise<BusinessActionResponse> {
-  try {
-    const session = await getServerSession(authOptions);
-
-    // دسترسی
-    if (!session?.user.roles.includes("SUPER_ADMIN")) {
-      return {
-        success: false,
-        message: "دسترسی ندارید",
-        error: "فقط ادمین می‌تواند کمیسیون را تغییر دهد",
-      };
-    }
-
-    // ولیدیشن
-    if (
-      typeof commission !== "number" ||
-      isNaN(commission) ||
-      commission < 0 ||
-      commission > 100
-    ) {
-      return {
-        success: false,
-        message: "مقدار کمیسیون نامعتبر است",
-        error: "Commission must be between 0 and 100",
-      };
-    }
-
-    // آپدیت دیتابیس
-    await prisma.business.update({
-      where: { id: businessId },
-      data: {
-        commissionRate: commission,
-      },
-    });
-
-    // ری‌ولیدیت کش
-    revalidatePath("/dashboard/admin/businesses");
-
-    return {
-      success: true,
-      message: "کمیسیون با موفقیت بروزرسانی شد",
-    };
-  } catch (error) {
-    console.error("Error updating business commission:", error);
-    return {
-      success: false,
-      message: "خطا در بروزرسانی کمیسیون",
       error: String(error),
     };
   }
@@ -229,15 +178,10 @@ interface IData {
   ownerName: string;
   identifier: string;
   businessType: BusinessType;
-  commissionRate: number;
   registrationStatus: BusinessRegistrationStatus;
   description: string;
   address: string;
-  timezone: string;
   rejectionReason: string;
-  isActive: boolean;
-  allowOnlinePayment: boolean;
-  allowOfflinePayment: boolean;
 }
 
 export async function updateBusiness({
@@ -246,15 +190,10 @@ export async function updateBusiness({
   ownerName,
   identifier,
   businessType,
-  commissionRate,
   address,
-  allowOfflinePayment,
-  allowOnlinePayment,
   description,
-  isActive,
   registrationStatus,
   rejectionReason,
-  timezone,
 }: IData) {
   try {
     const session = await getServerSession(authOptions);
@@ -291,18 +230,21 @@ export async function updateBusiness({
       where: { id },
       data: {
         address,
-        allowOfflinePayment,
-        allowOnlinePayment,
         businessType,
         businessName,
-        commissionRate,
         description,
         identifier: identifier.trim(),
-        isActive,
         ownerName,
         registrationStatus,
-        timezone,
         rejectionReason,
+        activatedAt:
+          registrationStatus === BusinessRegistrationStatus.APPROVED
+            ? new Date()
+            : null,
+        rejectedAt:
+          registrationStatus === BusinessRegistrationStatus.REJECTED
+            ? new Date()
+            : null,
       },
     });
 

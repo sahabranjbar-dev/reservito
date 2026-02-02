@@ -15,9 +15,7 @@ import {
   Copy,
   CreditCard,
   FileText,
-  Globe,
   MapPin,
-  Percent,
   Phone,
   Shield,
   User,
@@ -245,16 +243,6 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
                 </div>
               </div>
 
-              {/* <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
-                  نرخ کمیسیون
-                </label>
-                <div className="flex items-center gap-2 text-gray-800 font-medium bg-white p-3 rounded-lg border border-gray-200">
-                  <Percent size={16} className="text-blue-600" />
-                  <span>{businessDetail?.commissionRate}%</span>
-                </div>
-              </div> */}
-
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">
                   آدرس
@@ -288,16 +276,6 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {/* <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
-                    منطقه زمانی
-                  </label>
-                  <div className="flex items-center gap-2 text-gray-700 text-sm p-3 bg-white rounded-lg border border-gray-200">
-                    <Globe size={14} className="text-gray-500" />
-                    {businessDetail?.timezone}
-                  </div>
-                </div> */}
-
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
                     وضعیت فعال‌سازی
@@ -319,40 +297,6 @@ const AdminBusinessView = ({ id, onCancel, onSuccess }: Props) => {
               <CreditCard size={18} className="text-gray-700" />
               تنظیمات پرداخت
             </h3>
-
-            {/* <div className="grid grid-cols-2 gap-4">
-              <div
-                className={`p-3 rounded-lg border ${businessDetail?.allowOnlinePayment ? "border-green-200 bg-green-50" : "border-gray-200 bg-white"}`}
-              >
-                <div
-                  className={`w-3 h-3 rounded-full ${businessDetail?.allowOnlinePayment ? "bg-green-500" : "bg-gray-300"}`}
-                ></div>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-700 text-nowrap">
-                    پرداخت آنلاین
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {businessDetail?.allowOnlinePayment ? "فعال" : "غیرفعال"}
-                </p>
-              </div>
-
-              <div
-                className={`p-3 rounded-lg border ${businessDetail?.allowOfflinePayment ? "border-blue-200 bg-blue-50" : "border-gray-200 bg-white"}`}
-              >
-                <div
-                  className={`w-3 h-3 rounded-full ${businessDetail?.allowOfflinePayment ? "bg-blue-500" : "bg-gray-300"}`}
-                ></div>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-700 text-nowrap">
-                    پرداخت آفلاین
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {businessDetail?.allowOfflinePayment ? "فعال" : "غیرفعال"}
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
 

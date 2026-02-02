@@ -1,38 +1,19 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import {
-  Check,
-  X,
-  Eye,
-  MapPin,
-  Phone,
-  User,
-  Percent,
-  Edit,
-  ToggleRight,
-  ToggleLeft,
-} from "lucide-react";
-import {
-  approveBusiness,
-  rejectBusiness,
-  toggleBusinessStatus,
-  updateBusinessCommission,
-} from "../_meta/actions/businessActions";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { Modal } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import clsx from "clsx";
-import { BusinessType } from "@/constants/enums";
-import { Modal } from "@/components";
-import AdminBusinessForm from "./AdminBusinessForm";
-import AdminBusinessView from "./AdminBusinessView";
 import { BUSINESS_TYPE } from "@/constants/common";
+import { BusinessType } from "@/constants/enums";
 import { useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
+import { Edit, Eye, ToggleLeft, ToggleRight, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
+import { toggleBusinessStatus } from "../_meta/actions/businessActions";
+import AdminBusinessView from "./AdminBusinessView";
 
 enum BusinessStatus {
   PENDING = "PENDING",
@@ -57,7 +38,6 @@ interface Business {
   address: string | null;
   slug: string;
   businessType: string;
-  commissionRate: number;
   createdAt: string;
   registrationStatus: BusinessStatus;
   rejectionReason: string | null;

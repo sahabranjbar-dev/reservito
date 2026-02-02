@@ -12,8 +12,8 @@ const CustomerSearch = () => {
 
   const { replace } = useRouter();
   const onSubmit = ({ userNameOrPhone }: { userNameOrPhone: string }) => {
-    const params = new URLSearchParams();
-
+    const params = new URLSearchParams(searchParams);
+    params.delete("userNameOrPhone");
     params.append("userNameOrPhone", convertToEnglishDigits(userNameOrPhone));
 
     replace(`/dashboard/business/customers?${params}`);

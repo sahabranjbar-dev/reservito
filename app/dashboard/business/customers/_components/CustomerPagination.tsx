@@ -1,5 +1,5 @@
 import PaginationWrapper from "@/components/Pagination/Pagination";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   currentPage: number;
@@ -14,7 +14,16 @@ const CustomerPagination = ({
   totalCount,
   loading,
 }: Props) => {
-  const onPageChange = () => {};
+  const searchParams = useSearchParams();
+
+  const { replace } = useRouter();
+  const onPageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.delete("page");
+    params.append("page", String(page));
+
+    replace(`/dashboard/business/customers?${params}`);
+  };
   return (
     <PaginationWrapper
       currentPage={currentPage}
