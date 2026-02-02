@@ -12,11 +12,20 @@ import { useConfirm } from "@/hooks/useConfirm";
 import { cn } from "@/lib/utils";
 import { convertToFarsiDigits, getFullDateTime } from "@/utils/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Calendar, Clock, Coins, Phone, Scissors, User } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Coins,
+  Phone,
+  Scissors,
+  TextInitial,
+  User,
+} from "lucide-react";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { Activity, ReactNode, useState } from "react";
 import { toast } from "sonner";
 import { getBookingDetails, updateBookingStatusAction } from "../_meta/actions";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   bookingId: string;
@@ -68,7 +77,6 @@ const BookingDetails = ({ bookingId }: Props) => {
       </div>
     );
   }
-  console.log({ data });
 
   if (!data) return null;
 
@@ -98,20 +106,23 @@ const BookingDetails = ({ bookingId }: Props) => {
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-600">
-            تغییر وضعیت رزرو
-          </label>
+          <Label className="my-2">تغییر وضعیت رزرو</Label>
           <Select
             value={selectedStatus ?? undefined}
             onValueChange={(v) => setSelectedStatus(v as BookingStatus)}
+            dir="rtl"
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="انتخاب وضعیت" />
             </SelectTrigger>
             <SelectContent>
               {(Object.keys(BOOKING_STATUS_LABELS) as BookingStatus[]).map(
                 (status) => (
-                  <SelectItem key={status} value={status}>
+                  <SelectItem
+                    key={status}
+                    value={status}
+                    className="cursor-pointer"
+                  >
                     {BOOKING_STATUS_LABELS[status]}
                   </SelectItem>
                 ),
@@ -122,7 +133,7 @@ const BookingDetails = ({ bookingId }: Props) => {
       </div>
 
       {/* Body */}
-      <div className="space-y-6 grid grid-cols-1 md:grid-cols-2">
+      <div className="space-y-6 grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
         <DetailRow
           icon={<User className="w-4 h-4" />}
           label="مشتری"
@@ -131,11 +142,8 @@ const BookingDetails = ({ bookingId }: Props) => {
         <DetailRow
           icon={<Phone className="w-4 h-4" />}
           label="شماره تماس"
-          value={
-            <Link href={`tel:${data.customer?.phone}`}>
-              {data.customer?.phone}
-            </Link>
-          }
+          value={data.customer?.phone}
+          isCopyable
         />
         <DetailRow
           icon={<Scissors className="w-4 h-4" />}
@@ -158,16 +166,29 @@ const BookingDetails = ({ bookingId }: Props) => {
           value={getFullDateTime(data.startTime)}
         />
 
+        <Activity mode={data.customerNotes ? "visible" : "hidden"}>
+          <div className="border p-2 rounded-lg bg-blue-50 md:col-span-2 ">
+            <p className="flex justify-start items-center gap-2 text-slate-500">
+              <div className="p-1.5 bg-slate-50 rounded-lg border border-slate-100 ">
+                <TextInitial className="w-4 h-4" />
+              </div>
+
+              <span> توضیحات:</span>
+            </p>
+            <p className="p-4">{data.customerNotes}</p>
+          </div>
+        </Activity>
+
         {/* تغییر وضعیت */}
-        <div className="space-y-2 col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <button
             disabled={
-              isPending || selectedStatus === data.status || !selectedStatus
+              !selectedStatus || isPending || selectedStatus === data.status
             }
             onClick={submitStatusChange}
             className={cn(
               "w-full mt-2 py-2 rounded-xl text-sm font-medium transition",
-              isPending || selectedStatus === data.status
+              !selectedStatus || isPending || selectedStatus === data.status
                 ? "bg-slate-100 text-slate-400"
                 : "bg-indigo-600 text-white hover:bg-indigo-700",
             )}
@@ -182,23 +203,37 @@ const BookingDetails = ({ bookingId }: Props) => {
 
 export default BookingDetails;
 
-/* ---------- Sub Components ---------- */
-
 const DetailRow = ({
   icon,
   label,
   value,
+  valueClassName = "text-slate-700",
+  isCopyable = false,
 }: {
   icon: React.ReactNode;
   label: string;
-  value: ReactNode;
+  value: string;
+  valueClassName?: string;
+  isCopyable?: boolean;
 }) => (
-  <div>
-    <div>
-      <div>{icon}</div>
-      <div>{label}</div>
+  <div className="flex justify-between items-center group border p-2 rounded-lg bg-blue-50">
+    <div className="flex items-center gap-3 text-sm text-slate-500">
+      <div className="p-1.5 bg-slate-50 rounded-lg border border-slate-100">
+        {icon}
+      </div>
+      <span>{label}</span>
     </div>
-    <div>{value}</div>
+    <span
+      className={cn(
+        "text-left",
+        valueClassName,
+        isCopyable && "cursor-pointer hover:text-indigo-600 transition-colors",
+      )}
+      title={value}
+      onClick={() => isCopyable && navigator.clipboard.writeText(value)}
+    >
+      {value}
+    </span>
   </div>
 );
 

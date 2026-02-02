@@ -78,7 +78,9 @@ export const authOptions: AuthOptions = {
         // ساخت یا دریافت یوزر (بدون assign کردن role)
         const user = await prisma.user.upsert({
           where: { phone },
-          update: {},
+          update: {
+            lastLoginAt: new Date(),
+          },
           create: { phone },
           include: {
             businessMembers: {

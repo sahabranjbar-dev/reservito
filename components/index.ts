@@ -7,7 +7,7 @@ import Form from "./Form/Form";
 import BaseField from "./BaseField/BaseField";
 import SignoutButton from "./SignoutButton/SignoutButton";
 import ListHeader from "./ListHeader/ListHeader";
-import { Table } from "./Table/Table";
+import CustomTable from "./CustomTable/CustomTable";
 import { TextCore } from "./TextCore/TextCore";
 import CheckboxContainer from "./CheckboxContainer/CheckboxContainer";
 import TimePicker from "./TimePicker/TimePicker";
@@ -23,7 +23,7 @@ import FilterButtons from "./FilterButtons/FilterButtons";
 
 export {
   Header,
-  Table,
+  CustomTable,
   TextCore,
   TimePicker,
   DatePicker,

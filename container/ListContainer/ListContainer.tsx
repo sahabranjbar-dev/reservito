@@ -50,7 +50,9 @@ const ListContainer = ({
         setSearchParams,
       }}
     >
-      <main className="bg-white p-2 rounded-lg">{children}</main>
+      <main className="bg-white p-2 rounded-lg overflow-x-scroll max-w-dvw">
+        {children}
+      </main>
     </ListContainerContext.Provider>
   );
 };

@@ -15,7 +15,7 @@ interface HeaderContentProps {
 export default function HeaderContent({ role }: HeaderContentProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-16 max-w-screen-2xl items-center px-4 md:px-6">
+      <div className="container flex h-16 items-center px-4 md:px-6">
         <div className="flex items-center gap-4">
           <CustomTrigger />
 
@@ -34,7 +34,7 @@ export default function HeaderContent({ role }: HeaderContentProps) {
             className="mx-2 h-6 hidden md:block"
           />
 
-          <div className="w-full max-w-sm hidden md:block">
+          <div className="w-full hidden md:block">
             <div className="relative">
               <Search className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input

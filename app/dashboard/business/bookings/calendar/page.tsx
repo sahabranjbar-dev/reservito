@@ -2,6 +2,7 @@
 
 import { StatusBadge } from "@/components";
 import { cn } from "@/lib/utils";
+import { getCurrentDate } from "@/utils/common";
 import { useMutation } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -94,9 +95,7 @@ const BookingCard = ({ item }: { item: any }) => {
 };
 
 const BookingCalender = () => {
-  const [date, setDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
-  );
+  const [date, setDate] = useState<string>(getCurrentDate());
 
   const {
     data: bookingData,
@@ -111,9 +110,6 @@ const BookingCalender = () => {
         return result;
       }
       return result;
-    },
-    onSuccess: (data) => {
-      console.log({ data });
     },
   });
 
@@ -162,7 +158,6 @@ const BookingCalender = () => {
             await getDayData(date);
           }}
           onMonthChange={async (month) => {
-            console.log({ month });
             await getMonthData({
               from: month.from,
               to: month.to,

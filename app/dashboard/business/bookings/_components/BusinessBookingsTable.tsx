@@ -1,6 +1,6 @@
 "use client";
 
-import { ListHeader, StatusBadge, Table } from "@/components";
+import { ListHeader, StatusBadge, CustomTable } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import ListContainer from "@/container/ListContainer/ListContainer";
 import ListDataProvider from "@/container/ListDataProvider/ListDataProvider";
@@ -25,7 +25,7 @@ const BusinessBookingsTable = ({ data }: Props) => {
       field: "customer",
       render: (customer) => {
         return (
-          <div key={customer?.id} className="flex items-center gap-2 mb-1">
+          <div key={customer?.id}>
             <h3 className="font-bold text-slate-900 text-base">
               {customer.name}
             </h3>
@@ -105,7 +105,7 @@ const BusinessBookingsTable = ({ data }: Props) => {
     <ListContainer data={data}>
       <ListHeader title="لیست رزرو‌ها" filter={<BusinessBookingsFilters />} />
       <ListDataProvider>
-        <Table columns={columns} />
+        <CustomTable columns={columns} />
       </ListDataProvider>
     </ListContainer>
   );

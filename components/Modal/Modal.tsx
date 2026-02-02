@@ -42,7 +42,11 @@ export default function Modal({
   return (
     <Dialog modal open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={clsx("md:max-w-2xl max-h-[94vh]", width, className)}
+        className={clsx(
+          "md:max-w-2xl max-h-[94vh] overflow-scroll",
+          width,
+          className,
+        )}
       >
         {(title || description) && (
           <DialogHeader>
