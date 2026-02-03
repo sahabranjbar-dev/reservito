@@ -1,8 +1,6 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { authOptions } from "@/utils/authOptions";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 // دریافت لیست پرسنل برای دراپ‌داون
@@ -15,6 +13,7 @@ export async function getStaffAction(businessId: string) {
     });
     return { success: true, data: staff };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "خطا در دریافت لیست پرسنل" };
   }
 }
@@ -28,6 +27,7 @@ export async function getStaffScheduleAction(staffId: string) {
     });
     return { success: true, data: schedules };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "خطا در دریافت شیفت‌ها" };
   }
 }
@@ -68,8 +68,8 @@ export async function upsertScheduleAction(staffId: string, schedules: any[]) {
             endTime: schedule.endTime,
             isClosed: schedule.isClosed,
           },
-        })
-      )
+        }),
+      ),
     );
 
     // بروزرسانی کش برای نمایش تغییرات فوری

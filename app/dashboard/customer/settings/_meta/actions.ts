@@ -1,10 +1,6 @@
 "use server";
 import { authOptions } from "@/utils/authOptions";
-import {
-  convertToEnglishDigits,
-  mobileValidation,
-  validateEmail,
-} from "@/utils/common";
+import { convertToEnglishDigits, validateEmail } from "@/utils/common";
 import prisma from "@/utils/prisma";
 import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth";

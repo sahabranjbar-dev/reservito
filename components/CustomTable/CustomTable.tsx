@@ -10,11 +10,15 @@ import { ITableColumns } from "@/types/Table";
 
 interface ICustomTable<T = any> {
   columns: ITableColumns[];
-
-  data?: T;
+  data?: {
+    resultList?: T[];
+  };
   fetch?: () => void;
 }
+
 const CustomTable = ({ columns, data }: ICustomTable) => {
+  const hasData = !!data?.resultList?.length;
+
   return (
     <div className="w-full overflow-x-auto">
       <Table className="min-w-fit">
@@ -32,20 +36,31 @@ const CustomTable = ({ columns, data }: ICustomTable) => {
         </TableHeader>
 
         <TableBody>
-          {data?.resultList?.map((item: any) => (
-            <TableRow key={item?.id}>
-              {columns.map((col, index) => (
-                <TableCell
-                  key={`${col.field}-${index}`}
-                  className="text-center whitespace-nowrap"
-                >
-                  {col.render
-                    ? col.render(item[col.field], item, { index })
-                    : item[col.field]}
-                </TableCell>
-              ))}
+          {hasData ? (
+            data!.resultList!.map((item: any, rowIndex: number) => (
+              <TableRow key={item?.id ?? rowIndex}>
+                {columns.map((col, colIndex) => (
+                  <TableCell
+                    key={`${col.field}-${colIndex}`}
+                    className="text-center whitespace-nowrap"
+                  >
+                    {col.render
+                      ? col.render(item[col.field], item, { index: rowIndex })
+                      : (item[col.field] ?? "—")}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="text-center py-6 text-muted-foreground"
+              >
+                داده‌ای وجود ندارد
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

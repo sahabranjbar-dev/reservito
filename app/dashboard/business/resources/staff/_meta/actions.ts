@@ -59,6 +59,7 @@ export async function createStaffAction(
               role: Role.CUSTOMER,
             },
           },
+          fullName: name,
         },
       });
 

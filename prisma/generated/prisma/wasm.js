@@ -176,6 +176,7 @@ exports.Prisma.StaffMemberScalarFieldEnum = {
   name: 'name',
   avatar: 'avatar',
   phone: 'phone',
+  breakMinutes: 'breakMinutes',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

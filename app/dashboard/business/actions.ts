@@ -54,6 +54,7 @@ export async function setupBusinessAction({
           roles: {
             create: { role: "CUSTOMER" },
           },
+          fullName: staffName,
         },
         include: { roles: true },
       });

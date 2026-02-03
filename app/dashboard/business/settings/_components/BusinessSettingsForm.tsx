@@ -28,7 +28,12 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { BaseField, Form, SwitchComponent } from "@/components";
+import {
+  BaseField,
+  DisabledSection,
+  Form,
+  SwitchComponent,
+} from "@/components";
 import { BusinessRegistrationStatus, BusinessType } from "@/constants/enums";
 import clsx from "clsx";
 import ChangePasswordForm from "./ChangePasswordForm";
@@ -261,12 +266,7 @@ export default function BusinessSettingsPage({ business }: Props) {
               value="notifications"
               className="space-y-6 relative overflow-hidden p-4 border rounded-2xl cursor-not-allowed"
             >
-              <div className="absolute backdrop-blur-[2px] w-full h-full top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
-                <div className="border p-2 rounded-2xl bg-yellow-100 flex justify-center items-center gap-2 text-gray-600">
-                  این قابلیت به‌زودی فعال می‌شود.
-                  <CircleAlert />
-                </div>
-              </div>
+              <DisabledSection />
               <Card>
                 <CardHeader>
                   <CardTitle>تنظیمات اعلانات</CardTitle>

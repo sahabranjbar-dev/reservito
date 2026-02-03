@@ -109,15 +109,16 @@ export default function HubPage() {
           )}
 
           {businessMemberData?.role === "STAFF" && (
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/dashboard/staff")}
-              className="w-full flex items-center justify-center gap-3 p-4 border-2 border-indigo-100 rounded-xl hover:bg-indigo-50 transition group"
+              className="w-full flex items-center justify-center gap-3 p-4 border-2 border-orange-100 rounded-xl hover:bg-orange-50 transition group"
             >
-              <Briefcase className="text-indigo-600 group-hover:scale-110 transition" />
+              <Briefcase className="text-orange-600 group-hover:scale-110 transition" />
               <span className="font-bold text-gray-700">
                 همکار کسب‌وکار {businessMemberData?.business?.businessName}
               </span>
-            </button>
+            </Button>
           )}
 
           {session?.user?.roles.includes("SUPER_ADMIN") && (

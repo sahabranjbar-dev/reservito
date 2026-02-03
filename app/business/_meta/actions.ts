@@ -126,7 +126,6 @@ export async function getAvailableSlotsAction(params: {
     });
 
     if (!service) throw new Error("Service not found");
-    const serviceDuration = service.duration;
 
     // 2. دریافت پرسنل فعال مرتبط
     const staffList = await prisma.staffMember.findMany({
@@ -181,6 +180,11 @@ export async function getAvailableSlotsAction(params: {
     for (const staff of staffList) {
       // الف) بررسی تعطیلی روزانه (StaffException)
       // نرمال‌سازی تاریخ به رشته برای مقایسه ایمن
+      const serviceDuration = service.duration;
+      const staffBreak = staff.breakMinutes || 0;
+
+      const totalSlotDuration = serviceDuration + staffBreak;
+
       const exceptionDateStr = dateObj.toISOString().split("T")[0];
 
       const isOffToday = staff.exceptions.some((exc) => {
@@ -217,7 +221,7 @@ export async function getAvailableSlotsAction(params: {
       // ج) تولید اسلات‌ها
       for (
         let timeMin = shiftStartMin;
-        timeMin + serviceDuration <= shiftEndMin;
+        timeMin + totalSlotDuration <= shiftEndMin;
         timeMin += SLOT_INTERVAL
       ) {
         const slotTimeString = `${String(Math.floor(timeMin / 60)).padStart(
@@ -227,7 +231,7 @@ export async function getAvailableSlotsAction(params: {
 
         const potentialStart = new Date(`${date}T${slotTimeString}:00`);
         const potentialEnd = new Date(
-          potentialStart.getTime() + serviceDuration * 60000,
+          potentialStart.getTime() + totalSlotDuration * 60000,
         );
 
         if (isToday && potentialStart <= now) {

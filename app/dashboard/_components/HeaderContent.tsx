@@ -15,8 +15,8 @@ interface HeaderContentProps {
 
 export default function HeaderContent({ role }: HeaderContentProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-16 items-center px-4 md:px-6">
+    <header className="sticky top-0 z-40 w-full border-b border-primary/20 bg-primary-100/95 backdrop-blur supports-backdrop-filter:bg-primary-100/60 ">
+      <div className="flex h-16 items-center px-4 md:px-6">
         <div className="flex items-center gap-4">
           <CustomTrigger />
 

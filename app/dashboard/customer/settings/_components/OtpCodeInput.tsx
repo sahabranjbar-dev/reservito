@@ -10,8 +10,10 @@ import { AxiosError } from "axios";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { otCodeValidate } from "../_meta/actions";
+import { useSession } from "next-auth/react";
 
 const OtpCodeInput = () => {
+  const { data: userData } = useSession();
   const { minutes, seconds, isRunning, restart } = useTimer({
     autoStart: false,
     initialSeconds: 5,
@@ -88,7 +90,11 @@ const OtpCodeInput = () => {
                 type="button"
                 variant="link"
                 onClick={handleSendOtp}
-                disabled={!isPhoneValid || sendOtpMutation.isPending}
+                disabled={
+                  !isPhoneValid ||
+                  sendOtpMutation.isPending ||
+                  phone === userData?.user.phone
+                }
               >
                 دریافت کد تایید
               </Button>

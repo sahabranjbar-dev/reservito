@@ -17,7 +17,7 @@ interface Props {
   value: Date | undefined;
 }
 
-const DatePicker = ({ label, onChange, value }: Props) => {
+const DatePicker = ({ label, onChange, value, ...res }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
@@ -42,6 +42,7 @@ const DatePicker = ({ label, onChange, value }: Props) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
+          {...res}
           locale={faIR}
           mode="single"
           selected={value}

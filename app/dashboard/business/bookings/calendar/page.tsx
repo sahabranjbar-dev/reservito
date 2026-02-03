@@ -95,7 +95,7 @@ const BookingCard = ({ item }: { item: any }) => {
 };
 
 const BookingCalender = () => {
-  const [date, setDate] = useState<string>(getCurrentDate());
+  const [date, setDate] = useState<string | null>(null);
 
   const {
     data: bookingData,

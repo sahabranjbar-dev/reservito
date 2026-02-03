@@ -1,8 +1,8 @@
 "use client";
-
 import {
   BaseField,
   Combobox,
+  DatePicker,
   FilterButtons,
   Form,
   TextCore,
@@ -15,12 +15,11 @@ interface IForm {
   customerName?: string;
   customerPhone?: string;
   serviceName?: string;
-  staffName?: string;
   date?: string;
   status?: BookingStatus;
 }
 
-const BusinessBookingsFilters = () => {
+const StaffBookingFilter = () => {
   const { replace } = useRouter();
   const searchParams = useSearchParams();
 
@@ -29,9 +28,8 @@ const BusinessBookingsFilters = () => {
     customerName: searchParams.get("customerName") || "",
     customerPhone: searchParams.get("customerPhone") || "",
     serviceName: searchParams.get("serviceName") || "",
-    staffName: searchParams.get("staffName") || "",
     date: searchParams.get("date") || "",
-    status: (searchParams.get("status") as BookingStatus) || null,
+    status: (searchParams.get("status") as BookingStatus) || undefined,
   };
 
   const onSubmit = (values: IForm) => {
@@ -41,22 +39,17 @@ const BusinessBookingsFilters = () => {
       if (value) params.append(key, value.toString());
     });
 
-    replace(`/dashboard/business/bookings?${params.toString()}`);
+    replace(`/dashboard/staff/bookings?${params.toString()}`);
   };
 
   const removeFilterHandler = () => {
-    replace(`/dashboard/business/bookings`);
+    replace(`/dashboard/staff/bookings`);
   };
-
   return (
-    <Form<IForm>
-      onSubmit={onSubmit}
-      className="grid grid-cols-1 md:grid-cols-4 gap-2"
-      defaultValues={defaultValues}
-    >
-      {({ reset }) => {
+    <Form<IForm> defaultValues={defaultValues} onSubmit={onSubmit}>
+      {({ reset, setValue }) => {
         return (
-          <>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
             <BaseField
               component={TextCore}
               label="نام مشتری"
@@ -72,12 +65,8 @@ const BusinessBookingsFilters = () => {
               label="نام سرویس"
               name="serviceName"
             />
-            <BaseField
-              component={TextCore}
-              label="نام همکار"
-              name="staffName"
-            />
-            <BaseField component={TextCore} label="تاریخ رزرو" name="date" />
+
+            <BaseField component={DatePicker} label="تاریخ رزرو" name="date" />
 
             <BaseField
               component={Combobox}
@@ -91,15 +80,16 @@ const BusinessBookingsFilters = () => {
 
             <FilterButtons
               removeFilterHandler={() => {
+                setValue("date", "");
                 reset();
                 removeFilterHandler();
               }}
             />
-          </>
+          </div>
         );
       }}
     </Form>
   );
 };
 
-export default BusinessBookingsFilters;
+export default StaffBookingFilter;

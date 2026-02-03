@@ -7216,8 +7216,18 @@ export namespace Prisma {
 
   export type AggregateStaffMember = {
     _count: StaffMemberCountAggregateOutputType | null
+    _avg: StaffMemberAvgAggregateOutputType | null
+    _sum: StaffMemberSumAggregateOutputType | null
     _min: StaffMemberMinAggregateOutputType | null
     _max: StaffMemberMaxAggregateOutputType | null
+  }
+
+  export type StaffMemberAvgAggregateOutputType = {
+    breakMinutes: number | null
+  }
+
+  export type StaffMemberSumAggregateOutputType = {
+    breakMinutes: number | null
   }
 
   export type StaffMemberMinAggregateOutputType = {
@@ -7227,6 +7237,7 @@ export namespace Prisma {
     name: string | null
     avatar: string | null
     phone: string | null
+    breakMinutes: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7240,6 +7251,7 @@ export namespace Prisma {
     name: string | null
     avatar: string | null
     phone: string | null
+    breakMinutes: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7253,6 +7265,7 @@ export namespace Prisma {
     name: number
     avatar: number
     phone: number
+    breakMinutes: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -7261,6 +7274,14 @@ export namespace Prisma {
   }
 
 
+  export type StaffMemberAvgAggregateInputType = {
+    breakMinutes?: true
+  }
+
+  export type StaffMemberSumAggregateInputType = {
+    breakMinutes?: true
+  }
+
   export type StaffMemberMinAggregateInputType = {
     id?: true
     businessId?: true
@@ -7268,6 +7289,7 @@ export namespace Prisma {
     name?: true
     avatar?: true
     phone?: true
+    breakMinutes?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7281,6 +7303,7 @@ export namespace Prisma {
     name?: true
     avatar?: true
     phone?: true
+    breakMinutes?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7294,6 +7317,7 @@ export namespace Prisma {
     name?: true
     avatar?: true
     phone?: true
+    breakMinutes?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7339,6 +7363,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: StaffMemberAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StaffMemberSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: StaffMemberMinAggregateInputType
@@ -7369,6 +7405,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: StaffMemberCountAggregateInputType | true
+    _avg?: StaffMemberAvgAggregateInputType
+    _sum?: StaffMemberSumAggregateInputType
     _min?: StaffMemberMinAggregateInputType
     _max?: StaffMemberMaxAggregateInputType
   }
@@ -7380,11 +7418,14 @@ export namespace Prisma {
     name: string
     avatar: string | null
     phone: string | null
+    breakMinutes: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
     _count: StaffMemberCountAggregateOutputType | null
+    _avg: StaffMemberAvgAggregateOutputType | null
+    _sum: StaffMemberSumAggregateOutputType | null
     _min: StaffMemberMinAggregateOutputType | null
     _max: StaffMemberMaxAggregateOutputType | null
   }
@@ -7410,6 +7451,7 @@ export namespace Prisma {
     name?: boolean
     avatar?: boolean
     phone?: boolean
+    breakMinutes?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7431,6 +7473,7 @@ export namespace Prisma {
     name?: boolean
     avatar?: boolean
     phone?: boolean
+    breakMinutes?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7446,6 +7489,7 @@ export namespace Prisma {
     name?: boolean
     avatar?: boolean
     phone?: boolean
+    breakMinutes?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7461,13 +7505,14 @@ export namespace Prisma {
     name?: boolean
     avatar?: boolean
     phone?: boolean
+    breakMinutes?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type StaffMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "userId" | "name" | "avatar" | "phone" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["staffMember"]>
+  export type StaffMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessId" | "userId" | "name" | "avatar" | "phone" | "breakMinutes" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["staffMember"]>
   export type StaffMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | BusinessDefaultArgs<ExtArgs>
     user?: boolean | StaffMember$userArgs<ExtArgs>
@@ -7505,6 +7550,7 @@ export namespace Prisma {
       name: string
       avatar: string | null
       phone: string | null
+      breakMinutes: number
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -7945,6 +7991,7 @@ export namespace Prisma {
     readonly name: FieldRef<"StaffMember", 'String'>
     readonly avatar: FieldRef<"StaffMember", 'String'>
     readonly phone: FieldRef<"StaffMember", 'String'>
+    readonly breakMinutes: FieldRef<"StaffMember", 'Int'>
     readonly isActive: FieldRef<"StaffMember", 'Boolean'>
     readonly createdAt: FieldRef<"StaffMember", 'DateTime'>
     readonly updatedAt: FieldRef<"StaffMember", 'DateTime'>
@@ -18653,6 +18700,7 @@ export namespace Prisma {
     name: 'name',
     avatar: 'avatar',
     phone: 'phone',
+    breakMinutes: 'breakMinutes',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -19335,6 +19383,7 @@ export namespace Prisma {
     name?: StringFilter<"StaffMember"> | string
     avatar?: StringNullableFilter<"StaffMember"> | string | null
     phone?: StringNullableFilter<"StaffMember"> | string | null
+    breakMinutes?: IntFilter<"StaffMember"> | number
     isActive?: BoolFilter<"StaffMember"> | boolean
     createdAt?: DateTimeFilter<"StaffMember"> | Date | string
     updatedAt?: DateTimeFilter<"StaffMember"> | Date | string
@@ -19355,6 +19404,7 @@ export namespace Prisma {
     name?: SortOrder
     avatar?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
+    breakMinutes?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19379,6 +19429,7 @@ export namespace Prisma {
     name?: StringFilter<"StaffMember"> | string
     avatar?: StringNullableFilter<"StaffMember"> | string | null
     phone?: StringNullableFilter<"StaffMember"> | string | null
+    breakMinutes?: IntFilter<"StaffMember"> | number
     isActive?: BoolFilter<"StaffMember"> | boolean
     createdAt?: DateTimeFilter<"StaffMember"> | Date | string
     updatedAt?: DateTimeFilter<"StaffMember"> | Date | string
@@ -19399,13 +19450,16 @@ export namespace Prisma {
     name?: SortOrder
     avatar?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
+    breakMinutes?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     _count?: StaffMemberCountOrderByAggregateInput
+    _avg?: StaffMemberAvgOrderByAggregateInput
     _max?: StaffMemberMaxOrderByAggregateInput
     _min?: StaffMemberMinOrderByAggregateInput
+    _sum?: StaffMemberSumOrderByAggregateInput
   }
 
   export type StaffMemberScalarWhereWithAggregatesInput = {
@@ -19418,6 +19472,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"StaffMember"> | string
     avatar?: StringNullableWithAggregatesFilter<"StaffMember"> | string | null
     phone?: StringNullableWithAggregatesFilter<"StaffMember"> | string | null
+    breakMinutes?: IntWithAggregatesFilter<"StaffMember"> | number
     isActive?: BoolWithAggregatesFilter<"StaffMember"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"StaffMember"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"StaffMember"> | Date | string
@@ -20487,6 +20542,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20507,6 +20563,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20523,6 +20580,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20543,6 +20601,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20561,6 +20620,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20572,6 +20632,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20585,6 +20646,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21218,7 +21280,7 @@ export namespace Prisma {
     email?: string | null
     phone: string
     message: string
-    status: $Enums.ContactMessageStatus
+    status?: $Enums.ContactMessageStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21229,7 +21291,7 @@ export namespace Prisma {
     email?: string | null
     phone: string
     message: string
-    status: $Enums.ContactMessageStatus
+    status?: $Enums.ContactMessageStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21262,7 +21324,7 @@ export namespace Prisma {
     email?: string | null
     phone: string
     message: string
-    status: $Enums.ContactMessageStatus
+    status?: $Enums.ContactMessageStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21728,6 +21790,17 @@ export namespace Prisma {
     _max?: NestedEnumBusinessRoleFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -21785,10 +21858,15 @@ export namespace Prisma {
     name?: SortOrder
     avatar?: SortOrder
     phone?: SortOrder
+    breakMinutes?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type StaffMemberAvgOrderByAggregateInput = {
+    breakMinutes?: SortOrder
   }
 
   export type StaffMemberMaxOrderByAggregateInput = {
@@ -21798,6 +21876,7 @@ export namespace Prisma {
     name?: SortOrder
     avatar?: SortOrder
     phone?: SortOrder
+    breakMinutes?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21811,13 +21890,18 @@ export namespace Prisma {
     name?: SortOrder
     avatar?: SortOrder
     phone?: SortOrder
+    breakMinutes?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
+  export type StaffMemberSumOrderByAggregateInput = {
+    breakMinutes?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -21825,7 +21909,12 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StaffMemberScalarRelationFilter = {
@@ -21871,22 +21960,6 @@ export namespace Prisma {
 
   export type StaffAvailabilitySumOrderByAggregateInput = {
     dayOfWeek?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StaffExceptionStaffIdDateCompoundUniqueInput = {
@@ -22981,6 +23054,14 @@ export namespace Prisma {
     connect?: StaffServiceChangeRequestWhereUniqueInput | StaffServiceChangeRequestWhereUniqueInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type BusinessUpdateOneRequiredWithoutStaffMembersNestedInput = {
     create?: XOR<BusinessCreateWithoutStaffMembersInput, BusinessUncheckedCreateWithoutStaffMembersInput>
     connectOrCreate?: BusinessCreateOrConnectWithoutStaffMembersInput
@@ -23143,14 +23224,6 @@ export namespace Prisma {
     create?: XOR<StaffMemberCreateWithoutSchedulesInput, StaffMemberUncheckedCreateWithoutSchedulesInput>
     connectOrCreate?: StaffMemberCreateOrConnectWithoutSchedulesInput
     connect?: StaffMemberWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type StaffMemberUpdateOneRequiredWithoutSchedulesNestedInput = {
@@ -24051,6 +24124,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24069,6 +24143,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24288,6 +24363,7 @@ export namespace Prisma {
     name?: StringFilter<"StaffMember"> | string
     avatar?: StringNullableFilter<"StaffMember"> | string | null
     phone?: StringNullableFilter<"StaffMember"> | string | null
+    breakMinutes?: IntFilter<"StaffMember"> | number
     isActive?: BoolFilter<"StaffMember"> | boolean
     createdAt?: DateTimeFilter<"StaffMember"> | Date | string
     updatedAt?: DateTimeFilter<"StaffMember"> | Date | string
@@ -24484,6 +24560,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24502,6 +24579,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25489,6 +25567,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25508,6 +25587,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25539,6 +25619,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25558,6 +25639,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25573,6 +25655,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25592,6 +25675,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25623,6 +25707,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25642,6 +25727,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25968,6 +26054,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25987,6 +26074,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26061,6 +26149,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26080,6 +26169,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26234,6 +26324,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26253,6 +26344,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26486,6 +26578,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26505,6 +26598,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26787,6 +26881,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26806,6 +26901,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26874,6 +26970,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26893,6 +26990,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27026,6 +27124,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27269,6 +27368,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27287,6 +27387,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27304,6 +27405,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27328,6 +27430,7 @@ export namespace Prisma {
     name: string
     avatar?: string | null
     phone?: string | null
+    breakMinutes?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27406,6 +27509,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27424,6 +27528,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27441,6 +27546,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    breakMinutes?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

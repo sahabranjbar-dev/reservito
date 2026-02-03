@@ -32,11 +32,11 @@ export const BUSINESS_TYPE: Record<BusinessType, string> = {
 };
 
 export const BOOKING_STATUS = {
-  [BookingStatus.PENDING]: "در انتظار",
+  [BookingStatus.PENDING]: "در انتظار تأیید",
   [BookingStatus.CONFIRMED]: "تأیید شده",
   [BookingStatus.COMPLETED]: "انجام شده",
   [BookingStatus.CANCELED]: "لغو شده",
-  [BookingStatus.REJECTED]: "رد شده توسط مجموعه",
-  [BookingStatus.NO_SHOW_CUSTOMER]: "عدم حضور شما",
+  [BookingStatus.REJECTED]: "رد شده",
+  [BookingStatus.NO_SHOW_CUSTOMER]: "عدم حضور مشتری",
   [BookingStatus.NO_SHOW_STAFF]: "عدم حضور پرسنل",
 };

@@ -51,7 +51,7 @@ const StatusBadge = ({ status }: Props) => {
       priority: 3,
     },
     COMPLETED: {
-      label: "تکمیل شده",
+      label: "انجام شده",
       className:
         "bg-gradient-to-r from-slate-50 to-gray-50 text-slate-700 border-slate-300/70 shadow-[0_2px_8px_-2px_rgba(100,116,139,0.2)]",
       icon: CalendarCheck,
@@ -83,7 +83,7 @@ const StatusBadge = ({ status }: Props) => {
       priority: 7,
     },
     NO_SHOW_STAFF: {
-      label: "عدم حضور همکار",
+      label: "عدم حضور پرسنل",
       className:
         "bg-gradient-to-r from-fuchsia-50 to-pink-50 text-fuchsia-700 border-fuchsia-300/70 shadow-[0_2px_8px_-2px_rgba(217,70,239,0.2)]",
       icon: CalendarX,

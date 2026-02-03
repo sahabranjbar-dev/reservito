@@ -110,27 +110,14 @@ const customerSideBarItems: SidebarItem[] = [
 
 // --- 3. Staff (پرسنل) ---
 const staffSideBarItems: SidebarItem[] = [
-  { title: "داشبورد پرسنلی", url: "/", icon: Home },
-  { title: "تقویم کاری من", url: "/schedule", icon: Calendar },
-  { title: "نوبت‌های من", url: "/appointments", icon: CalendarCheck },
+  { title: "داشبورد", url: "/", icon: Home },
+  { title: "تقویم کاری", url: "/schedule", icon: Calendar },
+  { title: "نوبت‌ها", url: "/bookings", icon: CalendarCheck },
   {
-    title: "خدمات من",
+    title: "خدمات",
     icon: ListChecks,
-    children: [
-      { title: "لیست خدمات", url: "/services", icon: ListChecks },
-      { title: "تاریخچه شیفت‌ها", url: "/shifts-history", icon: CalendarClock },
-    ],
+    url: "/services",
   },
-  {
-    title: "درآمدها",
-    icon: Wallet,
-    children: [
-      { title: "کیف پول", url: "/finance/wallet", icon: Wallet },
-      { title: "عملکرد من", url: "/finance/performance", icon: Trophy },
-    ],
-  },
-  { title: "پیام‌ها", url: "/messages", icon: Inbox },
-  { title: "تنظیمات حساب", url: "/settings", icon: Settings },
 ];
 
 // --- 4. Admin (مدیر سیستم) ---
@@ -186,15 +173,6 @@ const adminSideBarItems: SidebarItem[] = [
   { title: "تنظیمات سیستمی", url: "/settings", icon: Settings },
 ];
 
-// Fix for missing icons in admin
-// I will map generic icons if specific ones aren't there to prevent build errors,
-// but usually you just add them to imports.
-// For this response, I will assume standard lucide icons or add them to imports above.
-
-// ==========================================
-// Helper Functions
-// ==========================================
-
 function getUserRole(session: any): UserRoleType {
   if (session?.user?.roles?.includes(Role.SUPER_ADMIN)) {
     return "admin";
@@ -208,28 +186,39 @@ function getUserRole(session: any): UserRoleType {
   return "customer";
 }
 
-// ==========================================
-// Hooks
-// ==========================================
-
 function useSidebarConfig() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
 
   return useMemo(() => {
-    if (status === "loading")
+    if (status === "loading") {
       return { items: [], role: "customer" as UserRoleType };
+    }
 
     const role = getUserRole(session);
 
     let items: SidebarItem[] = [];
     switch (role) {
       case "admin":
+        if (!pathname.includes(role)) {
+          items = customerSideBarItems;
+          break;
+        }
         items = adminSideBarItems;
         break;
       case "business":
+        if (!pathname.includes(role)) {
+          items = customerSideBarItems;
+          break;
+        }
+
         items = businessSideBarItems;
         break;
       case "staff":
+        if (!pathname.includes(role)) {
+          items = customerSideBarItems;
+          break;
+        }
         items = staffSideBarItems;
         break;
       default:
@@ -238,12 +227,8 @@ function useSidebarConfig() {
     }
 
     return { items, role };
-  }, [session, status]);
+  }, [pathname, session, status]);
 }
-
-// ==========================================
-// Sub-Components
-// ==========================================
 
 interface SidebarItemProps {
   item: SidebarItem;
@@ -254,7 +239,7 @@ interface SidebarItemProps {
 function SidebarItemComponent({ item, pathname, role }: SidebarItemProps) {
   const Icon = item.icon;
   const hasChildren = !!item.children?.length;
-  const basePath = `/dashboard/${role}`;
+  const basePath = `/dashboard/${pathname.split("/")[2]}`;
 
   // Helper to check URL activity
   const isUrlActive = (url: string) => {

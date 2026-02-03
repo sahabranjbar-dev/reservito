@@ -22,6 +22,7 @@ import StatusBadge from "./StatusBadge/StatusBadge";
 import FilterButtons from "./FilterButtons/FilterButtons";
 import LiveClock from "./LiveClock/LiveClock";
 import DynamicClockIcon from "./DynamicClockIcon/DynamicClockIcon";
+import DisabledSection from "./DisabledSection/DisabledSection";
 
 export {
   Header,
@@ -48,4 +49,5 @@ export {
   FilterButtons,
   LiveClock,
   DynamicClockIcon,
+  DisabledSection,
 };
