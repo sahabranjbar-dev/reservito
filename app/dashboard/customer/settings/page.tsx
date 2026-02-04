@@ -3,6 +3,7 @@ import CustomerSettingForm from "./_components/CustomerSettingForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import prisma from "@/utils/prisma";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "تنظیمات پروفایل | رزرویتو",
@@ -12,7 +13,7 @@ const CustomerDashboardSettings = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return { success: false, message: "دسترسی ندارید" };
+    redirect("/auth");
   }
 
   const userId = session.user.id;
