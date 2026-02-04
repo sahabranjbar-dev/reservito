@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useList } from "@/container/ListContainer/ListContainer";
 import { ITableColumns } from "@/types/Table";
 
 interface ICustomTable<T = any> {
@@ -14,10 +15,11 @@ interface ICustomTable<T = any> {
     resultList?: T[];
   };
   fetch?: () => void;
+  RowForm?: any;
 }
-
-const CustomTable = ({ columns, data }: ICustomTable) => {
+const CustomTable = ({ columns, data, RowForm }: ICustomTable) => {
   const hasData = !!data?.resultList?.length;
+  const { editingRowId, isCreating } = useList();
 
   return (
     <div className="w-full overflow-x-auto">
@@ -36,21 +38,26 @@ const CustomTable = ({ columns, data }: ICustomTable) => {
         </TableHeader>
 
         <TableBody>
+          {isCreating && <RowForm data={data} />}
           {hasData ? (
-            data!.resultList!.map((item: any, rowIndex: number) => (
-              <TableRow key={`${item?.id}-${rowIndex}`}>
-                {columns.map((col, colIndex) => (
-                  <TableCell
-                    key={`${col.field}-${colIndex}`}
-                    className="text-center whitespace-nowrap"
-                  >
-                    {col.render
-                      ? col.render(item[col.field], item, { index: rowIndex })
-                      : (item[col.field] ?? "—")}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            data!.resultList!.map((item: any, rowIndex: number) =>
+              editingRowId === item.id ? (
+                <RowForm key={item.id} data={item} />
+              ) : (
+                <TableRow key={item.id}>
+                  {columns.map((col, colIndex) => (
+                    <TableCell
+                      key={`${col.field}-${colIndex}`}
+                      className="text-center whitespace-nowrap"
+                    >
+                      {col.render
+                        ? col.render(item[col.field], item, { index: rowIndex })
+                        : (item[col.field] ?? "—")}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ),
+            )
           ) : (
             <TableRow>
               <TableCell

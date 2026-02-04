@@ -44,7 +44,9 @@ export default function ServicesClient({
   };
 
   const handleDelete = async (service: any) => {
-    await confirm().then(async (value) => {
+    await confirm({
+      description: "آیا میخواهید این سرویس را حذف کنید؟",
+    }).then(async (value) => {
       if (!value) return;
       const result = await deleteService(service?.id);
       if (!result.success) {

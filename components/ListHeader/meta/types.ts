@@ -8,4 +8,5 @@ export interface IListHeader {
   hasExport?: boolean;
   exportUrl?: string;
   createButton?: ReactElement;
+  onRefresh?: () => void;
 }

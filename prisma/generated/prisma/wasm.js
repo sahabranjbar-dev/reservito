@@ -283,9 +283,52 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  performedBy: 'performedBy',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ContactMessageReplyScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  reply: 'reply',
+  repliedBy: 'repliedBy',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TicketScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  status: 'status',
+  priority: 'priority',
+  createdAt: 'createdAt',
+  closedAt: 'closedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -296,6 +339,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
@@ -351,6 +400,25 @@ exports.ContactMessageStatus = exports.$Enums.ContactMessageStatus = {
   CLOSED: 'CLOSED'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  SYSTEM: 'SYSTEM',
+  BOOKING: 'BOOKING',
+  MESSAGE: 'MESSAGE',
+  SERVICE_CHANGE: 'SERVICE_CHANGE'
+};
+
+exports.TicketStatus = exports.$Enums.TicketStatus = {
+  OPEN: 'OPEN',
+  PENDING: 'PENDING',
+  CLOSED: 'CLOSED'
+};
+
+exports.TicketPriority = exports.$Enums.TicketPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserRole: 'UserRole',
@@ -365,7 +433,11 @@ exports.Prisma.ModelName = {
   Favorite: 'Favorite',
   StaffServiceChangeRequest: 'StaffServiceChangeRequest',
   OtpCode: 'OtpCode',
-  ContactMessage: 'ContactMessage'
+  ContactMessage: 'ContactMessage',
+  AuditLog: 'AuditLog',
+  Notification: 'Notification',
+  ContactMessageReply: 'ContactMessageReply',
+  Ticket: 'Ticket'
 };
 
 /**

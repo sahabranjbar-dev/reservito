@@ -17,19 +17,23 @@ const ListHeader = ({
   formPath,
   title,
   createButton,
+  onRefresh,
 }: IListHeader) => {
   const searchParams = useSearchParams();
 
   const hasFilter = searchParams.keys().some(Boolean);
 
   const { refresh } = useRouter();
-  const { fetch, loading, url } = useList();
+  const { fetch, loading, url, setIsCreating } = useList();
   const [filterOpen, setFilterOpen] = useState<boolean>();
 
   return (
     <div>
       {title && <h2 className="text-2xl font-semibold my-4">{title}</h2>}
       <div className="flex items-start justify-start gap-2 my-2">
+        <Button variant="outline" onClick={() => setIsCreating?.(true)}>
+          <Plus />
+        </Button>
         {createButton
           ? createButton
           : !!formPath && (
@@ -52,6 +56,10 @@ const ListHeader = ({
             disabled={loading}
             tooltip="بروزرسانی"
             onClick={() => {
+              if (onRefresh) {
+                onRefresh?.();
+                return;
+              }
               if (url) {
                 fetch();
                 return;

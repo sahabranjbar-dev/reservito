@@ -1,7 +1,13 @@
 "use server";
 
-import { BusinessRegistrationStatus, BusinessType } from "@/constants/enums";
+import {
+  BusinessRegistrationStatus,
+  BusinessRole,
+  BusinessType,
+  Role,
+} from "@/constants/enums";
 import { authOptions } from "@/utils/authOptions";
+import { convertToEnglishDigits } from "@/utils/common";
 import prisma from "@/utils/prisma";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -256,6 +262,261 @@ export async function updateBusiness({
     return {
       success: false,
       message: "خطا در ویرایش اطلاعات کسب‌وکار",
+    };
+  }
+}
+
+export async function getBusinessStaff(businessId: string) {
+  try {
+    if (!businessId) {
+      return { success: false, message: "id is required" };
+    }
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user) {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    if (!session.user.roles.includes(Role.SUPER_ADMIN)) {
+      return { success: false, message: "Access denied" };
+    }
+
+    const page = 1;
+    const pageSize = 10;
+
+    const where = {
+      businessId,
+      deletedAt: null,
+    };
+
+    const staffMember = await prisma.staffMember.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            phone: true,
+            email: true,
+          },
+        },
+        business: {
+          select: {
+            id: true,
+            businessName: true,
+          },
+        },
+        services: {
+          include: {
+            service: {
+              select: {
+                id: true,
+                name: true,
+                staff: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const resultList = staffMember.map((item, index) => ({
+      ...item,
+      rowNumber: (page - 1) * pageSize + index + 1,
+    }));
+
+    const totalItems = await prisma.staffMember.count({
+      where,
+    });
+
+    const data = {
+      resultList,
+      totalItems,
+      page,
+      pageSize,
+      totalPages: Math.ceil(totalItems / pageSize),
+    };
+
+    return { success: true, data };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Server error" };
+  }
+}
+interface IUsertData {
+  businessId: string;
+  staffPhone: string;
+  staffName: string;
+  staffMemberId?: string;
+}
+
+export async function upsertStaff({
+  businessId,
+  staffPhone,
+  staffName,
+  staffMemberId,
+}: IUsertData) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const business = await tx.business.findUnique({
+        where: { id: businessId },
+      });
+
+      if (!business) {
+        throw new Error("BUSINESS_NOT_FOUND");
+      }
+
+      const phone = convertToEnglishDigits(staffPhone);
+
+      // 1️⃣ UPSERT USER (by phone)
+      const user = await tx.user.upsert({
+        where: { phone },
+        update: {
+          fullName: staffName,
+        },
+        create: {
+          phone,
+          fullName: staffName,
+          roles: {
+            create: { role: "CUSTOMER" },
+          },
+        },
+      });
+
+      // 2️⃣ STAFF MEMBER
+      let staffMember;
+
+      if (staffMemberId) {
+        staffMember = await tx.staffMember.update({
+          where: { id: staffMemberId },
+          data: {
+            name: staffName,
+            phone,
+            userId: user.id,
+          },
+        });
+      } else {
+        staffMember = await tx.staffMember.create({
+          data: {
+            name: staffName,
+            phone,
+            businessId,
+            userId: user.id,
+          },
+        });
+      }
+
+      // 3️⃣ BUSINESS MEMBER (idempotent)
+      await tx.businessMember.upsert({
+        where: {
+          userId_businessId: {
+            userId: user.id,
+            businessId,
+          },
+        },
+        update: {},
+        create: {
+          userId: user.id,
+          businessId,
+          role: BusinessRole.STAFF,
+        },
+      });
+
+      return {
+        success: true,
+        message: staffMemberId
+          ? "ویرایش همکار با موفقیت انجام شد"
+          : "افزودن همکار با موفقیت انجام شد",
+      };
+    });
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Server error" };
+  }
+}
+
+interface IDeleteStaffInput {
+  staffMemberId: string;
+}
+
+export async function deleteStaffByAdmin({ staffMemberId }: IDeleteStaffInput) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user) {
+      return { success: false, message: "UNAUTHORIZED" };
+    }
+
+    const isAdmin = session.user.roles?.some((r) => r === "SUPER_ADMIN");
+
+    if (!isAdmin) {
+      return { success: false, message: "FORBIDDEN" };
+    }
+
+    return await prisma.$transaction(async (tx) => {
+      const staff = await tx.staffMember.findUnique({
+        where: { id: staffMemberId },
+        include: {
+          user: {
+            include: {
+              businessMembers: true,
+              roles: true,
+            },
+          },
+        },
+      });
+
+      if (!staff) {
+        return { success: false, message: "STAFF_NOT_FOUND" };
+      }
+
+      const userId = staff.userId;
+
+      if (!userId) {
+        return { success: false, message: "user id not found" };
+      }
+      // 1️⃣ حذف staffMember
+      await tx.staffMember.delete({
+        where: { id: staffMemberId },
+      });
+
+      // 2️⃣ حذف عضویت کسب‌وکار
+      await tx.businessMember.deleteMany({
+        where: {
+          userId,
+          businessId: staff.businessId,
+        },
+      });
+
+      // 3️⃣ اگر User هیچ وابستگی‌ای نداشت → حذف User
+      const remainingMemberships = await tx.businessMember.count({
+        where: { userId },
+      });
+
+      const hasImportantRole = staff.user?.roles.some(
+        (r) => r.role === "SUPER_ADMIN",
+      );
+
+      if (remainingMemberships === 0 && !hasImportantRole) {
+        await tx.user.delete({
+          where: { id: userId },
+        });
+      }
+
+      return {
+        success: true,
+        message: "همکار با موفقیت حذف شد",
+      };
+    });
+  } catch (error: any) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: error.message === "FORBIDDEN" ? "دسترسی غیرمجاز" : "خطای سرور",
     };
   }
 }

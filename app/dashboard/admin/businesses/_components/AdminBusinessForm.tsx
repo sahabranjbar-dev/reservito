@@ -14,6 +14,7 @@ import { BusinessRegistrationStatus, BusinessType } from "@/constants/enums";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateBusiness } from "../_meta/actions/businessActions";
+import BusinessStaffs from "./BusinessStaffs";
 
 interface Props {
   businessData?: any;
@@ -237,6 +238,12 @@ const AdminBusinessForm = ({ businessData }: Props) => {
             </div>
           </div>
         </Form>
+
+        <div className="border  p-2 my-4 rounded-md">
+          <h2>همکاران</h2>
+
+          <BusinessStaffs businessId={businessData?.id} />
+        </div>
       </CardContent>
     </Card>
   );

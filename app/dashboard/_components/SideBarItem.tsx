@@ -127,55 +127,73 @@ const staffSideBarItems: SidebarItem[] = [
 
 // --- 4. Admin (مدیر سیستم) ---
 const adminSideBarItems: SidebarItem[] = [
+  // داشبورد اصلی ادمین
   { title: "داشبورد مدیریت", url: "/", icon: LayoutDashboard },
+
+  // مدیریت کاربران
   {
     title: "مدیریت کاربران",
     icon: Users,
     children: [
       { title: "همه کاربران", url: "/users/all", icon: Users },
-      { title: "مدیران سیستم", url: "/users/admins", icon: Shield },
+      // { title: "مدیران سیستم", url: "/users/admins", icon: Shield },
     ],
   },
+
+  // مدیریت کسب‌وکارها
   {
     title: "مدیریت کسب‌وکارها",
     icon: Globe,
-    children: [
-      { title: "لیست کسب‌وکارها", url: "/businesses", icon: Globe },
-      {
-        title: "تایید صلاحیت",
-        url: "/businesses/approvals",
-        icon: ShieldCheck,
-      },
-      {
-        title: "دسته‌بندی‌ها",
-        url: "/businesses/categories",
-        icon: ListChecks,
-      },
-    ],
+    children: [{ title: "لیست کسب‌وکارها", url: "/businesses", icon: Globe }],
   },
+
   {
-    title: "مالی و کمیسیون",
-    icon: Banknote,
+    title: "مدیریت نوبت‌ها",
+    icon: Globe,
     children: [
-      {
-        title: "تراکنش‌های سیستم",
-        url: "/finance/transactions",
-        icon: CreditCard,
-      },
-      { title: "کمیسیون‌ها", url: "/finance/commissions", icon: Percent }, // Need to import Percent if needed, or use Banknote
-      { title: "تسویه با بیزنس‌ها", url: "/finance/settlements", icon: Wallet },
+      { title: "لیست نوبت‌ها", url: "/bookings", icon: ClipboardList },
     ],
   },
+
+  // مالی و کمیسیون‌ها
+  // {
+  //   title: "مالی و کمیسیون",
+  //   icon: Banknote,
+  //   children: [
+  //     {
+  //       title: "تراکنش‌های سیستم",
+  //       url: "/finance/transactions",
+  //       icon: CreditCard,
+  //     },
+  //   ],
+  // },
+
+  // مدیریت محتوا
+  // {
+  //   title: "مدیریت محتوا",
+  //   icon: FileText,
+  //   children: [
+  //     { title: "بنرها و اسلایدرها", url: "/content/banners", icon: Image },
+  //     { title: "وبلاگ و اخبار", url: "/content/blog", icon: FileText },
+  //   ],
+  // },
+
+  // پشتیبانی و تیکت‌ها
+
   {
-    title: "مدیریت محتوا",
-    icon: FileText, // Assuming FileText, or use ClipboardList
+    title: "پشتیبانی و پیام‌ها",
+    icon: HelpCircle,
     children: [
-      { title: "بنرها و اسلایدرها", url: "/content/banners", icon: Image }, // Need Image icon
-      { title: "وبلاگ و اخبار", url: "/content/blog", icon: FileText },
+      { title: "تیکت‌های پشتیبانی", url: "/support-tickets", icon: HelpCircle },
+      {
+        title: "پیام‌های تماس با ما",
+        url: "/contact-messages",
+        icon: FileText,
+      },
     ],
   },
-  { title: "تیکت‌های پشتیبانی", url: "/support-tickets", icon: HelpCircle },
-  { title: "تنظیمات سیستمی", url: "/settings", icon: Settings },
+
+  // تنظیمات سیستمی
 ];
 
 function getUserRole(session: any): UserRoleType {

@@ -24,6 +24,10 @@ export interface IListContainerContext<TData = any, TError = any> {
   error?: any;
   url?: string;
   setSearchParams: Dispatch<SetStateAction<any>>;
+  isCreating?: boolean;
+  setIsCreating?: Dispatch<SetStateAction<boolean>>;
+  editingRowId?: string | null;
+  setEditingRowId?: Dispatch<SetStateAction<string | null>>;
 }
 
 export type SortDirection = "desc" | "asc";

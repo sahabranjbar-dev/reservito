@@ -20,6 +20,10 @@ const ListContainer = ({
   const page = searchParamsFromURL.get("page") ?? "1";
   const pageSize = searchParamsFromURL.get("pageSize") ?? "10";
 
+  const [editingRowId, setEditingRowId] = useState<string | null>(null);
+
+  const [isCreating, setIsCreating] = useState(false);
+
   const [searchParams, setSearchParams] = useState<Record<string, string>>({
     page,
     pageSize,
@@ -48,6 +52,10 @@ const ListContainer = ({
         fetch: refetch,
         url,
         setSearchParams,
+        isCreating,
+        setIsCreating,
+        editingRowId,
+        setEditingRowId,
       }}
     >
       <main className="bg-white p-2 rounded-lg overflow-x-scroll max-w-lvw">
