@@ -32,6 +32,7 @@ import {
   Image,
   Inbox,
   LayoutDashboard,
+  LifeBuoy,
   ListChecks,
   Package,
   Percent,
@@ -110,6 +111,11 @@ const customerSideBarItems: SidebarItem[] = [
       { title: "نوبت‌های فعال", url: "/bookings/active", icon: CalendarCheck },
       { title: "تاریخچه نوبت‌ها", url: "/bookings/history", icon: History },
     ],
+  },
+  {
+    title: "پشتیبانی و تیکت",
+    url: "/support",
+    icon: LifeBuoy,
   },
 ];
 

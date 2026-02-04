@@ -413,13 +413,27 @@ enum TicketPriority {
 }
 
 model Ticket {
-  id        String         @id @default(cuid())
-  userId    String
-  subject   String
-  status    TicketStatus   @default(OPEN)
-  priority  TicketPriority @default(MEDIUM)
-  createdAt DateTime       @default(now())
-  closedAt  DateTime?
+  id          String         @id @default(cuid())
+  userId      String
+  subject     String
+  description String?        @db.Text
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  closedAt    DateTime?
 
-  user User @relation(fields: [userId], references: [id])
+  user     User            @relation(fields: [userId], references: [id])
+  messages TicketMessage[]
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  content   String   @db.Text
+  isAdmin   Boolean  @default(false)
+  senderId  String?
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }

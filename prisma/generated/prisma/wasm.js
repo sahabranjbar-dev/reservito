@@ -315,10 +315,21 @@ exports.Prisma.TicketScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   subject: 'subject',
+  description: 'description',
   status: 'status',
   priority: 'priority',
   createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   closedAt: 'closedAt'
+};
+
+exports.Prisma.TicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  content: 'content',
+  isAdmin: 'isAdmin',
+  senderId: 'senderId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -437,7 +448,8 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   Notification: 'Notification',
   ContactMessageReply: 'ContactMessageReply',
-  Ticket: 'Ticket'
+  Ticket: 'Ticket',
+  TicketMessage: 'TicketMessage'
 };
 
 /**

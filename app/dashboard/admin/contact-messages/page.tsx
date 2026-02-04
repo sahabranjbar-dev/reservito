@@ -1,7 +1,14 @@
-import React from "react";
+import prisma from "@/utils/prisma";
+import ContactMessageList from "./_components/ContactMessageList";
 
-const ContactMessages = () => {
-  return <div>ContactMessages</div>;
+const ContactMessagesPage = async () => {
+  const messages = await prisma.contactMessage.findMany({
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return <ContactMessageList data={messages} />;
 };
 
-export default ContactMessages;
+export default ContactMessagesPage;
