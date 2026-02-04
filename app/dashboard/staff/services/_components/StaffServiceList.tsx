@@ -253,8 +253,12 @@ const StaffServicesList = ({ staff }: Props) => {
                 requestedActive: serviceDetailsData?.serviceDetail?.isActive,
                 requestedDuration: serviceDetailsData?.serviceDetail?.duration,
                 requestedName: serviceDetailsData?.serviceDetail?.name,
-                requestedPrice: serviceDetailsData?.serviceDetail?.price,
+                requestedPrice: Number(
+                  serviceDetailsData?.serviceDetail?.price,
+                ),
                 serviceId: serviceDetailsData?.serviceDetail?.id,
+                requestedDescription:
+                  serviceDetailsData?.serviceDetail?.description ?? "",
               }}
               onSubmit={handleSubmitRequest}
               className="p-6"

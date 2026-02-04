@@ -7,6 +7,7 @@ import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
 import { BookingStatus } from "@/constants/enums";
 import { Metadata } from "next";
+import Link from "next/link";
 // ایمپورت کردن Enumها از پرایسما
 
 export const metadata: Metadata = {
@@ -100,9 +101,13 @@ export default async function ActiveBookingsPage() {
             <p className="text-slate-500 mt-2 mb-8 max-w-xs mx-auto">
               در حال حاضر هیچ رزرو تایید شده‌ای برای نمایش وجود ندارد.
             </p>
-            <button className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-1">
+            <Link
+              target="_blank"
+              href={"/business"}
+              className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-1"
+            >
               رزرو نوبت جدید
-            </button>
+            </Link>
           </div>
         ) : (
           <div className="space-y-6">

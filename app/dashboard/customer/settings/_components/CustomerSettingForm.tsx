@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseField, Form, TextCore } from "@/components";
+import { BaseField, DisabledSection, Form, TextCore } from "@/components";
 import { Button } from "@/components/ui/button";
 import { AtSign, Bell, CircleCheckBig, Lock, Mail, User } from "lucide-react";
 import Image from "next/image";
@@ -286,7 +286,8 @@ const CustomerSettingForm = ({ userInfo: user }: Props) => {
 
               {/* Security Settings Tab */}
               {activeTab === "security" && (
-                <div>
+                <div className="relative">
+                  <DisabledSection />
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
                     امنیت حساب
                   </h2>

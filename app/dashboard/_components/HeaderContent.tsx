@@ -2,11 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Bell, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 import Link from "next/link";
 import { CustomTrigger } from "./CustomTrigger";
-import { LiveClock } from "@/components";
+import dynamic from "next/dynamic";
 
+const LiveClock = dynamic(() => import("@/components/LiveClock/LiveClock"), {
+  ssr: false,
+});
 type UserRoleType = "admin" | "business" | "staff" | "customer";
 
 interface HeaderContentProps {

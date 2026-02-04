@@ -21,13 +21,13 @@ const CustomTable = ({ columns, data }: ICustomTable) => {
 
   return (
     <div className="w-full overflow-x-auto">
-      <Table className="min-w-fit">
+      <Table className="w-full border rounded-lg overflow-hidden">
         <TableHeader>
           <TableRow>
-            {columns.map((item) => (
+            {columns.map((item, index) => (
               <TableHead
-                key={item.field}
-                className="text-center whitespace-nowrap"
+                key={`${item.field}-${index}`}
+                className="text-center whitespace-nowrap bg-muted"
               >
                 {item.title}
               </TableHead>
@@ -38,7 +38,7 @@ const CustomTable = ({ columns, data }: ICustomTable) => {
         <TableBody>
           {hasData ? (
             data!.resultList!.map((item: any, rowIndex: number) => (
-              <TableRow key={item?.id ?? rowIndex}>
+              <TableRow key={`${item?.id}-${rowIndex}`}>
                 {columns.map((col, colIndex) => (
                   <TableCell
                     key={`${col.field}-${colIndex}`}

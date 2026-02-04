@@ -40,6 +40,7 @@ export default async function BookingHistoryPage() {
         select: {
           name: true,
           duration: true,
+          id: true,
         },
       },
       staff: {

@@ -88,6 +88,11 @@ const businessSideBarItems: SidebarItem[] = [
       { title: "پرسنل", url: "/resources/staff", icon: UserRound },
       { title: "شیفت‌ها", url: "/resources/shifts", icon: CalendarClock },
       { title: "استثنائات", url: "/resources/exceptions", icon: CalendarMinus },
+      {
+        title: "درخواست‌های تغییر",
+        url: "/resources/change-requests",
+        icon: CalendarMinus,
+      },
     ],
   },
 ];

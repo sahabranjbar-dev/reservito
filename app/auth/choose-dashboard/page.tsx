@@ -7,6 +7,7 @@ import { useEffect, useMemo } from "react";
 import { getBusinessMemberHandler, setCustomerRole } from "./_meta/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { SignoutButton } from "@/components";
 
 export default function HubPage() {
   const { data: session, status } = useSession();
@@ -141,6 +142,10 @@ export default function HubPage() {
               <span className="font-bold text-gray-700">مشتری / نوبت‌دهی</span>
             </Button>
           )}
+        </div>
+
+        <div className="py-4">
+          <SignoutButton />
         </div>
       </div>
     </div>

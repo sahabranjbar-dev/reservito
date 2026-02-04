@@ -1,7 +1,7 @@
 "use client";
 
 import { convertToFarsiDigits, getFullDate } from "@/utils/common";
-import { CalendarFold, Clock8 } from "lucide-react";
+import { CalendarFold } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DynamicClockIcon from "../DynamicClockIcon/DynamicClockIcon";
 

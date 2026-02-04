@@ -6,22 +6,31 @@ type ListInjectedProps = {
   data: any;
   error: any;
   fetch: () => void;
-  loading: boolean;
+  loading?: boolean;
 };
 
-const ListDataProvider = ({
-  children,
-}: PropsWithChildren<{ children: React.ReactElement<ListInjectedProps> }>) => {
-  const { data, error, fetch } = useList();
+const ListDataProvider = ({ children }: PropsWithChildren) => {
+  const { data, error, fetch, loading } = useList();
 
-  if (isValidElement(children)) {
-    return cloneElement(children, {
-      data,
-      error,
-      fetch,
-    });
-  }
-  return null;
+  return (
+    <>
+      {React.Children.map(children, (child) => {
+        if (!isValidElement(child)) return child;
+
+        // ❗ Fragment رو دست‌نخورده برمی‌گردونیم
+        if (child.type === React.Fragment) {
+          return child;
+        }
+
+        return cloneElement(child as React.ReactElement<any>, {
+          data,
+          error,
+          fetch,
+          loading,
+        });
+      })}
+    </>
+  );
 };
 
 export default ListDataProvider;

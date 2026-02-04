@@ -286,7 +286,7 @@ const BusinessDetail = ({ business }: Props) => {
                     ۱. انتخاب تاریخ
                   </label>
                   {/* اینجا کامپوننت تقویم جایگزین می‌شود */}
-                  <div className="p-4">
+                  <div className="my-2">
                     <PersianCalendar
                       selectedDate={selectedDate}
                       onDateSelect={handleDateSelect}

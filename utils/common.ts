@@ -232,9 +232,8 @@ export function getCurrentDate(): string {
   return `${year}-${month}-${day}`;
 }
 
-export function formatDate(date: string): string {
-  const year = new Date(date).getFullYear();
-  const month = String(new Date(date).getMonth() + 1).padStart(2, "0");
-  const day = String(new Date(date).getDay()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+export function formatDate(date: Date): string {
+  console.log({ date });
+
+  return date.toISOString().split("T")[0];
 }

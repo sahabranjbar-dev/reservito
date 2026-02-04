@@ -3,6 +3,7 @@
 import {
   BaseField,
   Combobox,
+  DatePicker,
   FilterButtons,
   Form,
   TextCore,
@@ -77,7 +78,7 @@ const BusinessBookingsFilters = () => {
               label="نام همکار"
               name="staffName"
             />
-            <BaseField component={TextCore} label="تاریخ رزرو" name="date" />
+            <BaseField component={DatePicker} label="تاریخ رزرو" name="date" />
 
             <BaseField
               component={Combobox}
