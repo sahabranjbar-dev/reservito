@@ -8,8 +8,8 @@ import { getServerSession } from "next-auth";
 // تابع دریافت لیست مشتریان
 export async function getCustomers(
   userNameOrPhone?: string,
-  inputPage?: string,
-  inPutPageSize?: string,
+  inputPage?: number,
+  inPutPageSize?: number,
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -22,9 +22,9 @@ export async function getCustomers(
       ? decodeURIComponent(resolvedUserNameOrPhone).trim()
       : "";
 
-    const page = Number(convertToEnglishDigits(inputPage || "1")) || 1;
+    const page = Number(convertToEnglishDigits(String(inputPage) || "1")) || 1;
     const pageSize =
-      Number(convertToEnglishDigits(inPutPageSize || "10")) || 10;
+      Number(convertToEnglishDigits(String(inPutPageSize) || "10")) || 10;
 
     const where: any = {
       bookings: {
@@ -68,7 +68,7 @@ export async function getCustomers(
 
       return {
         id: customer.id,
-        name: customer.fullName ?? "—",
+        name: customer.fullName,
         phone: customer.phone,
         totalBookings: bookings.length,
         lastBooking: bookings[0]?.createdAt ?? null,

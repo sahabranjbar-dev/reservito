@@ -1,5 +1,6 @@
 "use client";
 
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -25,11 +26,9 @@ import {
   TextInitial,
   User,
 } from "lucide-react";
-import Link from "next/link";
-import { Activity, ReactNode, useState } from "react";
+import { Activity, useState } from "react";
 import { toast } from "sonner";
 import { getBookingDetails, updateBookingStatusAction } from "../_meta/actions";
-import { Label } from "@/components/ui/label";
 
 interface Props {
   bookingId: string;

@@ -1,5 +1,5 @@
 "use client";
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
+import { getBusinessTypeOptions } from "@/app/business/detail/_meta/utils";
 import { StatusBadge } from "@/components";
 import { BookingStatus } from "@/constants/enums";
 import { formatDate } from "@/utils/common";
@@ -7,11 +7,9 @@ import {
   Calendar,
   CheckCircle,
   ChevronLeft,
-  ChevronRight,
   Clock,
   RotateCcw,
   User,
-  XCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +20,6 @@ export interface HistoryCardProps {
   startTime: Date;
   endTime: Date;
   status: BookingStatus;
-  finalPrice: number;
   business: {
     businessName: string;
     businessType: string;
@@ -48,6 +45,7 @@ export const HistoryBookingCard: React.FC<HistoryCardProps> = ({
   business,
   service,
   staff,
+  id,
 }) => {
   const AllbusinessData = getBusinessTypeOptions();
 
@@ -151,7 +149,7 @@ export const HistoryBookingCard: React.FC<HistoryCardProps> = ({
             </Link>
           ) : status === BookingStatus.PENDING ? (
             <Link
-              href={`/dashboard/customer/bookings/edit/${business.slug}`}
+              href={`/dashboard/customer/bookings/active/${id}`}
               className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors"
             >
               <CheckCircle size={14} />

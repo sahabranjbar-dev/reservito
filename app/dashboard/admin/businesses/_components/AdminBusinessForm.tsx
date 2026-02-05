@@ -1,5 +1,4 @@
 "use client";
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 import {
   BaseField,
   Combobox,
@@ -15,6 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateBusiness } from "../_meta/actions/businessActions";
 import BusinessStaffs from "./BusinessStaffs";
+import { getBusinessTypeOptions } from "@/app/business/detail/_meta/utils";
 
 interface Props {
   businessData?: any;

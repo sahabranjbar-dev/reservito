@@ -1,22 +1,20 @@
-import React from "react";
-import { HistoryListWrapper } from "./_components/HistoryListWrapper";
-import prisma from "@/utils/prisma";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
-import { redirect } from "next/navigation";
+import prisma from "@/utils/prisma";
 import { History } from "lucide-react";
-import { BookingStatus } from "@/constants/enums";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { HistoryListWrapper } from "./_components/HistoryListWrapper";
 
 export const metadata: Metadata = {
-  title: "تاریخچه‌ی رزرو‌ها | رزرویتو",
+  title: "تاریخچه‌ی رزرو‌ها | رزرو مارکت",
 };
 
 export default async function BookingHistoryPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   const customerId = session.user.id;

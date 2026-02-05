@@ -22,7 +22,7 @@ const BusinessUserBookingsPage = async ({ searchParams }: Props) => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   // دریافت رزروهای بیزنی که این کاربر صاحبش است
@@ -32,9 +32,9 @@ const BusinessUserBookingsPage = async ({ searchParams }: Props) => {
     // اگر بیزنی نیست
     return <div className="p-6">بیزنی پیدا نشد.</div>;
   }
-  const page = (await searchParams)?.page || 1;
+  const page = Number((await searchParams)?.page || 1);
 
-  const pageSize = (await searchParams)?.pageSize || 10;
+  const pageSize = Number((await searchParams)?.pageSize || 10);
 
   const customerName = (await searchParams)?.customerName;
 
@@ -75,13 +75,15 @@ const BusinessUserBookingsPage = async ({ searchParams }: Props) => {
 
   const bookings = await prisma.booking.findMany({
     where,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
     include: {
       customer: true,
       service: true,
       staff: true,
     },
     orderBy: {
-      startTime: "asc",
+      createdAt: "desc",
     },
   });
 

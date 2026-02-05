@@ -143,24 +143,12 @@ const CheckoutPage = () => {
     if (success) return;
     // اگر پارامترهای حیاتی وجود ندارند، کاربر را برگردان
     if (!serviceId || !date || !time || !businessId) {
-      // اگر اسلاگ هست، برگرده به صفحه رزرو آن بیزنس
-      if (businessId) {
-        router.replace(`/business/${businessId}`);
-      } else {
-        // اگر اونم نبود، برگرده صفحه اصلی
-        router.replace("/");
-      }
+      router.back();
     }
   }, [serviceId, date, time, router, businessId, success]);
 
   const goToPreviousPage = () => {
-    const params = new URLSearchParams({
-      businessId,
-      serviceId,
-      date,
-      time,
-    });
-    router.replace(`/business/${businessId}?${params.toString()}`);
+    router.back();
   };
 
   if (success) {
@@ -176,7 +164,7 @@ const CheckoutPage = () => {
           className="w-72 h-72"
           src="/lottie/success-booking.lottie"
           autoplay
-          speed={1.2}
+          speed={1.8}
         />
 
         <p className="max-w-md text-sm leading-7 text-gray-600">

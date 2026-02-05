@@ -1,6 +1,5 @@
 "use client";
 
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 import { Button } from "@/components/ui/button";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -10,6 +9,7 @@ import ServiceFormModal from "./ServiceFormModal";
 import { deleteService } from "../_meta/actions";
 import { toast } from "sonner";
 import { useConfirm } from "@/hooks/useConfirm";
+import { getBusinessTypeOptions } from "@/app/business/detail/_meta/utils";
 
 export default function ServicesClient({
   initialServices,

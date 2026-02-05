@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label"; // اگر دارید
 import {
   Select,
@@ -13,38 +17,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  MessageSquare,
-  Send,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  MoreVertical,
-  Plus,
-  Loader2,
-} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Clock, Loader2, MessageSquare, Plus } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-// اکشن‌ها
-import {
-  createCustomerTicket,
-  getCustomerTickets,
-  replyTicket,
-} from "./_meta/actions";
+import { DisabledSection, Modal } from "@/components";
 import { useSession } from "next-auth/react";
 import { notFound } from "next/navigation";
-import { Modal } from "@/components";
 import TicketDetailModal from "./_components/TicketDetailModal";
-
-// --- Components ---
+import { createCustomerTicket, getCustomerTickets } from "./_meta/actions";
 
 const StatusBadge = ({ status }: { status: string }) => {
   const config = {
@@ -89,7 +73,8 @@ const CreateTicketForm = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <Card className="border-t-4 border-t-indigo-500 shadow-md h-fit sticky top-4">
+    <Card className="relative border-t-4 border-t-indigo-500 shadow-md h-fit top-4 overflow-hidden">
+      <DisabledSection />
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <Plus className="h-5 w-5 text-indigo-600" />
@@ -152,7 +137,7 @@ const TicketList = ({ userId }: { userId: string }) => {
     id: string | null;
   }>({ id: null, open: false });
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["customer-tickets", userId],
     queryFn: async () => {
       const res = await getCustomerTickets(userId);

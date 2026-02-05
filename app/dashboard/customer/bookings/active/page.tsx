@@ -11,7 +11,7 @@ import Link from "next/link";
 // ایمپورت کردن Enumها از پرایسما
 
 export const metadata: Metadata = {
-  title: "رزرو‌های فعال |‌ رزرویتو",
+  title: "رزرو‌های فعال |‌ رزرو مارکت",
 };
 
 export default async function ActiveBookingsPage() {
@@ -19,7 +19,7 @@ export default async function ActiveBookingsPage() {
 
   // اگر کاربر لاگین نیست، ریدایرکت کن
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   const customerId = session.user.id;

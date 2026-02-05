@@ -28,25 +28,8 @@ import SideBarDashboardLabel from "./SideBarDashboardLabel";
 import SideBarHeaderContent from "./SideBarHeaderContent";
 import SideBarItem from "./SideBarItem";
 
-type UserRoleType = "admin" | "business" | "staff" | "customer";
-
-function getUserRole(session: any): UserRoleType {
-  if (session?.user?.roles?.includes("SUPER_ADMIN")) {
-    return "admin";
-  }
-  if (session?.user?.business?.businessRole === "OWNER") {
-    return "business";
-  }
-  if (session?.user?.business?.businessRole === "STAFF") {
-    return "staff";
-  }
-  return "customer";
-}
-
 const SidebarDashboard = async () => {
   const session = await getServerSession(authOptions);
-
-  const role = getUserRole(session);
 
   return (
     <Sidebar side="right" className="border-l border-r-0 border-slate-200 z-50">
@@ -75,7 +58,7 @@ const SidebarDashboard = async () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
-                  <div className="">
+                  <div>
                     <User2 className="size-4" />
                   </div>
                   <div className="grid flex-1 text-center text-sm">

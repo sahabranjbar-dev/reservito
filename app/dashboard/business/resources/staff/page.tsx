@@ -8,7 +8,7 @@ export default async function StaffPageServer() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   // دریافت بیزنس کاربر (فرض: اولین بیزنس او)

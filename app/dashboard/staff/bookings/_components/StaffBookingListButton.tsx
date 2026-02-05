@@ -1,7 +1,22 @@
 "use client";
-import BookingDetails from "@/app/dashboard/business/bookings/_components/BookingDetails";
 import { Modal } from "@/components";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { BookingStatus } from "@/constants/enums";
+import { useConfirm } from "@/hooks/useConfirm";
+import { cn } from "@/lib/utils";
+import {
+  convertToFarsiDigits,
+  copyTextToClipboard,
+  getFullDateTime,
+} from "@/utils/common";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Calendar,
@@ -14,27 +29,11 @@ import {
   User,
 } from "lucide-react";
 import { Activity, useState } from "react";
+import { toast } from "sonner";
 import {
   getStaffBookingDetails,
   updateBookingStatusAction,
 } from "../../schedule/_meta/actions";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { BookingStatus } from "@/constants/enums";
-import {
-  convertToFarsiDigits,
-  copyTextToClipboard,
-  getFullDateTime,
-} from "@/utils/common";
-import { toast } from "sonner";
-import { useConfirm } from "@/hooks/useConfirm";
-import { cn } from "@/lib/utils";
 
 interface Props {
   id: string;

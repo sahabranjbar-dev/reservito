@@ -8,7 +8,7 @@ import FavoriteStaffList from "./_components/FavoriteStaffList";
 import { getFavoritesData } from "./_meta/actions";
 
 export const metadata = {
-  title: "علاقه‌مندی‌های من - رزرویتو",
+  title: "علاقه‌مندی‌های من - رزرو مارکت",
 };
 
 export default async function CustomerDashboardFavorites() {

@@ -24,7 +24,7 @@ import {
   updateBookingAction,
 } from "../../../_meta/actions";
 import { BookingStatus } from "@/constants/enums";
-import PersianCalendar from "@/app/business/[businessId]/[slug]/_components/PersianCalendar";
+import PersianCalendar from "@/app/business/detail/[businessId]/[slug]/_components/PersianCalendar";
 
 interface ManageBookingClientProps {
   booking: {

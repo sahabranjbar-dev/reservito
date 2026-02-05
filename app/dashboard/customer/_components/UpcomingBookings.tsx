@@ -1,10 +1,9 @@
-// components/dashboard/UpcomingBookings.tsx
-import React from "react";
-import { Calendar, Clock, MapPin, User } from "lucide-react";
-import Link from "next/link";
 import { StatusBadge } from "@/components";
 import { BookingStatus } from "@/constants/enums";
+import { Calendar, Clock, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Activity } from "react";
 
 interface UpcomingBookingsProps {
   bookings: Array<{
@@ -121,12 +120,20 @@ export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
                 >
                   جزئیات
                 </Link>
-                <Link
-                  href={`/dashboard/customer/bookings/active/${booking.id}`}
-                  className="flex-1 text-center py-2 text-sm font-medium text-rose-600 border border-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                <Activity
+                  mode={
+                    booking.status === BookingStatus.PENDING
+                      ? "visible"
+                      : "hidden"
+                  }
                 >
-                  لغو نوبت
-                </Link>
+                  <Link
+                    href={`/dashboard/customer/bookings/active/${booking.id}`}
+                    className="flex-1 text-center py-2 text-sm font-medium text-rose-600 border border-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                  >
+                    لغو نوبت
+                  </Link>
+                </Activity>
               </div>
             </div>
           ))
@@ -135,7 +142,7 @@ export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
             <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500">هیچ نوبت پیش رو ندارید</p>
             <Link
-              href="/search"
+              href="/business"
               className="mt-4 inline-block text-indigo-600 hover:text-indigo-800"
             >
               رزرو نوبت جدید

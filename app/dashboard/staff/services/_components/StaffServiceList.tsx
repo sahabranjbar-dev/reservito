@@ -190,7 +190,7 @@ const StaffServicesList = ({ staff }: Props) => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow p-5 relative group"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow p-5 relative group "
             >
               <div className="flex justify-between items-start mb-3">
                 <div>
@@ -198,7 +198,7 @@ const StaffServicesList = ({ staff }: Props) => {
                     {service.service.name}
                   </h3>
                   {service.service.description && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-500 mt-1 line-clamp-3 truncate text-wrap overflow-hidden">
                       {service.service.description}
                     </p>
                   )}

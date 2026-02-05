@@ -146,7 +146,7 @@ const BusinessLoginPage = () => {
             <p className="text-slate-600 text-sm">
               هنوز ثبت‌نام نکرده‌اید؟
               <Link
-                href="/business/register"
+                href="/business/auth/register"
                 className="font-bold text-indigo-600 hover:text-indigo-700 mr-1 transition-colors"
               >
                 ثبت‌نام رایگان
@@ -156,7 +156,7 @@ const BusinessLoginPage = () => {
         </div>
 
         <p className="mt-12 text-center text-xs text-slate-400 border-t border-slate-100 pt-6">
-          تمامی حقوق برای پلتفرم رزرویتو محفوظ است &copy; ۱۴۰۳
+          تمامی حقوق برای پلتفرم رزرو مارکت محفوظ است &copy; ۱۴۰۳
         </p>
       </div>
 

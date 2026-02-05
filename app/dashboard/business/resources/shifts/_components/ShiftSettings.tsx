@@ -160,19 +160,6 @@ const ShiftSettings = ({ businessId }: { businessId: string }) => {
             زمان‌بندی کاری پرسنل را مشخص کنید
           </p>
         </div>
-
-        <Button
-          onClick={handleSave}
-          disabled={!hasChanges || isPending || !selectedStaffId}
-          className="gap-2"
-        >
-          {isPending ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4" />
-          )}
-          ذخیره تغییرات
-        </Button>
       </div>
 
       {/* Staff Select */}
@@ -299,6 +286,20 @@ const ShiftSettings = ({ businessId }: { businessId: string }) => {
           })}
         </div>
       )}
+
+      <div className="w-full flex justify-end p-3">
+        <Button
+          onClick={handleSave}
+          disabled={!hasChanges || isPending || !selectedStaffId}
+        >
+          {isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
+          ذخیره تغییرات
+        </Button>
+      </div>
     </div>
   );
 };

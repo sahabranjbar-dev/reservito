@@ -15,7 +15,7 @@ const BusinessRegisterPage = () => {
                 <Building className="w-5 h-5" />
               </div>
               <span className="font-bold text-xl tracking-tight text-slate-900">
-                رزرویتو بیزنس
+                رزرو مارکت بیزنس
               </span>
             </div>
             <Link
@@ -34,7 +34,7 @@ const BusinessRegisterPage = () => {
               ثبت‌نام کرده‌اید؟ وارد شوید.
             </p>
             <Link
-              href="/business/login"
+              href="/business/auth/login"
               className="font-bold text-indigo-600 hover:text-indigo-700 mr-1 transition-colors"
             >
               ورود به حساب
@@ -60,8 +60,8 @@ const BusinessRegisterPage = () => {
                 پیشرفت کسب‌وکار
               </h2>
               <p className="text-slate-300 text-lg leading-relaxed max-w-lg">
-                به هزاران صاحب کسب‌وکار بپیوندید که با رزرویتو، زمان خود را بهتر
-                مدیریت می‌کنند و درآمد خود را افزایش می‌دهند.
+                به هزاران صاحب کسب‌وکار بپیوندید که با رزرو مارکت، زمان خود را
+                بهتر مدیریت می‌کنند و درآمد خود را افزایش می‌دهند.
               </p>
             </div>
 

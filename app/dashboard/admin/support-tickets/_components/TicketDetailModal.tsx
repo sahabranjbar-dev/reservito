@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -10,50 +10,18 @@ import {
   Clock,
   Image as ImageIcon,
   Loader2,
-  MessageSquare,
-  MoreVertical,
   Paperclip,
   Send,
   Trash2,
   XCircle,
 } from "lucide-react";
-import React, { useState } from "react";
-import { getTicket, replyToTicket, updateTicketStatus } from "../_meta/actions";
-import { toast } from "sonner";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
+import { getTicket, replyToTicket, updateTicketStatus } from "../_meta/actions";
 
-// --- Types ---
 type TicketStatus = "OPEN" | "PENDING" | "CLOSED";
 type TicketPriority = "LOW" | "MEDIUM" | "HIGH";
-
-interface TicketMessage {
-  id: string;
-  content: string;
-  createdAt: Date;
-  isAdmin: boolean;
-  sender: {
-    fullName: string;
-    avatar?: string | null;
-  };
-}
-
-interface Ticket {
-  id: string;
-  subject: string;
-  description: string; // فرض بر وجود این فیلد
-  status: TicketStatus;
-  priority: TicketPriority;
-  createdAt: Date;
-  user: {
-    fullName: string;
-    phone: string;
-    email: string | null;
-    avatar: string | null;
-  };
-  messages: TicketMessage[];
-}
-
-// --- Badges ---
 
 export const PriorityBadge = ({ priority }: { priority: TicketPriority }) => {
   const config = {
@@ -190,7 +158,7 @@ const TicketDetailModal = ({ id, onClose }: Props) => {
   return (
     <div className="w-full flex flex-col h-full max-h-[85vh]">
       {/* Modal Header */}
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 shrink-0">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-lg overflow-hidden">
@@ -293,7 +261,7 @@ const TicketDetailModal = ({ id, onClose }: Props) => {
 
       {/* Footer */}
       {ticket.status !== "CLOSED" && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0">
           <div className="flex items-end gap-3">
             <div className="flex-1 relative">
               <textarea

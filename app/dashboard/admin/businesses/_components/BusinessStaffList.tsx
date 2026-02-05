@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/preserve-manual-memoization */
 import { CustomTable } from "@/components";
 import PaginationWrapper from "@/components/Pagination/Pagination";
 import ListDataProvider from "@/container/ListDataProvider/ListDataProvider";

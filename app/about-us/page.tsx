@@ -1,23 +1,26 @@
-import React from "react";
-import Link from "next/link";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import {
-  Target,
+  Calendar,
+  CalendarDays,
+  CheckCircle,
   Heart,
   Phone,
+  PhoneOutgoing,
+  SquareChartGantt,
+  Target,
   Users,
-  CheckCircle,
-  Calendar,
 } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
 
 const services = [
   {
@@ -45,18 +48,18 @@ const team = [
 ];
 
 export const metadata: Metadata = {
-  title: "درباره‌ما | رزرویتو",
+  title: "درباره‌ما | رزرو مارکت",
 };
 
 export default function AboutUsPage() {
   return (
     <main dir="rtl" className="min-h-screen bg-white text-neutral-900">
       {/* HERO */}
-      <header className="bg-linear-to-r from-indigo-100 to-white border-b">
+      <section className="bg-linear-to-r from-indigo-100 to-white border-b">
         <div className="container mx-auto px-6 py-12 md:flex md:items-center md:justify-between">
           <div className="max-w-2xl">
-            <h1 className="text-3xl md:text-4xl font-extrabold leading-tight">
-              رزرویتو — تجربهٔ سادهٔ رزرو
+            <h1 className="flex justify-start items-center gap-2">
+              رزرو مارکت | تجربه‌ی ساده‌ی رزرو
             </h1>
             <p className="mt-4 text-neutral-600">
               ما کمک می‌کنیم مشتریانتان راحت‌تر وقت بگیرند و شما بهتر مدیریت
@@ -66,16 +69,20 @@ export default function AboutUsPage() {
 
             <div className="mt-6 flex gap-3">
               <Link href="/business">
-                <Button className="shadow-sm">رزرو نوبت</Button>
+                <Button className="shadow-sm" rightIcon={<CalendarDays />}>
+                  رزرو نوبت
+                </Button>
               </Link>
               <Link href="/contact-us">
-                <Button variant="outline">تماس با ما</Button>
+                <Button rightIcon={<PhoneOutgoing />} variant="outline">
+                  تماس با ما
+                </Button>
               </Link>
             </div>
           </div>
 
           <div className="hidden md:block mt-8 md:mt-0">
-            <div className="w-64 h-40 rounded-xl bg-gradient-to-tr from-indigo-100 to-indigo-50 shadow-md flex items-center justify-center">
+            <div className="w-64 h-40 rounded-xl bg-linear-to-tr from-indigo-100 to-indigo-50 shadow-md flex items-center justify-center">
               <div className="text-center">
                 <div className="text-2xl font-bold">+۵۰ کسب‌وکار</div>
                 <div className="text-sm text-neutral-600">
@@ -85,7 +92,7 @@ export default function AboutUsPage() {
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
       {/* MISSION & SERVICES */}
       <section className="container mx-auto px-6 py-12 grid gap-8 md:grid-cols-3">
@@ -224,7 +231,7 @@ export default function AboutUsPage() {
           <div className="mt-4 grid sm:grid-cols-2 gap-4">
             <blockquote className="p-6 bg-white rounded-lg shadow">
               <p className="text-neutral-700">
-                سرویس رزرویتو باعث شد مدیریت نوبت‌ها ساده‌تر بشه و رضایت
+                سرویس رزرو مارکت باعث شد مدیریت نوبت‌ها ساده‌تر بشه و رضایت
                 مشتری‌هامون بالا بره.
               </p>
               <footer className="mt-3 text-sm text-neutral-500">
@@ -243,7 +250,7 @@ export default function AboutUsPage() {
             </blockquote>
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center border-t pt-8">
             <h4 className="text-lg font-bold">
               آماده‌اید کسب‌وکار خود را رشد دهید؟
             </h4>
@@ -251,22 +258,15 @@ export default function AboutUsPage() {
               یک دموی رایگان رزرو کنید و ببینید چطور می‌توانیم به شما کمک کنیم.
             </p>
             <div className="mt-4 flex justify-center gap-3">
-              <Link target="_blank" href="/business/register">
-                <Button variant="outline">ثبت‌نام رایگان</Button>
-              </Link>
-              <Link href="/pricing">
-                <Button>قیمت‌ها</Button>
+              <Link target="_blank" href="/business/auth/register">
+                <Button rightIcon={<SquareChartGantt />} variant="outline">
+                  ثبت‌نام رایگان
+                </Button>
               </Link>
             </div>
           </div>
         </div>
       </section>
-
-      <footer className="border-t py-6 mt-8">
-        <div className="container mx-auto px-6 text-center text-sm text-neutral-600">
-          © {new Date().getFullYear()} رزرویتو — همهٔ حقوق محفوظ است.
-        </div>
-      </footer>
     </main>
   );
 }

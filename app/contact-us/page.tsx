@@ -4,7 +4,7 @@ import { Mail, MapPin, PhoneOutgoing } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "تماس‌ با ما | رزرویتو",
+  title: "تماس‌ با ما | رزرو مارکت",
 };
 
 interface Props {
@@ -41,7 +41,9 @@ const ContactUsPage = async ({ searchParams }: Props) => {
         <ul className="text-neutral-600 space-y-2">
           <li className="flex justify-start items-center gap-2">
             <Mail size={16} /> ایمیل:
-            <Link href={"mailto:info@reservito.com"}>info@reservito.com</Link>
+            <Link href={"mailto:info@reservmarket.com"}>
+              info@reservmarket.com
+            </Link>
           </li>
           <li className="flex justify-start items-center gap-2">
             <PhoneOutgoing size={16} /> تلفن:{" "}

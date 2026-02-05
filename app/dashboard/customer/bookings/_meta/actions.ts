@@ -20,7 +20,6 @@ export async function getAvailableSlotsAction(params: {
     });
 
     if (!service) throw new Error("Service not found");
-    const serviceDuration = service.duration;
 
     // 2. دریافت پرسنل فعال مرتبط
     const staffList = await prisma.staffMember.findMany({
@@ -35,8 +34,13 @@ export async function getAvailableSlotsAction(params: {
         exceptions: true,
         bookings: {
           where: {
-            status: "CONFIRMED",
+            startTime: {
+              gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+              lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
+            },
+            status: { in: ["PENDING", "CONFIRMED"] },
           },
+          select: { startTime: true, endTime: true },
         },
       },
     });
@@ -67,11 +71,26 @@ export async function getAvailableSlotsAction(params: {
     for (const staff of staffList) {
       // الف) بررسی تعطیلی روزانه (StaffException)
       // نرمال‌سازی تاریخ به رشته برای مقایسه ایمن
+      const serviceDuration = service.duration;
+      const staffBreak = staff.breakMinutes || 0;
+
+      const totalSlotDuration = serviceDuration + staffBreak;
+
       const exceptionDateStr = dateObj.toISOString().split("T")[0];
 
       const isOffToday = staff.exceptions.some((exc) => {
         const excDateStr = new Date(exc.date).toISOString().split("T")[0];
         return exc.isClosed && excDateStr === exceptionDateStr;
+      });
+
+      const timeExceptions = staff.exceptions.filter((exc) => {
+        const excDateStr = new Date(exc.date).toISOString().split("T")[0];
+        return (
+          !exc.isClosed &&
+          excDateStr === exceptionDateStr &&
+          exc.startTime &&
+          exc.endTime
+        );
       });
 
       if (isOffToday) continue;
@@ -93,7 +112,7 @@ export async function getAvailableSlotsAction(params: {
       // ج) تولید اسلات‌ها
       for (
         let timeMin = shiftStartMin;
-        timeMin + serviceDuration <= shiftEndMin;
+        timeMin + totalSlotDuration <= shiftEndMin;
         timeMin += SLOT_INTERVAL
       ) {
         const slotTimeString = `${String(Math.floor(timeMin / 60)).padStart(
@@ -103,10 +122,14 @@ export async function getAvailableSlotsAction(params: {
 
         const potentialStart = new Date(`${date}T${slotTimeString}:00`);
         const potentialEnd = new Date(
-          potentialStart.getTime() + serviceDuration * 60000,
+          potentialStart.getTime() + totalSlotDuration * 60000,
         );
 
         if (isToday && potentialStart <= now) {
+          continue;
+        }
+
+        if (isInTimeException(potentialStart, potentialEnd, timeExceptions)) {
           continue;
         }
 
@@ -136,6 +159,22 @@ export async function getAvailableSlotsAction(params: {
     return { success: false, error: "خطا در محاسبه زمان‌ها" };
   }
 }
+
+const isInTimeException = (start: Date, end: Date, exceptions: any) => {
+  return exceptions.some((exc: any) => {
+    const [sh, sm] = exc.startTime!.split(":").map(Number);
+    const [eh, em] = exc.endTime!.split(":").map(Number);
+
+    const excStart = new Date(start);
+    excStart.setHours(sh, sm, 0, 0);
+
+    const excEnd = new Date(start);
+    excEnd.setHours(eh, em, 0, 0);
+
+    // overlap check
+    return start < excEnd && end > excStart;
+  });
+};
 
 export async function updateBookingAction(params: {
   bookingId: string;

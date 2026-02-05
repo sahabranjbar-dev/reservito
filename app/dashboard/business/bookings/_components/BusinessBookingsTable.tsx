@@ -9,12 +9,33 @@ import { Calendar, Clock, Phone } from "lucide-react";
 import BookingListMoreButton from "./BookingListMoreButton";
 import BusinessBookingsFilters from "./BusinessBookingsFilters";
 import Link from "next/link";
+import PaginationWrapper from "@/components/Pagination/Pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
-  data?: any;
+  data?: {
+    page: number;
+    pageSize: number;
+    resultList: any[];
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 const BusinessBookingsTable = ({ data }: Props) => {
+  const { replace } = useRouter();
+
+  const searchParams = useSearchParams();
+
+  const onPageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("page");
+
+    params.append("page", String(page + 1));
+
+    replace(`/dashboard/business/bookings/list?${params}`);
+  };
   const columns: ITableColumns[] = [
     {
       field: "rowNumber",
@@ -100,12 +121,20 @@ const BusinessBookingsTable = ({ data }: Props) => {
       render: (id) => <BookingListMoreButton id={id} />,
     },
   ];
+  console.log({ data });
 
   return (
     <ListContainer data={data}>
       <ListHeader title="لیست رزرو‌ها" filter={<BusinessBookingsFilters />} />
       <ListDataProvider>
         <CustomTable columns={columns} />
+        <PaginationWrapper
+          currentPage={1}
+          loading={false}
+          onPageChange={onPageChange}
+          totalCount={data?.totalItems}
+          totalPages={data?.totalPages}
+        />
       </ListDataProvider>
     </ListContainer>
   );

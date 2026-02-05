@@ -1,21 +1,20 @@
 import { BusinessType } from "@/constants/enums";
-import { ElementType } from "react";
 import {
-  Scissors,
-  Dumbbell,
-  Stethoscope,
-  Sparkles,
-  GraduationCap,
-  Trophy,
-  Coffee,
-  UtensilsCrossed,
-  Scale,
-  PawPrint,
   Briefcase,
-  Store,
+  Coffee,
+  Dumbbell,
+  GraduationCap,
+  PawPrint,
+  Scale,
+  Scissors,
   Sprout,
+  Stethoscope,
+  Store,
   Syringe,
+  Trophy,
+  UtensilsCrossed,
 } from "lucide-react";
+import { ElementType } from "react";
 
 export type BusinessTypeOption = {
   id: BusinessType;

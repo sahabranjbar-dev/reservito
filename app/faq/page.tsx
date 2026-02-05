@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "سوالات متداول | رزرویتو",
+  title: "سوالات متداول | رزرو مارکت",
 };
 
 const FAQPage = () => {
@@ -14,7 +14,7 @@ const FAQPage = () => {
           <h1 className="text-3xl md:text-4xl font-extrabold">سوالات متداول</h1>
           <p className="mt-4 text-neutral-600 max-w-3xl">
             در این بخش پاسخ رایج‌ترین سوالات کاربران درباره استفاده از سامانه
-            رزرویتو را مشاهده می‌کنید.
+            رزرو مارکت را مشاهده می‌کنید.
           </p>
         </div>
       </header>
@@ -68,8 +68,8 @@ const FAQPage = () => {
             اگر کسب‌وکار در زمان نوبت حاضر نبود چه کنم؟
           </h2>
           <p className="text-neutral-700 leading-8">
-            در صورت بروز مشکل، می‌توانید از طریق پشتیبانی رزرویتو موضوع را گزارش
-            دهید تا بررسی و پیگیری انجام شود.
+            در صورت بروز مشکل، می‌توانید از طریق پشتیبانی رزرو مارکت موضوع را
+            گزارش دهید تا بررسی و پیگیری انجام شود.
           </p>
         </div>
 

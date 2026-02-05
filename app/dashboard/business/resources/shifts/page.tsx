@@ -7,7 +7,7 @@ export default async function ShiftsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   const business = session.user.business;

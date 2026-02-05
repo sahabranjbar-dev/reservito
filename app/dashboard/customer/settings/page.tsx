@@ -6,7 +6,7 @@ import prisma from "@/utils/prisma";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "تنظیمات پروفایل | رزرویتو",
+  title: "تنظیمات پروفایل | رزرو مارکت",
 };
 
 const CustomerDashboardSettings = async () => {

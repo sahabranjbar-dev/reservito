@@ -44,7 +44,7 @@ const businessRules: Rule[] = [
     const userId = session?.user.id;
     const businessId = session?.user.business?.id;
     if (!businessId || !userId) {
-      return redirectToLogin(req, "/business/login");
+      return redirectToLogin(req, "/business/auth/login");
     }
     const businessMember = await prisma.businessMember.findUnique({
       where: {
@@ -69,7 +69,7 @@ const businessRules: Rule[] = [
       businessMember.business.registrationStatus !== "APPROVED" ||
       !businessMember.business.isActive
     )
-      return redirectToLogin(req, "/business/login");
+      return redirectToLogin(req, "/business/auth/login");
   },
 ];
 

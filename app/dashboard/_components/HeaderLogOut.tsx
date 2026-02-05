@@ -19,7 +19,7 @@ const HeaderLogOut = () => {
               redirect: false,
             }).then(() => {
               if (pathname.startsWith("/dashboard/business")) {
-                replace("/business/login");
+                replace("/business/auth/login");
                 return;
               }
               replace("/auth");

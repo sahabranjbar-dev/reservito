@@ -1,29 +1,24 @@
 "use client";
 
+import clsx from "clsx";
 import {
   BookOpenCheck,
   Building2,
-  CalendarCheck,
-  Headset,
-  Home,
   HomeIcon,
   LayoutDashboard,
-  LogIn,
-  Menu,
   MessageCircleMore,
-  ScanText,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LoginButton from "../LoginButton/LoginButton";
-import clsx from "clsx";
 import HeaderMenu from "../HeaderMenu/HeaderMenu";
+import LoginButton from "../LoginButton/LoginButton";
 
 const hiddenRoutes = [
   "/auth",
   "/dashboard",
-  "/business/register",
-  "/business/login",
+  "/business/auth/register",
+  "/business/auth/login",
 ];
 
 const menuItems = [
@@ -55,10 +50,16 @@ const Header = () => {
           {/* Logo */}
           <Link href={"/"} className="flex items-center gap-2">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-              <CalendarCheck className="w-6 h-6" />
+              <Image
+                src={"/images/logo.png"}
+                alt="logo"
+                width={48}
+                height={48}
+                className="rounded-xl"
+              />
             </div>
             <span className="text-2xl font-bold tracking-tight text-slate-900">
-              رزرویتو
+              رزرو مارکت
             </span>
           </Link>
 

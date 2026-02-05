@@ -1,8 +1,5 @@
-// types/booking.ts
-
 import { BusinessType } from "@/constants/enums";
 
-// نقشه برداری رنگ‌ها برای وضعیت‌ها
 export const statusConfig = {
   PENDING: {
     label: "در انتظار تایید",

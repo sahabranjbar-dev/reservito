@@ -10,7 +10,7 @@ export async function getStaffList() {
     const businessId = session?.user.business?.id;
 
     const staff = await prisma.staffMember.findMany({
-      where: { businessId, isActive: true },
+      where: { businessId, isActive: true, deletedAt: null },
     });
 
     const resolvedStaffOption = staff?.map((item: any) => {

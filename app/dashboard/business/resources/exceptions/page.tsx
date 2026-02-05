@@ -1,31 +1,30 @@
 "use client";
 
-import React, { useEffect, useReducer, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Calendar, Loader2, Save } from "lucide-react";
+import React, { useEffect, useReducer, useState } from "react";
 
+import { Combobox, SwitchComponent, TimePicker } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Combobox, SwitchComponent, TimePicker } from "@/components";
 
-import ExceptionCalendar, { RangeValue } from "./_components/ExceptionCalendar";
-import { EXCEPTIONS_TYPE_OPTIONS } from "./_meta/constants";
+import {
+  UpsertStaffExceptions,
+  upsertStaffExceptions,
+} from "@/app/actions/staff-exception.action";
+import { Separator } from "@/components/ui/separator";
 import { ExceptionType } from "@/constants/enums";
 import {
   convertToFarsiDigits,
   getCurrentDate,
   getFullDate,
 } from "@/utils/common";
-import {
-  UpsertStaffExceptions,
-  upsertStaffExceptions,
-} from "@/app/actions/staff-exception.action";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import ExceptionCalendar, { RangeValue } from "./_components/ExceptionCalendar";
 import { getStaffExceptions, getStaffList } from "./_meta/actions";
-import { Separator } from "@/components/ui/separator";
+import { EXCEPTIONS_TYPE_OPTIONS } from "./_meta/constants";
 
 /* ---------------------------------- types --------------------------------- */
 

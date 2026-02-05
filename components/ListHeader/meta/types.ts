@@ -9,4 +9,5 @@ export interface IListHeader {
   exportUrl?: string;
   createButton?: ReactElement;
   onRefresh?: () => void;
+  hasInplaceCreate?: boolean;
 }

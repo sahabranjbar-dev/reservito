@@ -51,6 +51,7 @@ export async function getCustomerTickets(userId: string) {
     });
     return { success: true, data: tickets };
   } catch (error) {
+    console.error(error);
     return { success: false, message: "خطا در دریافت تیکت‌ها." };
   }
 }

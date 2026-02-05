@@ -4,14 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { authOptions } from "@/utils/authOptions";
 import prisma from "@/utils/prisma";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  Calendar,
-  Captions,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { Calendar, Captions, Users } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -20,7 +13,7 @@ const BusinessOwnerDashboardPage = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   const business = await prisma.business.findFirst({

@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import ClientBusinessList from "./_components/ClientBusinessList";
-import { getPaginatedBusinessAction } from "./_meta/actions";
+import { getPaginatedBusinessAction } from "./detail/_meta/actions";
+import ClientBusinessList from "./detail/_components/ClientBusinessList";
 
 export const metadata: Metadata = {
-  title: "مراکز خدمات و رزرو | رزرویتو",
+  title: "مراکز خدمات و رزرو | رزرو مارکت",
 };
 
 export default async function BusinessPage({

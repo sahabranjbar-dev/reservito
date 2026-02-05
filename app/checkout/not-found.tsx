@@ -31,12 +31,14 @@ const NotFoundPage = () => {
             </Button>
           </Link>
 
-          <Button
-            variant="ghost"
-            className="w-full text-slate-600 hover:text-slate-900"
-          >
-            جستجوی کسب‌وکار جدید
-          </Button>
+          <Link href={"/business"}>
+            <Button
+              variant="ghost"
+              className="w-full text-slate-600 hover:text-slate-900"
+            >
+              جستجوی کسب‌وکار جدید
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

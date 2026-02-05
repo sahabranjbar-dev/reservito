@@ -1,4 +1,3 @@
-// app/dashboard/staff/_actions/getStaffDashboard.ts
 "use server";
 
 import { getServerSession } from "next-auth";

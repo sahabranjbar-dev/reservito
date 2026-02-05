@@ -77,7 +77,7 @@ const AdminUsersList = ({ data }: AdminUsersListProps) => {
       {
         field: "ownedBusinesses",
         title: "اطلاعات بیزنس",
-        render(value, row, rowMeta) {
+        render(value, row) {
           const isBusinessOwner = (value?.length ?? 0) > 0;
 
           return isBusinessOwner ? (

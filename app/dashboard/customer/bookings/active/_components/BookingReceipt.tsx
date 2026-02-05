@@ -1,37 +1,34 @@
 "use client";
 
+import { businessTypeLabelsFa } from "@/app/business/detail/_meta/utils";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import {
-  CalendarDays,
-  MapPin,
-  Clock,
-  Printer,
-  Download,
-  Share2,
-  CheckCircle2,
-  Phone,
-  Scissors,
-  AlertCircle,
-  XCircle,
-  Hourglass,
-  ReceiptText,
-  User,
-  Building2,
-  Calendar,
-  Wallet,
-  ExternalLink,
-  QrCode,
-  ShieldCheck,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { businessTypeLabelsFa } from "@/app/business/_meta/utils";
 import { BookingStatus, BusinessType } from "@/constants/enums";
-import { useMemo } from "react";
+import { cn } from "@/lib/utils";
+import {
+  AlertCircle,
+  ArrowLeftFromLine,
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  Download,
+  ExternalLink,
+  Hourglass,
+  MapPin,
+  Phone,
+  Printer,
+  QrCode,
+  ReceiptText,
+  Scissors,
+  Share2,
+  ShieldCheck,
+  User,
+  XCircle,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Activity, useMemo } from "react";
+import { toast } from "sonner";
 
 type Booking = {
   id: string;
@@ -304,7 +301,7 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8 print:p-0">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-4 md:p-8 print:p-0">
       <div className="w-full max-w-6xl mx-auto space-y-6">
         {/* هدر و دکمه‌های اکشن */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:hidden">
@@ -316,29 +313,23 @@ END:VCALENDAR`;
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
+              disabled
+              variant="outline"
+              size="sm"
+              onClick={generateQRCode}
+            >
+              <QrCode className="w-4 h-4 ml-2" />
+              QR Code
+            </Button>
+            <Button
               variant="outline"
               size="sm"
               onClick={() => {
                 back();
               }}
+              leftIcon={<ArrowLeftFromLine />}
             >
               بازگشت
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleShare}>
-              <Share2 className="w-4 h-4 ml-2" />
-              اشتراک
-            </Button>
-            <Button variant="outline" size="sm" onClick={downloadCalendarEvent}>
-              <Download className="w-4 h-4 ml-2" />
-              تقویم
-            </Button>
-            <Button size="sm" onClick={handlePrint}>
-              <Printer className="w-4 h-4 ml-2" />
-              چاپ رسید
-            </Button>
-            <Button variant="outline" size="sm" onClick={generateQRCode}>
-              <QrCode className="w-4 h-4 ml-2" />
-              QR Code
             </Button>
           </div>
         </div>
@@ -565,7 +556,7 @@ END:VCALENDAR`;
                       ) : (
                         <p className="text-slate-500">آدرس ثبت نشده است</p>
                       )}
-                      <div className="pt-2">
+                      {/* <div className="pt-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -574,7 +565,7 @@ END:VCALENDAR`;
                           <ExternalLink className="w-4 h-4" />
                           مشاهده روی نقشه
                         </Button>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -583,14 +574,26 @@ END:VCALENDAR`;
               {/* نکات مهم */}
               <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div className="space-y-2">
                     <h5 className="font-bold text-amber-800">نکات مهم</h5>
                     <ul className="text-sm text-amber-700 space-y-1 list-disc list-inside">
-                      <li>لطفاً ۱۰ دقیقه قبل از زمان مقرر در محل حاضر شوید.</li>
-                      <li>این رسید به منزله تأیید رزرو می‌باشد.</li>
+                      <Activity
+                        mode={
+                          booking.status === BookingStatus.CONFIRMED
+                            ? "visible"
+                            : "hidden"
+                        }
+                      >
+                        <li>
+                          لطفاً ۱۰ دقیقه قبل از زمان مقرر در محل حاضر شوید.
+                        </li>
+
+                        <li>این رسید به منزله تأیید رزرو می‌باشد.</li>
+                      </Activity>
                       <li>
-                        در صورت نیاز به لغو، حداقل ۲ ساعت قبل اقدام فرمایید.
+                        در صورت نیاز به لغو، حداقل ۲ ساعت قبل از نوبت اقدام
+                        فرمایید.
                       </li>
                       <li>
                         جهت هرگونه سؤال با شماره {booking.business.owner.phone}{" "}

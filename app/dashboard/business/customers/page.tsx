@@ -14,14 +14,17 @@ import CustomerMoreButton from "./_components/CustomerMoreButton";
 import CustomerPagination from "./_components/CustomerPagination";
 import CustomerSearch from "./_components/CustomerSearch";
 import { getCustomers } from "./_meta/actions";
+import ListContainer from "@/container/ListContainer/ListContainer";
+import ListDataProvider from "@/container/ListDataProvider/ListDataProvider";
+import Link from "next/link";
 
 const BusinessDashboardCustomerPage = () => {
   const searchParams = useSearchParams();
 
   const userNameOrPhone = searchParams.get("userNameOrPhone") || "";
 
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
+  const page = Number(searchParams.get("page") || "1");
+  const pageSize = Number(searchParams.get("pageSize") || "10");
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["customers", userNameOrPhone, page, pageSize],
@@ -63,11 +66,14 @@ const BusinessDashboardCustomerPage = () => {
       {
         title: "شماره تماس",
         field: "phone",
-        render: (value: string) => (
-          <div className="flex justify-center items-center gap-2 text-sm text-slate-600">
+        render: (value) => (
+          <Link
+            href={`tel:${value}`}
+            className="flex justify-center items-center gap-2 text-sm text-slate-600 hover:text-blue-500"
+          >
             <Phone className="w-3.5 h-3.5 text-slate-400" />
             <span dir="ltr">{value}</span>
-          </div>
+          </Link>
         ),
       },
       {
@@ -133,10 +139,11 @@ const BusinessDashboardCustomerPage = () => {
           <Loader2 className="animate-spin" />
         </div>
       ) : (
-        <CustomTable
-          columns={columns}
-          data={{ resultList: data?.resultList || [] }}
-        />
+        <ListContainer data={data}>
+          <ListDataProvider>
+            <CustomTable columns={columns} />
+          </ListDataProvider>
+        </ListContainer>
       )}
 
       {/* نشانگر وضعیت صفحه‌بندی (صوری) */}

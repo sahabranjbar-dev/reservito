@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { convertToFarsiDigits } from "@/utils/common";
 import { useQuery } from "@tanstack/react-query";
 import {
   ChevronLeft,
@@ -11,17 +12,14 @@ import {
   ExternalLink,
   MapPin,
   Phone,
-  Star,
   XCircle,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import PersianCalendar from "./PersianCalendar"; // ایمپورت کامپوننت جدید
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { convertToFarsiDigits } from "@/utils/common";
-import { getAvailableSlotsAction } from "@/app/business/_meta/actions";
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
+import { useState } from "react";
+import { getAvailableSlotsAction } from "../../../_meta/actions";
+import { getBusinessTypeOptions } from "../../../_meta/utils";
+import PersianCalendar from "./PersianCalendar"; // ایمپورت کامپوننت جدید
 
 // تایپ‌ها (بدون تغییر)
 type Service = {
@@ -64,9 +62,6 @@ interface Props {
 }
 
 const BusinessDetail = ({ business }: Props) => {
-  const session = useSession();
-  const userId = session.data?.user.id;
-
   const searchParams = useSearchParams();
   const { push } = useRouter();
 

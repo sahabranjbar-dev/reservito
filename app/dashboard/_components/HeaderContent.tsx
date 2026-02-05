@@ -30,7 +30,7 @@ export default function HeaderContent({ role }: HeaderContentProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
               <span className="text-sm font-bold">R</span>
             </div>
-            <span className="hidden lg:inline-block">رزرویتو</span>
+            <span className="hidden lg:inline-block">رزرو مارکت</span>
           </Link>
 
           <Separator

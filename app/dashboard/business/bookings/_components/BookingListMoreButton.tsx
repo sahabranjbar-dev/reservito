@@ -1,3 +1,4 @@
+"use client";
 import { Modal } from "@/components";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";

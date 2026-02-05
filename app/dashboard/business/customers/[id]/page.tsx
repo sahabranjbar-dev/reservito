@@ -5,32 +5,22 @@ import { authOptions } from "@/utils/authOptions";
 import { getFullDateTime } from "@/utils/common";
 import prisma from "@/utils/prisma";
 
-import {
-  ArrowRight,
-  Calendar,
-  Clock,
-  MapPin,
-  NotebookText,
-  Phone,
-} from "lucide-react";
+import { Calendar, Clock, MapPin, NotebookText, Phone } from "lucide-react";
 
 import { StatusBadge } from "@/components";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
+import GoBackButton from "@/components/GoBackButton/GoBackButton";
 import { BookingStatus } from "@/constants/enums";
 import AddNote from "./_components/AddNote";
-import GoBackButton from "@/components/GoBackButton/GoBackButton";
+import Link from "next/link";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
-
-const maskPhone = (phone: string) =>
-  phone.replace(/^(\d{4})\d+(\d{3})$/, "$1***$2");
 
 export default async function CustomerProfilePage({ params }: Props) {
   const session = await getServerSession(authOptions);
@@ -117,9 +107,11 @@ export default async function CustomerProfilePage({ params }: Props) {
                 {customer.fullName || "مشتری بدون نام"}
               </h2>
 
-              <div className="flex items-center gap-1 text-sm text-slate-500 mt-2">
+              <div className="flex items-center gap-1 text-sm text-slate-500 mt-2 underline">
                 <Phone className="w-3 h-3" />
-                <span dir="ltr">{maskPhone(customer.phone)}</span>
+                <Link href={`tel:${customer.phone}`} dir="ltr">
+                  {customer.phone}
+                </Link>
               </div>
 
               <Separator className="my-4" />

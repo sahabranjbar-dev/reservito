@@ -1,8 +1,9 @@
 "use client";
+
 import {
   businessTypeLabelsFa,
   getBusinessTypeOptions,
-} from "@/app/business/_meta/utils";
+} from "@/app/business/detail/_meta/utils";
 import { Button } from "@/components/ui/button";
 import { getFullDateTime } from "@/utils/common";
 import { format } from "date-fns-jalali"; // یا کتابخانه مشابه
@@ -12,7 +13,6 @@ import {
   CheckCircle,
   Clock,
   Edit,
-  Eye,
   Hourglass,
   ShieldCheck,
   Ticket,
@@ -23,21 +23,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { BookingCardProps, statusConfig } from "../_meta/type";
 import { toast } from "sonner";
+import { BookingCardProps, statusConfig } from "../_meta/type";
 
 export const ActiveBookingCard: React.FC<BookingCardProps> = ({
   startTime,
   endTime,
   status,
-  totalPrice,
   business,
   service,
   staff,
-  discountUsages,
   id,
   customerNotes,
-  ...res
 }) => {
   const { push } = useRouter();
   const config = statusConfig[status];
@@ -50,11 +47,6 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
 
   const BusinessIcon = userBusiness?.icon;
 
-  // محاسبه میزان تخفیف
-  const discountAmount =
-    discountUsages?.reduce((sum, item) => sum + item.discountAmount, 0) || 0;
-
-  // تعیین متن دکمه اصلی بر اساس وضعیت
   const renderActionButtons = () => {
     if (status === "CONFIRMED") {
       return (

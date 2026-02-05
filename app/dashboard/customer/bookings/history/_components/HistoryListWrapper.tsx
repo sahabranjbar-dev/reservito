@@ -1,8 +1,8 @@
 "use client"; // لازم است چون از استیت استفاده می‌کنیم
 
+import { CheckCircle, Filter, XCircle } from "lucide-react";
 import React, { useState } from "react";
 import { HistoryBookingCard, HistoryCardProps } from "./HistoryBookingCard";
-import { History, CheckCircle, XCircle, Filter } from "lucide-react";
 
 type FilterType = "ALL" | "COMPLETED" | "CANCELED";
 
@@ -64,7 +64,16 @@ export const HistoryListWrapper = ({
           </div>
         ) : (
           filteredBookings.map((booking) => (
-            <HistoryBookingCard key={booking.id} {...booking} />
+            <HistoryBookingCard
+              key={booking.id}
+              business={booking.business}
+              endTime={booking.endTime}
+              id={booking.id}
+              service={booking.service}
+              staff={booking.staff}
+              startTime={booking.startTime}
+              status={booking.status}
+            />
           ))
         )}
       </div>

@@ -37,7 +37,7 @@ const HeaderMenu = () => {
       <DrawerContent className="w-72 p-4">
         {/* هدر منو */}
         <DrawerHeader className="relative border-b pb-2">
-          <DrawerTitle className="text-lg font-bold">رزرویتو</DrawerTitle>
+          <DrawerTitle className="text-lg font-bold">رزرو مارکت</DrawerTitle>
           <DrawerDescription className="text-sm text-neutral-500">
             رزرو آنلاین نوبت
           </DrawerDescription>

@@ -5,26 +5,6 @@ import BookingActions from "./BookingActions";
 import { StatusBadge } from "@/components";
 import { getFullDateTime } from "@/utils/common";
 
-const mockData = [
-  {
-    id: "1",
-    customer: "علی رضایی",
-    phone: "09121234567",
-    service: "ویزیت",
-    business: "کلینیک سپید",
-    date: "1404/11/15",
-    time: "14:30",
-    status: "PENDING",
-  },
-];
-
-const statusMap: Record<string, string> = {
-  PENDING: "در انتظار",
-  CONFIRMED: "تأیید شده",
-  CANCELLED: "لغو شده",
-  DONE: "انجام شده",
-};
-
 interface Props {
   data: any[];
 }

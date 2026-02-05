@@ -3,11 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Send, XCircle, User, ShieldCheck, Lock } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import { getTicket, replyTicket } from "../_meta/actions";
+import { Loader2, Lock, Send, ShieldCheck, User, XCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns-jalali"; // یا همان تابع Intl که استفاده کردید
+import { getTicket, replyTicket } from "../_meta/actions";
 
 // --- Types ---
 
@@ -104,7 +103,7 @@ const TicketDetailModal = ({ id, userId, onClose }: Props) => {
   return (
     <div className="flex flex-col h-[80vh] w-full bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
       {/* Modal Header */}
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
         <div className="flex-1">
           <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
             {isLoading ? "در حال بارگذاری..." : ticket?.subject}
@@ -197,7 +196,7 @@ const TicketDetailModal = ({ id, userId, onClose }: Props) => {
                       {formatDate(msg.createdAt)}
                     </span>
                   </div>
-                  <p className="whitespace-pre-wrap break-words">
+                  <p className="whitespace-pre-wrap wrap-break-word">
                     {msg.content}
                   </p>
                 </div>
@@ -209,7 +208,7 @@ const TicketDetailModal = ({ id, userId, onClose }: Props) => {
       </div>
 
       {/* Footer / Input Area */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0">
         {ticket?.status === "CLOSED" ? (
           <div className="flex items-center justify-center gap-2 text-gray-500 text-sm py-2 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
             <Lock className="h-4 w-4" />

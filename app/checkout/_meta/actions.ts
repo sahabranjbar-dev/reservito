@@ -47,6 +47,7 @@ export async function createBookingAction(params: {
         services: { some: { serviceId: serviceId } },
       },
       include: {
+        business: { select: { slug: true } },
         bookings: {
           where: {
             status: { in: ["PENDING", "CONFIRMED"] },
@@ -84,7 +85,7 @@ export async function createBookingAction(params: {
       },
     });
 
-    revalidatePath(`/business/${businessId}`);
+    revalidatePath(`/business/detail/${businessId}/${staff.business.slug}`);
     revalidatePath("/checkout");
     revalidatePath("/dashboard/business/bookings");
 

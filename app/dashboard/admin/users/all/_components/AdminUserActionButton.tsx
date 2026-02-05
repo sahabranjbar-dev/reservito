@@ -5,20 +5,12 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Eye,
-  MoreVertical,
-  PencilIcon,
-  ShareIcon,
-  TrashIcon,
-} from "lucide-react";
+import { Eye, MoreVertical, PencilIcon } from "lucide-react";
 import { useState } from "react";
-import ViewUser from "./ViewUser";
 import EditUser from "./EditUser";
+import ViewUser from "./ViewUser";
 
 interface Props {
   id: string;

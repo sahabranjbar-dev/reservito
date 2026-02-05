@@ -18,6 +18,7 @@ const ListHeader = ({
   title,
   createButton,
   onRefresh,
+  hasInplaceCreate = false,
 }: IListHeader) => {
   const searchParams = useSearchParams();
 
@@ -31,9 +32,11 @@ const ListHeader = ({
     <div>
       {title && <h2 className="text-2xl font-semibold my-4">{title}</h2>}
       <div className="flex items-start justify-start gap-2 my-2">
-        <Button variant="outline" onClick={() => setIsCreating?.(true)}>
-          <Plus />
-        </Button>
+        <Activity mode={hasInplaceCreate ? "visible" : "hidden"}>
+          <Button variant="outline" onClick={() => setIsCreating?.(true)}>
+            <Plus />
+          </Button>
+        </Activity>
         {createButton
           ? createButton
           : !!formPath && (
@@ -92,7 +95,7 @@ const ListHeader = ({
 
       <div
         className={clsx(
-          "overflow-hidden transition-all duration-300",
+          "overflow-scroll transition-all duration-300",
           filterOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         )}
       >

@@ -1,31 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Role } from "@/constants/enums";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  User,
-  Phone,
-  Mail,
-  Calendar,
-  Shield,
+  AlertCircle,
   Building,
-  Star,
+  Calendar,
   Clock,
   Edit,
-  Trash2,
+  Key,
+  Loader2,
+  Mail,
+  Phone,
   Power,
   RefreshCw,
-  CheckCircle,
+  Shield,
+  Star,
+  Trash2,
+  User,
   XCircle,
-  AlertCircle,
-  Loader2,
-  Key,
-  Layers,
-  Info,
 } from "lucide-react";
-import { toast } from "sonner";
 import Image from "next/image";
+import React, { useState } from "react";
+import { toast } from "sonner";
 import {
   addUserRole,
   deleteUser,
@@ -34,7 +32,6 @@ import {
   restoreUser,
   toggleUserStatus,
 } from "../_meta/actions";
-import { Role } from "@/constants/enums";
 
 interface UserDetail {
   id: string;
@@ -317,9 +314,9 @@ const ViewUser = ({ id }: Props) => {
 
   // --- Loading & Error States ---
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
+      <div className="flex flex-col items-center justify-center py-20 min-h-100">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600 mb-4" />
         <p className="text-gray-500 dark:text-gray-400">
           در حال بارگذاری پروفایل...
@@ -330,7 +327,7 @@ const ViewUser = ({ id }: Props) => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 min-h-[400px] bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900">
+      <div className="flex flex-col items-center justify-center py-20 min-h-100 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900">
         <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
           خطا در بارگذاری
@@ -469,7 +466,7 @@ const ViewUser = ({ id }: Props) => {
       </div>
 
       {/* Tabs Content */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden min-h-[400px]">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden min-h-100">
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 dark:border-gray-700 px-6 pt-4 overflow-x-auto">
           <div className="flex space-x-6 space-x-reverse">

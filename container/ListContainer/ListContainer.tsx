@@ -58,7 +58,7 @@ const ListContainer = ({
         setEditingRowId,
       }}
     >
-      <main className="bg-white p-2 rounded-lg overflow-x-scroll max-w-lvw">
+      <main className="bg-white p-2 rounded-lg overflow-scroll max-w-lvw">
         {children}
       </main>
     </ListContainerContext.Provider>

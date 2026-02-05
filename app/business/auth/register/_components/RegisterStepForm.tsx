@@ -35,14 +35,14 @@ export default function RegisterStepForm() {
       api.post("/business/register", outParser(data)),
     onSuccess: () => {
       toast.success("ثبت‌نام با موفقیت انجام شد");
-      push("/business/login");
+      push("/business/auth/login");
     },
   });
 
   const onSubmit = async (
     data: RegisterFormValues,
     e: any,
-    methods: UseFormReturn<any, any, any>
+    methods: UseFormReturn<any, any, any>,
   ) => {
     try {
       // اعتبارسنجی فقط مرحله جاری

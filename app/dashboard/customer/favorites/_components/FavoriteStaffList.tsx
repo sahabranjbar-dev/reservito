@@ -1,4 +1,3 @@
-// components/favorites/FavoriteStaffList.tsx
 import React from "react";
 import {
   Star,

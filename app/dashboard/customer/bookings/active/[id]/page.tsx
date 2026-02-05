@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { BookingStatus } from "@/constants/enums";
 import { XCircle } from "lucide-react";
+import { StatusBadge } from "@/components";
 
 export default async function ManageBookingPage({
   params,
@@ -15,7 +16,7 @@ export default async function ManageBookingPage({
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/api/auth/signin");
+    redirect("/auth");
   }
 
   const { id: bookingId } = await params;
@@ -57,15 +58,12 @@ export default async function ManageBookingPage({
           <h2 className="text-lg font-bold text-slate-800">
             این نوبت دیگر قابل تغییر نیست
           </h2>
-          <p className="text-slate-500 text-sm mt-2">
-            وضعیت نوبت شما{" "}
-            <span className="font-bold">
-              {booking.status === BookingStatus.COMPLETED
-                ? "انجام شده"
-                : "لغو شده"}
-            </span>{" "}
-            است.
-          </p>
+          <div className="text-slate-500 text-sm mt-2">
+            وضعیت نوبت شما:
+            <div className="m-2">
+              {<StatusBadge status={booking.status as BookingStatus} />}
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -1,11 +1,10 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Star, MapPin, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { BusinessType } from "@/constants/enums";
-import { businessTypeLabelsFa } from "../_meta/utils";
 import clsx from "clsx";
+import { MapPin } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { Activity } from "react";
+import { businessTypeLabelsFa } from "../_meta/utils";
 
 type Business = {
   id: string;
@@ -30,7 +29,7 @@ const BusinessCard = ({ business }: { business: Business }) => {
 
   return (
     <Link
-      href={`/business/${business.id}/${business.slug}`}
+      href={`/business/detail/${business.id}/${business.slug}`}
       className="group block bg-white rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50 transition-all duration-300 border border-slate-100 overflow-hidden"
     >
       <div className="relative h-56 w-full overflow-hidden bg-slate-100">

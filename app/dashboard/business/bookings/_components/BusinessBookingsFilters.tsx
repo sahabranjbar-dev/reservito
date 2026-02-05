@@ -42,17 +42,17 @@ const BusinessBookingsFilters = () => {
       if (value) params.append(key, value.toString());
     });
 
-    replace(`/dashboard/business/bookings?${params.toString()}`);
+    replace(`/dashboard/business/bookings/list?${params.toString()}`);
   };
 
   const removeFilterHandler = () => {
-    replace(`/dashboard/business/bookings`);
+    replace(`/dashboard/business/bookings/list`);
   };
 
   return (
     <Form<IForm>
       onSubmit={onSubmit}
-      className="grid grid-cols-1 md:grid-cols-4 gap-2"
+      className="grid grid-cols-1 md:grid-cols-4 gap-2 min-h-fit"
       defaultValues={defaultValues}
     >
       {({ reset }) => {

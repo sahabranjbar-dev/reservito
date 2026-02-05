@@ -1,5 +1,4 @@
 "use client";
-import { businessOptions } from "@/app/business/register/meta/constants";
 import { BaseField, Combobox, Form, TextCore } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { UpdateBusinessInput, updateBusinessSettings } from "../_meta/actions";
 import { Check } from "lucide-react";
+import { businessOptions } from "@/app/business/auth/register/meta/constants";
 
 interface IForm {
   businessName: string;
