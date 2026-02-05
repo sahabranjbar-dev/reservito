@@ -16,12 +16,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { getAvailableSlotsAction } from "../../_meta/actions";
-import { getBusinessTypeOptions } from "../../_meta/utils";
 import PersianCalendar from "./PersianCalendar"; // ایمپورت کامپوننت جدید
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { convertToFarsiDigits } from "@/utils/common";
+import { getAvailableSlotsAction } from "@/app/business/_meta/actions";
+import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 
 // تایپ‌ها (بدون تغییر)
 type Service = {
