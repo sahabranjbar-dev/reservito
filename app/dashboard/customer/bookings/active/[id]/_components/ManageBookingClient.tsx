@@ -11,7 +11,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { format } from "date-fns-jalali";
-import PersianCalendar from "@/app/business/[...slug]/_components/PersianCalendar";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { convertToEnglishDigits, convertToFarsiDigits } from "@/utils/common";
@@ -25,6 +24,7 @@ import {
   updateBookingAction,
 } from "../../../_meta/actions";
 import { BookingStatus } from "@/constants/enums";
+import PersianCalendar from "@/app/business/[businessId]/[slug]/_components/PersianCalendar";
 
 interface ManageBookingClientProps {
   booking: {
