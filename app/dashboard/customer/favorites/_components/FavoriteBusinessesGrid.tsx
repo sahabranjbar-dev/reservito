@@ -55,7 +55,7 @@ export default function FavoriteBusinessesGrid({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-600" />
+              <div className="w-full h-full bg-linear-to-r from-indigo-500 to-purple-600" />
             )}
 
             {/* Logo */}
@@ -129,7 +129,7 @@ export default function FavoriteBusinessesGrid({
             {/* Address */}
             {business.address && (
               <div className="flex items-start text-sm text-gray-500 mb-4">
-                <MapPin className="h-4 w-4 ml-1 flex-shrink-0 mt-0.5" />
+                <MapPin className="h-4 w-4 ml-1 shrink-0 mt-0.5" />
                 <span className="line-clamp-2">{business.address}</span>
               </div>
             )}

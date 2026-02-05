@@ -1,6 +1,5 @@
 "use client";
 
-import { getBusinessTypeOptions } from "@/app/business/_meta/utils";
 import { BaseField, Form, TextCore } from "@/components"; // مسیر کامپوننت‌های شما
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Calendar, Phone, User } from "lucide-react";
@@ -9,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { setupBusinessAction } from "../actions";
+import { getBusinessTypeOptions } from "@/app/business/detail/_meta/utils";
 
 const SetupWizard = () => {
   const session = useSession();
