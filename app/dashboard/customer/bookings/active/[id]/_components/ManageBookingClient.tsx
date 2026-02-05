@@ -11,7 +11,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { format } from "date-fns-jalali";
-import { BookingStatus } from "@prisma/client";
 import PersianCalendar from "@/app/business/[...slug]/_components/PersianCalendar";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -25,6 +24,7 @@ import {
   getAvailableSlotsAction,
   updateBookingAction,
 } from "../../../_meta/actions";
+import { BookingStatus } from "@/constants/enums";
 
 interface ManageBookingClientProps {
   booking: {
