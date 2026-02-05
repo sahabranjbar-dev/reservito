@@ -1,4 +1,3 @@
-import React from "react";
 import ContactForm from "./_components/ContactForm";
 import Link from "next/link";
 import { Mail, MapPin, PhoneOutgoing } from "lucide-react";
