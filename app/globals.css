@@ -2,12 +2,16 @@
 
 @font-face {
   font-family: "IranSans";
-  src: url("/public/fonts/IRANSansXFaNum-Bold.woff2") format(".woff2");
+  src: url("/fonts/IRANSansXFaNum-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("/public/fonts/IRANSansXFaNum-Bold.woff2") format(".woff2");
+  src: url("/fonts/IRANSansXFaNum-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
 }
 
 @import "tailwindcss";
