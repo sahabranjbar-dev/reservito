@@ -19,7 +19,7 @@ interface IVerifyForm {
   mobile: string;
   onLoginSuccess?: (
     data: SignInResponse | undefined,
-    session: Session | null
+    session: Session | null,
   ) => void;
 }
 
@@ -43,7 +43,14 @@ const VerifyCodeForm = ({
       redirect: false,
       code,
       phone: mobile,
+      callbackUrl: undefined,
     });
+    console.log(response, "response");
+
+    if (response?.error) {
+      throw new Error(response?.error);
+    }
+
     return response;
   };
 

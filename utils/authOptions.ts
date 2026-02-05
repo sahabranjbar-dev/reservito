@@ -62,15 +62,25 @@ export const authOptions: AuthOptions = {
 
       async authorize(credentials) {
         if (!credentials?.phone || !credentials.code) return null;
+        console.log(credentials.code, "code", credentials.phone, "phone");
 
         const phone = convertToEnglishDigits(credentials.phone);
         const code = convertToEnglishDigits(credentials.code);
 
         const otp = await prisma.otpCode.findUnique({ where: { phone } });
-        if (!otp || otp.expiresAt < new Date()) return null;
+
+        console.log(otp, "otp");
+
+        if (!otp || otp.expiresAt < new Date()) {
+          throw new Error("کد منقضی شده است");
+        }
 
         const isValid = await bcrypt.compare(code, otp.codeHash);
-        if (!isValid) return null;
+        console.log(isValid, "isValid");
+
+        if (!isValid) {
+          throw new Error("کد معتبر نیست");
+        }
 
         // مصرف OTP
         await prisma.otpCode.deleteMany({ where: { phone } });
@@ -243,5 +253,6 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/auth",
     signOut: "/auth",
+    error: "/auth",
   },
 };
