@@ -2,7 +2,7 @@
 import { getBusinessTypeOptions } from "@/app/business/detail/_meta/utils";
 import { StatusBadge } from "@/components";
 import { BookingStatus } from "@/constants/enums";
-import { formatDate } from "@/utils/common";
+import { formatDate, getHour } from "@/utils/common";
 import {
   Calendar,
   CheckCircle,
@@ -118,15 +118,7 @@ export const HistoryBookingCard: React.FC<HistoryCardProps> = ({
             <div className="flex items-center gap-1">
               <Clock size={14} />
               <span>
-                {new Intl.DateTimeFormat("fa-IR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).format(new Date(startTime))}{" "}
-                -{" "}
-                {new Intl.DateTimeFormat("fa-IR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).format(endTime)}
+                {getHour(startTime)} تا {getHour(endTime)}
               </span>
             </div>
             <div className="flex items-center gap-1">

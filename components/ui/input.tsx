@@ -21,11 +21,12 @@ function Input({
           "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
           "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
           className,
+          { "pl-10": Icon },
         )}
         maxLength={maxLength}
       />
       {Icon && (
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center overflow-hidden">
           {Icon}
         </div>
       )}

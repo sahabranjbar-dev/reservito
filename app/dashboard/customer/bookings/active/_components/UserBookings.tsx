@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BookingStatus } from "@/constants/enums";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/utils/common";
+import { formatCurrency, getHour } from "@/utils/common";
 import { Calendar, Clock, MapPin, MoreVertical, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -145,9 +145,7 @@ const UserBookings = ({ bookings }: Props) => {
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
-                            {new Intl.DateTimeFormat("fa-IR", {
-                              timeStyle: "short",
-                            }).format(new Date(booking.startTime))}
+                            {getHour(booking?.startTime)}
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="w-1 h-1 bg-slate-300 rounded-full" />

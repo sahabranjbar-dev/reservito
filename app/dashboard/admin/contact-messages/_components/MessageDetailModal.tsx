@@ -23,6 +23,7 @@ import {
 } from "../_meta/actions";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { getFullDateTime } from "@/utils/common";
 
 // --- Types ---
 // استفاده از تایپ‌های پرایسما برای همخوانی بیشتر یا تعریف دستی:
@@ -149,13 +150,7 @@ const MessageDetailModal = ({ id, onClose }: Props) => {
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(date));
+    return getFullDateTime(date);
   };
 
   if (isLoading || isFetching || !message?.id) {

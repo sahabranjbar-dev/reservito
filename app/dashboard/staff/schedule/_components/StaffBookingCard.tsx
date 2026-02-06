@@ -27,20 +27,20 @@ const StaffBookingCard = ({ item }: { item: any }) => {
       />
 
       <div className="flex items-start justify-between gap-4 mr-3">
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-2 ">
           <div className="flex items-center gap-2 text-lg font-bold text-slate-800">
             <span>{item.service.name}</span>
             <StatusBadge status={item?.status} />
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-slate-500">
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-md">
+          <div className="grid grid-cols-1 gap-4 text-sm text-slate-500">
+            <div className="inline-flex w-fit items-center flex-nowrap gap-1.5 bg-slate-50 px-2 py-1 rounded-md">
               <Clock1 className="w-4 h-4 text-slate-400" />
-              <span className="font-mono tracking-wide">{timeString}</span>
+              <span className="text-nowrap">{timeString}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-md">
+            <div className="inline-flex w-fit flex-nowrap items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-md">
               <Calendar className="w-4 h-4 text-slate-400" />
-              <span>{dateString}</span>
+              <span className="text-nowrap">{dateString}</span>
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { DisabledSection } from "@/components";
 import { convertToFarsiDigits } from "@/utils/common";
 import { format } from "date-fns";
 import { faIR } from "date-fns/locale";
@@ -6,7 +7,6 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
-  CircleAlert,
   Clock,
   Clock as ClockIcon,
   List,
@@ -16,8 +16,6 @@ import {
 import Link from "next/link";
 import React from "react";
 import { getStaffDashboardData } from "./_meta/actions";
-import { Button } from "@/components/ui/button";
-import { DisabledSection } from "@/components";
 
 // کامپوننت کارت آمار
 const StatCard = ({
@@ -275,7 +273,7 @@ const StaffDashboardPage = async () => {
           {/* ستون سمت راست - اطلاعات جانبی */}
           <div className="space-y-6">
             {/* پروفایل کارمند */}
-            <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            {/* <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
               <DisabledSection />
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
                 اطلاعات من
@@ -320,7 +318,7 @@ const StaffDashboardPage = async () => {
               <button className="w-full mt-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 rounded-xl font-medium transition-colors duration-150">
                 مشاهده پروفایل کامل
               </button>
-            </div>
+            </div> */}
 
             {/* اقدامات سریع */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
@@ -368,7 +366,7 @@ const StaffDashboardPage = async () => {
             </div>
 
             {/* اطلاعیه‌ها */}
-            <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            {/* <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
               <DisabledSection />
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -393,7 +391,7 @@ const StaffDashboardPage = async () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { StatusBadge } from "@/components";
 import { BookingStatus } from "@/constants/enums";
+import { getHour } from "@/utils/common";
 import { Calendar, Clock, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,10 +29,7 @@ interface UpcomingBookingsProps {
 
 export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
   const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString("fa-IR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return getHour(date);
   };
 
   const formatDate = (date: Date) => {

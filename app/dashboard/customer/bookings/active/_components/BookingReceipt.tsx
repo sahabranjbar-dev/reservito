@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookingStatus, BusinessType } from "@/constants/enums";
 import { cn } from "@/lib/utils";
+import { getFullDateTime, getHour } from "@/utils/common";
 import {
   AlertCircle,
   ArrowLeftFromLine,
@@ -266,19 +267,11 @@ END:VCALENDAR`;
 
   // --- فرمت تاریخ فارسی ---
   const formatPersianDate = (date: Date) => {
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "long",
-    }).format(date);
+    return getFullDateTime(date);
   };
 
   const formatPersianTime = (date: Date) => {
-    return new Intl.DateTimeFormat("fa-IR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+    return getHour(date);
   };
 
   // --- محاسبه زمان پایان ---

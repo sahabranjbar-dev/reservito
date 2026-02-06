@@ -136,7 +136,10 @@ function TextCore({
     <Input
       {...props}
       data-slot="input"
-      className={cn(className)}
+      className={cn(
+        className,
+        "placeholder:overflow-hidden placeholder:truncate",
+      )}
       disabled={disabled}
       placeholder={
         disabled

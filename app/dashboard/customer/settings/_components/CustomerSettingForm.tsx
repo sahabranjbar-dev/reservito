@@ -236,7 +236,7 @@ const CustomerSettingForm = ({ userInfo: user }: Props) => {
                             />
                           </div>
 
-                          <div className="space-y-2 grid grid-cols-1 md:grid-cols-2 gap-4 border rounded-2xl p-2 bg-slate-50">
+                          <div className="space-y-2 grid grid-cols-1 lg:grid-cols-2 gap-4 border rounded-2xl p-2 bg-slate-50">
                             <div>
                               <BaseField
                                 name="phone"
@@ -257,13 +257,13 @@ const CustomerSettingForm = ({ userInfo: user }: Props) => {
                                     : "hidden"
                                 }
                               >
-                                <span className="tex-xs text-green-600 flex justify-start items-center gap-2">
+                                <p className="tex-xs text-green-600 flex justify-start items-center gap-2">
                                   <CircleCheckBig
                                     size={16}
                                     className="animate-pulse"
                                   />
                                   شماره موبایل تایید شد
-                                </span>
+                                </p>
                               </Activity>
                             </div>
 

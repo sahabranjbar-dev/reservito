@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getTicket, replyToTicket, updateTicketStatus } from "../_meta/actions";
+import { getFullDateTime } from "@/utils/common";
 
 type TicketStatus = "OPEN" | "PENDING" | "CLOSED";
 type TicketPriority = "LOW" | "MEDIUM" | "HIGH";
@@ -137,12 +138,7 @@ const TicketDetailModal = ({ id, onClose }: Props) => {
   });
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("fa-IR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      day: "2-digit",
-      month: "long",
-    }).format(new Date(date));
+    return getFullDateTime(date);
   };
 
   if (isLoading) {

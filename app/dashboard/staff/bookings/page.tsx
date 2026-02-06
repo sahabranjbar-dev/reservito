@@ -130,7 +130,7 @@ export default async function StaffBookingPage({ searchParams }: Props) {
   };
 
   return (
-    <>
+    <div className="max-w-lvw">
       {/* Booking List */}
       <BookingList data={data} />
       <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -140,6 +140,6 @@ export default async function StaffBookingPage({ searchParams }: Props) {
           totalPages={data?.totalPages}
         />
       </div>
-    </>
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { otCodeValidate } from "../_meta/actions";
 import { useSession } from "next-auth/react";
+import { MessageSquareText } from "lucide-react";
 
 const OtpCodeInput = () => {
   const { data: userData } = useSession();
@@ -95,6 +96,8 @@ const OtpCodeInput = () => {
                   sendOtpMutation.isPending ||
                   phone === userData?.user.phone
                 }
+                className="text-blue-500 text-sm underline"
+                rightIcon={<MessageSquareText />}
               >
                 دریافت کد تایید
               </Button>
@@ -104,13 +107,15 @@ const OtpCodeInput = () => {
               </span>
             )}
 
-            <Button
-              type="button"
-              onClick={onApprovedCodeHandler}
-              disabled={!canSubmitOtp || optValidation.isPending}
-            >
-              تایید کد
-            </Button>
+            {false && (
+              <Button
+                type="button"
+                onClick={onApprovedCodeHandler}
+                disabled={!canSubmitOtp || optValidation.isPending}
+              >
+                تایید کد
+              </Button>
+            )}
           </div>
         }
       />

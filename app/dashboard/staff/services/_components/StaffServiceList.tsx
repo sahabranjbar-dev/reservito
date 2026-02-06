@@ -278,13 +278,11 @@ const StaffServicesList = ({ staff }: Props) => {
                         name="requestedName"
                         component={TextCore}
                         label="نام خدمت"
-                        required
                       />
                       <BaseField
                         name="requestedPrice"
                         component={TextCore}
                         label="قیمت (تومان)"
-                        required
                         number
                         formatter
                       />
@@ -293,7 +291,6 @@ const StaffServicesList = ({ staff }: Props) => {
                         name="requestedDuration"
                         component={TextCore}
                         label="مدت زمان (دقیقه)"
-                        required
                         number
                       />
 

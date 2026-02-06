@@ -32,6 +32,7 @@ import {
   restoreUser,
   toggleUserStatus,
 } from "../_meta/actions";
+import { getFullDateTime } from "@/utils/common";
 
 interface UserDetail {
   id: string;
@@ -168,13 +169,7 @@ const formatDate = (dateString: string | Date | null) => {
   if (!dateString) return "نامشخص";
   const date =
     typeof dateString === "string" ? new Date(dateString) : dateString;
-  return new Intl.DateTimeFormat("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+  return getFullDateTime(date);
 };
 
 const getStatusBadge = (isActive: boolean, deletedAt: string | null) => {
