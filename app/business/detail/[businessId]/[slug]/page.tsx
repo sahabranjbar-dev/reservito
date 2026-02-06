@@ -3,13 +3,13 @@ import { getBusinessBySlugAction } from "../../_meta/actions";
 import ClientBusinessDetail from "./_components/BusinessDetail";
 
 interface Props {
-  params: {
+  params: Promise<{
     businessId: string;
     slug: string;
-  };
+  }>;
 }
 const BusinessPage = async ({ params }: Props) => {
-  const { businessId, slug } = params;
+  const { businessId, slug } = await params;
   console.log({ businessId, slug });
 
   const response = await getBusinessBySlugAction(businessId);
