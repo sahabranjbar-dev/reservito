@@ -233,7 +233,9 @@ export function getCurrentDate(): string {
 }
 
 export function formatDate(date: Date): string {
-  console.log({ date });
-
   return date.toISOString().split("T")[0];
 }
+
+export const getHour = (date: Date) => {
+  return new Date(date).toUTCString().split(" ")[4].slice(0, 5);
+};

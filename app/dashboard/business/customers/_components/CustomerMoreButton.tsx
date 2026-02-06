@@ -16,8 +16,6 @@ interface Props<T = any> {
 }
 
 const CustomerMoreButton = ({ row, id }: Props) => {
-  console.log({ row });
-
   return (
     <>
       <DropdownMenu>

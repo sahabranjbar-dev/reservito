@@ -45,7 +45,6 @@ const VerifyCodeForm = ({
       phone: mobile,
       callbackUrl: undefined,
     });
-    console.log(response, "response");
 
     if (response?.error) {
       throw new Error(response?.error);

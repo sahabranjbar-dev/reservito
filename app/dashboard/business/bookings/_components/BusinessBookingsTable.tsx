@@ -1,16 +1,17 @@
 "use client";
 
-import { ListHeader, StatusBadge, CustomTable } from "@/components";
+import { CustomTable, ListHeader, StatusBadge } from "@/components";
+import PaginationWrapper from "@/components/Pagination/Pagination";
 import { Badge } from "@/components/ui/badge";
 import ListContainer from "@/container/ListContainer/ListContainer";
 import ListDataProvider from "@/container/ListDataProvider/ListDataProvider";
 import { ITableColumns } from "@/types/Table";
+import { getHour } from "@/utils/common";
 import { Calendar, Clock, Phone } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import BookingListMoreButton from "./BookingListMoreButton";
 import BusinessBookingsFilters from "./BusinessBookingsFilters";
-import Link from "next/link";
-import PaginationWrapper from "@/components/Pagination/Pagination";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   data?: {
@@ -42,17 +43,25 @@ const BusinessBookingsTable = ({ data }: Props) => {
       title: "ردیف",
     },
     {
-      title: "مشتری",
+      title: "نام",
       field: "customer",
       render: (customer) => {
         return (
           <div key={customer?.id}>
-            <h3 className="font-bold text-slate-900 text-base">
-              {customer.name}
-            </h3>
+            <span>{customer.name ?? "---"}</span>
+          </div>
+        );
+      },
+    },
+    {
+      title: "تلفن تماس",
+      field: "customer",
+      render: (customer) => {
+        return (
+          <div key={customer?.id}>
             <Link
               href={`tel:${customer?.phone}`}
-              className="flex items-center text-xs text-slate-500 gap-1"
+              className="flex justify-center items-center text-xs text-slate-500 gap-1"
             >
               <Phone className="w-3 h-3" />
               {customer.phone}
@@ -80,7 +89,7 @@ const BusinessBookingsTable = ({ data }: Props) => {
       title: "تاریخ",
       field: "startTime",
       render: (startTime, row) => (
-        <div key={row?.id} className="flex items-center gap-1">
+        <div key={row?.id} className="flex justify-center items-center gap-1">
           <Calendar className="w-3 h-3" />
           {new Date(startTime).toLocaleDateString("fa-IR")}
         </div>
@@ -88,19 +97,13 @@ const BusinessBookingsTable = ({ data }: Props) => {
     },
     {
       title: "ساعت",
-      field: "startTimeq",
+      field: "startTime",
 
-      render: (_, row) => {
-        const start = new Date(row?.startTime).toLocaleTimeString("fa-IR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        const end = new Date(row.endTime).toLocaleTimeString("fa-IR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+      render: (startTime, row) => {
+        const start = getHour(new Date(startTime));
+        const end = getHour(new Date(row.endTime));
         return (
-          <div key={row?.id} className="flex items-center gap-1">
+          <div key={row?.id} className="flex justify-center items-center gap-1">
             <Clock className="w-3 h-3" />
             {start} - {end}
           </div>
@@ -121,7 +124,6 @@ const BusinessBookingsTable = ({ data }: Props) => {
       render: (id) => <BookingListMoreButton id={id} />,
     },
   ];
-  console.log({ data });
 
   return (
     <ListContainer data={data}>

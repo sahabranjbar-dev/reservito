@@ -171,13 +171,13 @@ const BookingDetails = ({ bookingId }: Props) => {
 
         <Activity mode={data.customerNotes ? "visible" : "hidden"}>
           <div className="border p-2 rounded-lg bg-blue-50 md:col-span-2 ">
-            <p className="flex justify-start items-center gap-2 text-slate-500">
+            <div className="flex justify-start items-center gap-2 text-slate-500">
               <div className="p-1.5 bg-slate-50 rounded-lg border border-slate-100 ">
                 <TextInitial className="w-4 h-4" />
               </div>
 
               <span> توضیحات:</span>
-            </p>
+            </div>
             <p className="p-4">{data.customerNotes}</p>
           </div>
         </Activity>

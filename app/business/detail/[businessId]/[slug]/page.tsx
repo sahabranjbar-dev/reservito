@@ -10,12 +10,9 @@ interface Props {
 }
 const BusinessPage = async ({ params }: Props) => {
   const { businessId, slug } = await params;
-  console.log({ businessId, slug });
 
   const response = await getBusinessBySlugAction(businessId);
-  console.log({ response });
 
-  // اگر خطا بود، کامپوننت ارور نشون بده
   if (!response.success) {
     return (
       <div className="flex flex-col items-center justify-center h-[70vh] text-center px-4">
@@ -36,12 +33,8 @@ const BusinessPage = async ({ params }: Props) => {
   }
 
   const business = response.data;
-  console.log({ business });
 
-  // بررسی اسلاگ
   const resolvedSlug = decodeURIComponent(slug);
-
-  console.log({ resolvedSlug });
 
   if (business?.slug !== resolvedSlug) {
     return (
