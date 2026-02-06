@@ -5,8 +5,7 @@ import {
   getBusinessTypeOptions,
 } from "@/app/business/detail/_meta/utils";
 import { Button } from "@/components/ui/button";
-import { getFullDateTime } from "@/utils/common";
-import { format } from "date-fns-jalali"; // یا کتابخانه مشابه
+import { getFullDateTime, getHour } from "@/utils/common";
 import {
   AlertCircle,
   Calendar,
@@ -171,7 +170,7 @@ export const ActiveBookingCard: React.FC<BookingCardProps> = ({
                   </p>
                   <p className="text-slate-600 text-sm flex items-center gap-2 mt-1">
                     <Clock size={14} className="text-slate-400" />
-                    {format(startTime, "HH:mm")} تا {format(endTime, "HH:mm")}
+                    {getHour(startTime)} تا {getHour(endTime)}
                     <span className="text-slate-300">|</span>
                     <span>{service.duration} دقیقه</span>
                   </p>

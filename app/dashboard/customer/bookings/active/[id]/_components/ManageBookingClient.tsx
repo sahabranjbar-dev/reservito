@@ -13,7 +13,11 @@ import {
 import { format } from "date-fns-jalali";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { convertToEnglishDigits, convertToFarsiDigits } from "@/utils/common";
+import {
+  convertToEnglishDigits,
+  convertToFarsiDigits,
+  getHour,
+} from "@/utils/common";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useConfirm } from "@/hooks/useConfirm";
@@ -55,12 +59,7 @@ export const ManageBookingClient: React.FC<ManageBookingClientProps> = ({
   );
 
   const initialSelectedSlot = useMemo(
-    () =>
-      convertToEnglishDigits(
-        Intl.DateTimeFormat("fa", { timeStyle: "short" }).format(
-          new Date(booking.startTime),
-        ),
-      ),
+    () => convertToEnglishDigits(getHour(booking.startTime)),
     [booking.startTime],
   );
 
@@ -171,7 +170,7 @@ export const ManageBookingClient: React.FC<ManageBookingClientProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <Clock size={16} className="text-indigo-300" />
-              {format(booking.startTime, "HH:mm")}
+              {getHour(booking.startTime)}
             </div>
           </div>
         </div>

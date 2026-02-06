@@ -90,6 +90,7 @@ const BookingReceipt = ({ booking }: Props) => {
   const downloadCalendarEvent = () => {
     try {
       const eventStart = new Date(booking.startTime);
+
       const eventEnd = new Date(
         eventStart.getTime() + booking.service.duration * 60000,
       );

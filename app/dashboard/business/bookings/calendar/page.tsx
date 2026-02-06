@@ -15,13 +15,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { getBookingByDate, getBookingsByRange } from "../_meta/actions";
 import BusinessBookingCalender from "./_components/BusinessBookingCalender";
+import { getHour } from "@/utils/common";
 
 const BookingCard = ({ item }: { item: any }) => {
   const startDate = new Date(item.startTime);
-  const timeString = new Intl.DateTimeFormat("fa-IR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(startDate);
+  const timeString = getHour(item.startTime) + " - " + getHour(item.endTime);
 
   const dateString = new Intl.DateTimeFormat("fa-IR", {
     month: "long",

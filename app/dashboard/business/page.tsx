@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { authOptions } from "@/utils/authOptions";
+import { getHour } from "@/utils/common";
 import prisma from "@/utils/prisma";
 import { Calendar, Captions, Users } from "lucide-react";
 import { getServerSession } from "next-auth";
@@ -142,10 +143,7 @@ const BusinessOwnerDashboardPage = async () => {
                         <p className="text-xs text-slate-500 flex items-center gap-1">
                           {booking.service?.name}
                           <span className="w-1 h-1 bg-slate-300 rounded-full" />
-                          {new Date(booking.startTime).toLocaleTimeString(
-                            "fa-IR",
-                            { hour: "2-digit", minute: "2-digit" },
-                          )}
+                          {getHour(booking.startTime)}
                         </p>
                       </div>
                     </div>

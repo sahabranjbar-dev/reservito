@@ -1,14 +1,12 @@
 import { StatusBadge } from "@/components";
 import { cn } from "@/lib/utils";
+import { getHour } from "@/utils/common";
 import { AlertCircle, Calendar, Clock1, FileText, User } from "lucide-react";
 import React from "react";
 
 const StaffBookingCard = ({ item }: { item: any }) => {
   const startDate = new Date(item.startTime);
-  const timeString = new Intl.DateTimeFormat("fa-IR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(startDate);
+  const timeString = getHour(item?.startTime) + " - " + getHour(item?.endTime);
 
   const dateString = new Intl.DateTimeFormat("fa-IR", {
     month: "long",

@@ -190,9 +190,7 @@ export const getFullDateTime = (date?: Date) => {
           weekday: "long",
         }).format(date) +
         " " +
-        new Intl.DateTimeFormat("fa-IR", {
-          timeStyle: "medium",
-        }).format(date)
+        getHour(date)
     : "---";
 };
 
