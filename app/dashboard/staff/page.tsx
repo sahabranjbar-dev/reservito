@@ -1,5 +1,5 @@
-import { DisabledSection } from "@/components";
-import { convertToFarsiDigits } from "@/utils/common";
+import { DisabledSection, StatusBadge } from "@/components";
+import { convertToFarsiDigits, getHour } from "@/utils/common";
 import { format } from "date-fns";
 import { faIR } from "date-fns/locale";
 import {
@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import { getStaffDashboardData } from "./_meta/actions";
+import { BookingStatus } from "@/constants/enums";
 
 // کامپوننت کارت آمار
 const StatCard = ({
@@ -85,7 +86,7 @@ const BookingCard = ({
           </p>
           <div className="flex items-center text-sm text-gray-500 dark:text-gray-500">
             <ClockIcon className="h-4 w-4 ml-1" />
-            <span>{format(booking.startTime, "HH:mm", { locale: faIR })}</span>
+            <span>{getHour(booking.startTime)}</span>
             {booking.duration && (
               <>
                 <span className="mx-2">•</span>
@@ -96,21 +97,7 @@ const BookingCard = ({
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <span
-          className={`text-xs px-3 py-1 rounded-full font-medium ${
-            booking.status === "confirmed"
-              ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300"
-              : booking.status === "pending"
-                ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-300"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
-          }`}
-        >
-          {booking.status === "confirmed"
-            ? "تایید شده"
-            : booking.status === "pending"
-              ? "در انتظار"
-              : "لغو شده"}
-        </span>
+        <StatusBadge status={booking.status} />
         {isNext && (
           <button className="mt-3 text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-150">
             شروع سرویس
@@ -187,7 +174,8 @@ const StaffDashboardPage = async () => {
                   <div className="flex items-center bg-white/20 px-3 py-1 rounded-full">
                     <Clock className="h-4 w-4 ml-1" />
                     <span>
-                      {format(nextBooking.startTime, "HH:mm", { locale: faIR })}
+                      {getHour(nextBooking.startTime)} تا{" "}
+                      {getHour(nextBooking.endTime)}
                     </span>
                   </div>
                 </div>

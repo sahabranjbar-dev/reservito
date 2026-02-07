@@ -6,6 +6,7 @@ import { Bell } from "lucide-react";
 import Link from "next/link";
 import { CustomTrigger } from "./CustomTrigger";
 import dynamic from "next/dynamic";
+import NotificationButton from "./NotificationButton";
 
 const LiveClock = dynamic(() => import("@/components/LiveClock/LiveClock"), {
   ssr: false,
@@ -43,15 +44,9 @@ export default function HeaderContent({ role }: HeaderContentProps) {
         <div className="flex flex-1 items-center justify-end gap-8">
           <LiveClock />
           <Separator orientation="vertical" className="h-full min-h-10" />
+
           {/* نوتیفیکیشن */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 end-1.5 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
-            <span className="sr-only">اعلان‌ها</span>
-          </Button>
+          <NotificationButton />
         </div>
       </div>
     </header>

@@ -1,15 +1,32 @@
-import { Button } from "@/components/ui/button";
+import React from "react";
 import {
-  AlertCircle,
   Bell,
-  Calendar,
   CheckCheck,
-  ChevronLeft,
+  Trash2,
+  MoreVertical,
+  Calendar,
   CreditCard,
   MessageSquare,
-  MoreVertical,
-  Trash2,
+  AlertCircle,
+  ChevronLeft,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // دیتای نمونه برای نمایش
 const mockData = {
